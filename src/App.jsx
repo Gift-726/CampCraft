@@ -16,45 +16,48 @@ import {
 function LandingPage() {
   const { currentUser } = useAuth();
   const categories = [
-    { name: 'Plumbing', icon: '🚿', color: 'from-blue-500/20 to-cyan-500/20 text-blue-400' },
-    { name: 'Electrical', icon: '⚡', color: 'from-yellow-500/20 to-amber-500/20 text-yellow-400' },
-    { name: 'Carpentry', icon: '🪚', color: 'from-orange-500/20 to-amber-600/20 text-orange-400' },
-    { name: 'Painting', icon: '🎨', color: 'from-pink-500/20 to-rose-500/20 text-pink-400' },
-    { name: 'Welding', icon: '🔥', color: 'from-red-500/20 to-orange-500/20 text-red-400' },
-    { name: 'Generator Repair', icon: '⚙️', color: 'from-indigo-500/20 to-purple-500/20 text-indigo-400' },
-    { name: 'Laundry Services', icon: '🧺', color: 'from-teal-500/20 to-emerald-500/20 text-teal-400' },
+    { name: 'Plumbing', icon: '🚿', color: 'bg-emerald-50 text-emerald-800' },
+    { name: 'Electrical', icon: '⚡', color: 'bg-emerald-50 text-emerald-800' },
+    { name: 'Carpentry', icon: '🪚', color: 'bg-emerald-50 text-emerald-800' },
+    { name: 'Painting', icon: '🎨', color: 'bg-emerald-50 text-emerald-800' },
+    { name: 'Welding', icon: '🔥', color: 'bg-emerald-50 text-emerald-800' },
+    { name: 'Generator Repair', icon: '⚙️', color: 'bg-emerald-50 text-emerald-800' },
+    { name: 'Laundry Services', icon: '🧺', color: 'bg-emerald-50 text-emerald-800' },
   ];
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 font-sans">
+    <div className="min-h-screen bg-slate-50 text-slate-800 font-sans">
       {/* Header */}
-      <header className="border-b border-slate-900 bg-slate-950/80 backdrop-blur-md sticky top-0 z-50">
+      <header className="border-b border-slate-200 bg-white sticky top-0 z-50 shadow-sm">
         <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center space-x-3">
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-emerald-500 to-amber-500 flex items-center justify-center text-slate-950 font-extrabold shadow-md">
+            <div className="w-9 h-9 rounded-xl bg-emerald-800 flex items-center justify-center text-white font-extrabold shadow-md">
               ⛺
             </div>
-            <span className="text-lg font-bold bg-gradient-to-r from-white to-emerald-400 bg-clip-text text-transparent">CampCraft</span>
+            <div>
+              <span className="text-base font-bold text-slate-900 block leading-tight">CampCraft</span>
+              <span className="text-[9px] text-slate-500 font-medium tracking-tight">Redemption City's Finder</span>
+            </div>
           </div>
-          <nav className="hidden md:flex space-x-8 text-sm text-slate-400">
-            <a href="#how" className="hover:text-emerald-400 transition-colors">How It Works</a>
-            <a href="#categories" className="hover:text-emerald-400 transition-colors">Categories</a>
-            <a href="#about" className="hover:text-emerald-400 transition-colors">About</a>
+          <nav className="hidden md:flex space-x-8 text-sm text-slate-600 font-medium">
+            <a href="#how" className="hover:text-emerald-805 transition-colors">How It Works</a>
+            <a href="#categories" className="hover:text-emerald-805 transition-colors">Categories</a>
+            <a href="#about" className="hover:text-emerald-805 transition-colors">About</a>
           </nav>
           <div className="flex items-center space-x-4">
             {currentUser ? (
               <Link 
                 to={`/${currentUser.role}/dashboard`}
-                className="px-4 py-2 rounded-lg bg-emerald-500 text-slate-950 font-bold text-sm hover:bg-emerald-400 transition"
+                className="px-4 py-2 rounded-lg bg-emerald-805 text-white font-bold text-sm hover:bg-emerald-900 transition"
               >
                 Dashboard
               </Link>
             ) : (
               <>
-                <Link to="/login" className="text-sm font-medium text-slate-300 hover:text-white transition">Login</Link>
+                <Link to="/login" className="text-sm font-semibold text-slate-600 hover:text-slate-900 transition">Login</Link>
                 <Link 
                   to="/register" 
-                  className="px-4 py-2 rounded-lg bg-emerald-500 text-slate-950 font-bold text-sm hover:bg-emerald-400 transition"
+                  className="px-4 py-2 rounded-lg bg-emerald-800 text-white font-bold text-sm hover:bg-emerald-900 transition shadow-sm"
                 >
                   Get Started
                 </Link>
@@ -65,79 +68,78 @@ function LandingPage() {
       </header>
 
       {/* Hero Section */}
-      <section className="max-w-6xl mx-auto px-4 py-20 md:py-32 flex flex-col md:flex-row items-center justify-between gap-12">
+      <section className="max-w-6xl mx-auto px-4 py-16 md:py-24 flex flex-col md:flex-row items-center justify-between gap-12">
         <div className="flex-1 space-y-6 text-left">
-          <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-semibold uppercase tracking-wider">
-            <span>Redemption City's Trusted Network</span>
-          </div>
-          <h1 className="text-4xl md:text-6xl font-extrabold text-white leading-tight">
+          <h1 className="text-4xl md:text-5xl font-extrabold text-slate-900 leading-tight">
             Find Trusted Artisans <br/>
-            <span className="bg-gradient-to-r from-emerald-400 via-teal-300 to-amber-400 bg-clip-text text-transparent">
+            <span className="text-emerald-800">
               in Redemption City
             </span>
           </h1>
-          <p className="text-slate-400 text-base md:text-lg leading-relaxed max-w-xl font-light">
-            CampCraft connects residents with verified local tradespeople. Fast, reliable, and verified.
+          <p className="text-slate-500 text-base md:text-lg leading-relaxed max-w-xl font-light">
+            CampCraft connects residents with verified local tradespeople. Fast, reliable, accountable.
           </p>
-          <div className="flex flex-col sm:flex-row items-center gap-4 pt-2">
+          <div className="flex flex-row items-center gap-4 pt-2">
             <Link 
               to="/login"
-              className="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-emerald-500 text-slate-950 font-bold hover:bg-emerald-400 shadow-lg shadow-emerald-500/10 hover:scale-[1.02] active:scale-[0.98] transition-all text-center"
+              className="px-6 py-2.5 rounded-lg bg-emerald-800 text-white font-bold hover:bg-emerald-900 shadow transition-all text-center text-sm"
             >
-              Find a Service
+              Find Service
             </Link>
             <Link 
               to="/register" 
-              className="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-slate-900 border border-slate-800 hover:border-slate-700 text-slate-200 hover:text-white font-semibold transition text-center"
+              className="px-6 py-2.5 rounded-lg border border-slate-350 text-slate-700 bg-white font-bold hover:bg-slate-50 transition text-center text-sm"
             >
               Join as Artisan
             </Link>
           </div>
         </div>
         
-        {/* Right side illustration simulation */}
-        <div className="flex-1 w-full max-w-md md:max-w-none relative aspect-[4/3] rounded-3xl bg-gradient-to-br from-slate-900 to-slate-950 border border-slate-800/80 p-8 flex items-center justify-center overflow-hidden shadow-2xl">
-          <div className="absolute inset-0 bg-emerald-500/5 blur-3xl rounded-full"></div>
+        {/* Right side illustration representation */}
+        <div className="flex-1 w-full max-w-md md:max-w-none relative aspect-[4/3] rounded-3xl bg-white border border-slate-200 p-8 flex items-center justify-center overflow-hidden shadow-md">
+          <div className="absolute inset-0 bg-emerald-50/50 blur-3xl rounded-full"></div>
           <div className="z-10 text-center space-y-4">
-            <div className="w-20 h-20 mx-auto rounded-2xl bg-gradient-to-tr from-emerald-500 to-teal-500 flex items-center justify-center shadow-xl">
-              <Wrench className="w-10 h-10 text-slate-950" />
+            <div className="w-20 h-20 mx-auto rounded-2xl bg-emerald-50 flex items-center justify-center text-emerald-800 border border-emerald-100 shadow-sm">
+              <Wrench className="w-10 h-10" />
             </div>
             <div>
-              <p className="text-xs font-semibold text-emerald-400 tracking-widest uppercase">Redemption Network</p>
-              <h3 className="text-xl font-bold text-white mt-1">Verified Professionalism</h3>
+              <p className="text-xs font-bold text-emerald-800 tracking-widest uppercase">Redemption Network</p>
+              <h3 className="text-xl font-extrabold text-slate-900 mt-1">Verified Professionals Only</h3>
             </div>
             <div className="flex justify-center space-x-2">
-              <span className="px-2.5 py-1 rounded bg-slate-800 text-[10px] font-semibold text-slate-400">🛡️ 100% Insured</span>
-              <span className="px-2.5 py-1 rounded bg-slate-800 text-[10px] font-semibold text-slate-400">⚡ Fast Dispatch</span>
+              <span className="px-2.5 py-1 rounded bg-slate-100 text-[10px] font-bold text-slate-600">🛡️ 100% Insured</span>
+              <span className="px-2.5 py-1 rounded bg-slate-100 text-[10px] font-bold text-slate-600">⚡ Verified Ratings</span>
             </div>
           </div>
         </div>
       </section>
 
       {/* Popular Categories */}
-      <section id="categories" className="max-w-6xl mx-auto px-4 py-16 border-t border-slate-900 space-y-8">
-        <div className="flex items-end justify-between">
+      <section id="categories" className="max-w-6xl mx-auto px-4 py-16 border-t border-slate-200 space-y-8 bg-white rounded-3xl shadow-sm mb-16">
+        <div className="flex items-end justify-between px-4">
           <div>
-            <h2 className="text-2xl font-bold text-white">Popular Categories</h2>
-            <p className="text-slate-500 text-sm mt-1">Browse our hand-picked and verified services.</p>
+            <h2 className="text-2xl font-bold text-slate-900">Popular Categories</h2>
+            <p className="text-slate-500 text-sm mt-1">Browse trade professionals by category.</p>
           </div>
-          <Link to="/login" className="text-emerald-400 text-sm hover:underline flex items-center space-x-1">
+          <Link to="/login" className="text-emerald-800 text-sm font-bold hover:underline flex items-center space-x-1">
             <span>View all</span>
             <ChevronRight className="w-4 h-4" />
           </Link>
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 px-4">
           {categories.map((c, i) => (
             <Link 
               key={i} 
               to="/login"
-              className={`p-6 rounded-2xl bg-gradient-to-br ${c.color} border border-slate-800 hover:border-slate-700 hover:scale-[1.03] transition-all flex flex-col justify-between h-36 text-left group`}
+              className={`p-6 rounded-2xl bg-white border border-slate-200 hover:border-emerald-800 hover:shadow-md transition-all flex flex-col justify-between h-32 text-left group`}
             >
-              <span className="text-3xl">{c.icon}</span>
+              <div className="flex items-center justify-between">
+                <span className="text-2xl">{c.icon}</span>
+                <span className="text-[10px] uppercase font-bold text-slate-450 tracking-wider">Browse</span>
+              </div>
               <div>
-                <h4 className="font-bold text-white mt-2 group-hover:text-emerald-400 transition-colors">{c.name}</h4>
-                <p className="text-xs text-slate-400 mt-1">Explore listings</p>
+                <h4 className="font-extrabold text-slate-900 group-hover:text-emerald-800 transition-colors">{c.name}</h4>
               </div>
             </Link>
           ))}
@@ -145,8 +147,8 @@ function LandingPage() {
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-slate-900 bg-slate-950/40 py-8 text-center text-xs text-slate-600">
-        <p>© {new Date().getFullYear()} CampCraft Systems. Matching residents with verified artisans in Redemption City.</p>
+      <footer className="border-t border-slate-200 bg-white py-8 text-center text-xs text-slate-500 shadow-inner">
+        <p>© {new Date().getFullYear()} CampCraft. Redemption City's Artisan & Service Finder.</p>
       </footer>
     </div>
   );
@@ -197,22 +199,22 @@ function RegisterPage() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col justify-center items-center px-4 py-12 relative">
+    <div className="min-h-screen bg-slate-50 text-slate-800 flex flex-col justify-center items-center px-4 py-12 relative">
       <div className="absolute top-8 left-8">
-        <Link to="/" className="flex items-center space-x-2 font-bold text-white">
-          <span>⛺</span>
+        <Link to="/" className="flex items-center space-x-2 font-bold text-slate-900 text-lg">
+          <span className="w-8 h-8 rounded-lg bg-emerald-800 flex items-center justify-center text-white">⛺</span>
           <span>CampCraft</span>
         </Link>
       </div>
 
-      <div className="w-full max-w-md bg-slate-900 border border-slate-800 rounded-3xl p-8 shadow-2xl relative">
+      <div className="w-full max-w-md bg-white border border-slate-200 rounded-3xl p-8 shadow-xl relative">
         <div className="text-center space-y-2 mb-6">
-          <h1 className="text-2xl font-bold text-white">Create Your Account</h1>
-          <p className="text-slate-400 text-sm">Select your role to get started</p>
+          <h1 className="text-2xl font-bold text-slate-900">Create Your Account</h1>
+          <p className="text-slate-500 text-sm">Select your role to get started</p>
         </div>
 
         {error && (
-          <div className="mb-4 p-3 bg-red-500/10 border border-red-500/20 text-red-400 text-xs rounded-xl flex items-center space-x-2">
+          <div className="mb-4 p-3 bg-red-50 border border-red-200 text-red-700 text-xs rounded-xl flex items-center space-x-2">
             <AlertCircle className="w-4 h-4 shrink-0" />
             <span>{error}</span>
           </div>
@@ -223,93 +225,93 @@ function RegisterPage() {
           <div className="space-y-4">
             <button 
               onClick={() => setRole('resident')}
-              className="w-full p-4 rounded-2xl bg-slate-950 border border-slate-800 hover:border-emerald-500/50 hover:bg-emerald-500/5 transition flex items-center space-x-4 text-left group"
+              className="w-full p-4 rounded-2xl bg-white border border-slate-200 hover:border-emerald-800 hover:bg-emerald-50/20 transition flex items-center space-x-4 text-left group"
             >
-              <div className="w-10 h-10 rounded-xl bg-emerald-500/10 flex items-center justify-center text-emerald-400">
+              <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-800 flex items-center justify-center border border-emerald-100">
                 <User className="w-5 h-5" />
               </div>
               <div>
-                <h4 className="font-bold text-white group-hover:text-emerald-400">Resident</h4>
+                <h4 className="font-extrabold text-slate-900 group-hover:text-emerald-850">Resident</h4>
                 <p className="text-xs text-slate-500">Find and hire verified artisans</p>
               </div>
             </button>
 
             <button 
               onClick={() => setRole('artisan')}
-              className="w-full p-4 rounded-2xl bg-slate-950 border border-slate-800 hover:border-blue-500/50 hover:bg-blue-500/5 transition flex items-center space-x-4 text-left group"
+              className="w-full p-4 rounded-2xl bg-white border border-slate-200 hover:border-emerald-800 hover:bg-emerald-50/20 transition flex items-center space-x-4 text-left group"
             >
-              <div className="w-10 h-10 rounded-xl bg-blue-500/10 flex items-center justify-center text-blue-400">
+              <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-800 flex items-center justify-center border border-emerald-100">
                 <Wrench className="w-5 h-5" />
               </div>
               <div>
-                <h4 className="font-bold text-white group-hover:text-blue-400">Artisan</h4>
+                <h4 className="font-extrabold text-slate-900 group-hover:text-emerald-850">Artisan</h4>
                 <p className="text-xs text-slate-500">Offer your skills and find jobs</p>
               </div>
             </button>
 
             <button 
               onClick={() => setRole('admin')}
-              className="w-full p-4 rounded-2xl bg-slate-950 border border-slate-800 hover:border-amber-500/50 hover:bg-amber-500/5 transition flex items-center space-x-4 text-left group"
+              className="w-full p-4 rounded-2xl bg-white border border-slate-200 hover:border-emerald-800 hover:bg-emerald-50/20 transition flex items-center space-x-4 text-left group"
             >
-              <div className="w-10 h-10 rounded-xl bg-amber-500/10 flex items-center justify-center text-amber-400">
+              <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-800 flex items-center justify-center border border-emerald-100">
                 <Settings className="w-5 h-5" />
               </div>
               <div>
-                <h4 className="font-bold text-white group-hover:text-amber-400">Admin</h4>
-                <p className="text-xs text-slate-500">Verify artisans and manage platform</p>
+                <h4 className="font-extrabold text-slate-900 group-hover:text-emerald-850">Admin</h4>
+                <p className="text-xs text-slate-500">Manage and verify accounts</p>
               </div>
             </button>
 
             <div className="text-center pt-4 text-xs text-slate-500">
-              Already have an account? <Link to="/login" className="text-emerald-400 hover:underline">Sign In</Link>
+              Already have an account? <Link to="/login" className="text-emerald-800 font-bold hover:underline">Sign In</Link>
             </div>
           </div>
         ) : (
           /* REGISTRATION FORM FOR CHOSEN ROLE */
           <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="flex justify-between items-center bg-slate-950 p-2 rounded-xl border border-slate-800/80 mb-2">
-              <span className="text-xs text-slate-400">Role: <strong className="text-white capitalize">{role}</strong></span>
+            <div className="flex justify-between items-center bg-slate-50 p-2.5 rounded-xl border border-slate-200 mb-2">
+              <span className="text-xs text-slate-600">Role: <strong className="text-emerald-850 capitalize font-extrabold">{role}</strong></span>
               <button 
                 type="button" 
                 onClick={() => setRole(null)} 
-                className="text-xs text-emerald-400 hover:underline"
+                className="text-xs text-emerald-800 font-bold hover:underline"
               >
                 Change Role
               </button>
             </div>
 
             <div className="space-y-1">
-              <label className="text-xs font-semibold text-slate-300">Full Name</label>
+              <label className="text-xs font-semibold text-slate-600">Full Name</label>
               <input 
                 type="text" 
                 placeholder="e.g. Mary Johnson"
                 value={fullName}
                 onChange={e => setFullName(e.target.value)}
-                className="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 focus:outline-none focus:border-emerald-500 text-sm text-white"
+                className="w-full px-4 py-2 rounded-xl bg-white border border-slate-300 focus:outline-none focus:border-emerald-800 text-sm text-slate-800"
                 required
               />
             </div>
 
             <div className="space-y-1">
-              <label className="text-xs font-semibold text-slate-300">Email address</label>
+              <label className="text-xs font-semibold text-slate-600">Email address</label>
               <input 
                 type="email" 
                 placeholder="you@example.com"
                 value={email}
                 onChange={e => setEmail(e.target.value)}
-                className="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 focus:outline-none focus:border-emerald-500 text-sm text-white"
+                className="w-full px-4 py-2 rounded-xl bg-white border border-slate-300 focus:outline-none focus:border-emerald-800 text-sm text-slate-800"
                 required
               />
             </div>
 
             <div className="space-y-1">
-              <label className="text-xs font-semibold text-slate-300">Password</label>
+              <label className="text-xs font-semibold text-slate-600">Password</label>
               <input 
                 type="password" 
                 placeholder="••••••"
                 value={password}
                 onChange={e => setPassword(e.target.value)}
-                className="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 focus:outline-none focus:border-emerald-500 text-sm text-white"
+                className="w-full px-4 py-2 rounded-xl bg-white border border-slate-300 focus:outline-none focus:border-emerald-800 text-sm text-slate-800"
                 required
               />
             </div>
@@ -318,23 +320,23 @@ function RegisterPage() {
             {(role === 'resident' || role === 'artisan') && (
               <>
                 <div className="space-y-1">
-                  <label className="text-xs font-semibold text-slate-300">Phone number</label>
+                  <label className="text-xs font-semibold text-slate-600">Phone number</label>
                   <input 
                     type="tel" 
                     placeholder="e.g. 08031234567"
                     value={phone}
                     onChange={e => setPhone(e.target.value)}
-                    className="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 focus:outline-none focus:border-emerald-500 text-sm text-white"
+                    className="w-full px-4 py-2 rounded-xl bg-white border border-slate-300 focus:outline-none focus:border-emerald-800 text-sm text-slate-800"
                     required
                   />
                 </div>
 
                 <div className="space-y-1">
-                  <label className="text-xs font-semibold text-slate-300">Zone location</label>
+                  <label className="text-xs font-semibold text-slate-600">Zone location</label>
                   <select 
                     value={zone}
                     onChange={e => setZone(e.target.value)}
-                    className="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 focus:outline-none focus:border-emerald-500 text-sm text-white"
+                    className="w-full px-4 py-2 rounded-xl bg-white border border-slate-300 focus:outline-none focus:border-emerald-800 text-sm text-slate-800"
                   >
                     <option value="Zone A">Zone A</option>
                     <option value="Zone B">Zone B</option>
@@ -347,11 +349,11 @@ function RegisterPage() {
             {role === 'artisan' && (
               <>
                 <div className="space-y-1">
-                  <label className="text-xs font-semibold text-slate-300">Service Category</label>
+                  <label className="text-xs font-semibold text-slate-600">Service Category</label>
                   <select 
                     value={category}
                     onChange={e => setCategory(e.target.value)}
-                    className="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 focus:outline-none focus:border-emerald-500 text-sm text-white"
+                    className="w-full px-4 py-2 rounded-xl bg-white border border-slate-300 focus:outline-none focus:border-emerald-800 text-sm text-slate-800"
                   >
                     <option value="Plumbing">🚿 Plumbing</option>
                     <option value="Electrical">⚡ Electrical</option>
@@ -364,25 +366,25 @@ function RegisterPage() {
                 </div>
 
                 <div className="space-y-1">
-                  <label className="text-xs font-semibold text-slate-300">Experience (Years)</label>
+                  <label className="text-xs font-semibold text-slate-600">Experience (Years)</label>
                   <input 
                     type="number" 
                     placeholder="e.g. 5"
                     value={experienceYears}
                     onChange={e => setExperienceYears(e.target.value)}
-                    className="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 focus:outline-none focus:border-emerald-500 text-sm text-white"
+                    className="w-full px-4 py-2 rounded-xl bg-white border border-slate-300 focus:outline-none focus:border-emerald-800 text-sm text-slate-800"
                     required
                   />
                 </div>
 
                 <div className="space-y-1">
-                  <label className="text-xs font-semibold text-slate-300">Professional Bio</label>
+                  <label className="text-xs font-semibold text-slate-600">Professional Bio</label>
                   <textarea 
                     placeholder="Describe your skills and services..."
                     value={bio}
                     onChange={e => setBio(e.target.value)}
                     rows="3"
-                    className="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 focus:outline-none focus:border-emerald-500 text-sm text-white resize-none"
+                    className="w-full px-4 py-2 rounded-xl bg-white border border-slate-300 focus:outline-none focus:border-emerald-800 text-sm text-slate-800 resize-none"
                     required
                   />
                 </div>
@@ -391,7 +393,7 @@ function RegisterPage() {
 
             <button 
               type="submit"
-              className="w-full py-3 rounded-xl bg-emerald-500 text-slate-950 font-bold hover:bg-emerald-400 transition"
+              className="w-full py-2.5 rounded-xl bg-emerald-800 hover:bg-emerald-900 text-white font-bold shadow transition"
             >
               Sign Up
             </button>
@@ -422,29 +424,29 @@ function LoginPage() {
       else if (user.role === 'admin') navigate('/admin/dashboard');
       else navigate('/');
     } catch (err) {
-      setError(err.message || 'Invalid credentials. Try artisan@example.com / resident@example.com / admin@example.com');
+      setError(err.message || 'Invalid credentials. Try resident@example.com / artisan@example.com');
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col justify-center items-center px-4 py-12 relative">
+    <div className="min-h-screen bg-slate-50 text-slate-800 flex flex-col justify-center items-center px-4 py-12 relative">
       <div className="absolute top-8 left-8">
-        <Link to="/" className="flex items-center space-x-2 font-bold text-white">
-          <span>⛺</span>
+        <Link to="/" className="flex items-center space-x-2 font-bold text-slate-900 text-lg">
+          <span className="w-8 h-8 rounded-lg bg-emerald-800 flex items-center justify-center text-white">⛺</span>
           <span>CampCraft</span>
         </Link>
       </div>
 
-      <div className="w-full max-w-md bg-slate-900 border border-slate-800 rounded-3xl p-8 shadow-2xl relative">
+      <div className="w-full max-w-md bg-white border border-slate-200 rounded-3xl p-8 shadow-xl relative">
         <div className="text-center space-y-2 mb-6">
-          <h1 className="text-2xl font-bold text-white">Welcome Back</h1>
-          <p className="text-slate-400 text-sm">Sign in to your account</p>
+          <h1 className="text-2xl font-bold text-slate-900">Welcome Back</h1>
+          <p className="text-slate-505 text-sm">Sign in to your account</p>
         </div>
 
         {error && (
-          <div className="mb-4 p-3 bg-red-500/10 border border-red-500/20 text-red-400 text-xs rounded-xl flex items-center space-x-2">
+          <div className="mb-4 p-3 bg-red-50 border border-red-200 text-red-700 text-xs rounded-xl flex items-center space-x-2">
             <AlertCircle className="w-4 h-4 shrink-0" />
             <span>{error}</span>
           </div>
@@ -452,48 +454,48 @@ function LoginPage() {
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-1">
-            <label className="text-xs font-semibold text-slate-300">Email address</label>
+            <label className="text-xs font-semibold text-slate-600">Email address</label>
             <input 
               type="email" 
               placeholder="you@example.com"
               value={email}
               onChange={e => setEmail(e.target.value)}
-              className="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 focus:outline-none focus:border-emerald-500 text-sm text-white"
+              className="w-full px-4 py-2 rounded-xl bg-white border border-slate-300 focus:outline-none focus:border-emerald-800 text-sm text-slate-800"
               required
             />
           </div>
 
           <div className="space-y-1">
             <div className="flex justify-between items-center">
-              <label className="text-xs font-semibold text-slate-300">Password</label>
-              <Link to="/forgot-password" className="text-xs text-emerald-400 hover:underline">Forgot password?</Link>
+              <label className="text-xs font-semibold text-slate-600">Password</label>
+              <Link to="/forgot-password" className="text-xs text-emerald-850 font-semibold hover:underline">Forgot password?</Link>
             </div>
             <input 
               type="password" 
               placeholder="••••••"
               value={password}
               onChange={e => setPassword(e.target.value)}
-              className="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 focus:outline-none focus:border-emerald-500 text-sm text-white"
+              className="w-full px-4 py-2 rounded-xl bg-white border border-slate-300 focus:outline-none focus:border-emerald-800 text-sm text-slate-800"
               required
             />
           </div>
 
           <div className="flex items-center space-x-2">
-            <input type="checkbox" id="remember" className="rounded bg-slate-950 border-slate-800 text-emerald-500 focus:ring-0" />
-            <label htmlFor="remember" className="text-xs text-slate-400">Remember me</label>
+            <input type="checkbox" id="remember" className="rounded border-slate-300 text-emerald-800 focus:ring-0" />
+            <label htmlFor="remember" className="text-xs text-slate-500 font-medium">Remember me</label>
           </div>
 
           <button 
             type="submit"
             disabled={loading}
-            className="w-full py-3 rounded-xl bg-emerald-500 text-slate-950 font-bold hover:bg-emerald-400 transition disabled:opacity-50"
+            className="w-full py-2.5 rounded-xl bg-emerald-800 hover:bg-emerald-900 text-white font-bold shadow transition disabled:opacity-50"
           >
             {loading ? 'Signing In...' : 'Sign In'}
           </button>
         </form>
 
         <div className="text-center pt-6 text-xs text-slate-500">
-          Don't have an account? <Link to="/register" className="text-emerald-400 hover:underline">Register</Link>
+          Don't have an account? <Link to="/register" className="text-emerald-800 font-bold hover:underline">Register</Link>
         </div>
       </div>
     </div>
@@ -506,49 +508,49 @@ function ForgotPasswordPage() {
   const [sent, setSent] = useState(false);
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col justify-center items-center px-4 py-12 relative">
+    <div className="min-h-screen bg-slate-50 text-slate-800 flex flex-col justify-center items-center px-4 py-12 relative">
       <div className="absolute top-8 left-8">
-        <Link to="/" className="flex items-center space-x-2 font-bold text-white">
-          <span>⛺</span>
+        <Link to="/" className="flex items-center space-x-2 font-bold text-slate-900 text-lg">
+          <span className="w-8 h-8 rounded-lg bg-emerald-800 flex items-center justify-center text-white">⛺</span>
           <span>CampCraft</span>
         </Link>
       </div>
 
-      <div className="w-full max-w-md bg-slate-900 border border-slate-800 rounded-3xl p-8 shadow-2xl relative">
+      <div className="w-full max-w-md bg-white border border-slate-200 rounded-3xl p-8 shadow-xl relative">
         <div className="text-center space-y-2 mb-6">
-          <h1 className="text-2xl font-bold text-white">Reset Your Password</h1>
-          <p className="text-slate-400 text-sm">Enter your email and we'll send you a link to reset your password.</p>
+          <h1 className="text-2xl font-bold text-slate-900">Reset Your Password</h1>
+          <p className="text-slate-500 text-sm">Enter your email and we'll send you a link to reset your password.</p>
         </div>
 
         {sent ? (
           <div className="space-y-4 text-center">
-            <div className="p-3 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-sm rounded-xl">
+            <div className="p-3 bg-emerald-50 border border-emerald-100 text-emerald-800 text-sm rounded-xl">
               Password reset link sent! Check your inbox.
             </div>
-            <Link to="/login" className="block text-xs text-emerald-400 hover:underline">Back to login</Link>
+            <Link to="/login" className="block text-xs text-emerald-800 font-bold hover:underline">Back to login</Link>
           </div>
         ) : (
           <form onSubmit={(e) => { e.preventDefault(); setSent(true); }} className="space-y-4">
             <div className="space-y-1">
-              <label className="text-xs font-semibold text-slate-300">Email address</label>
+              <label className="text-xs font-semibold text-slate-600">Email address</label>
               <input 
                 type="email" 
                 placeholder="you@example.com"
                 value={email}
                 onChange={e => setEmail(e.target.value)}
-                className="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 focus:outline-none focus:border-emerald-500 text-sm text-white"
+                className="w-full px-4 py-2 rounded-xl bg-white border border-slate-300 focus:outline-none focus:border-emerald-800 text-sm text-slate-800"
                 required
               />
             </div>
 
             <button 
               type="submit"
-              className="w-full py-3 rounded-xl bg-emerald-500 text-slate-950 font-bold hover:bg-emerald-400 transition"
+              className="w-full py-2.5 rounded-xl bg-emerald-800 hover:bg-emerald-900 text-white font-bold shadow transition"
             >
               Send Reset Link
             </button>
             <div className="text-center pt-2">
-              <Link to="/login" className="text-xs text-slate-500 hover:text-white transition">Back to login</Link>
+              <Link to="/login" className="text-xs text-slate-500 hover:text-slate-800 transition">Back to login</Link>
             </div>
           </form>
         )}
@@ -575,12 +577,12 @@ function ResidentDashboard() {
     <div className="space-y-8 text-left">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-white">Welcome back,</h1>
-          <h2 className="text-xl text-emerald-400 font-semibold">{currentUser.fullName}</h2>
+          <h1 className="text-xs text-slate-400 font-bold uppercase tracking-wider">Resident Portal</h1>
+          <h2 className="text-2xl font-black text-slate-900 mt-1">Welcome back, {currentUser.fullName}</h2>
         </div>
         <Link 
           to="/resident/post-job" 
-          className="px-4 py-2 rounded-lg bg-emerald-500 text-slate-950 font-bold text-sm hover:bg-emerald-400 transition flex items-center space-x-2"
+          className="px-4 py-2 rounded-lg bg-emerald-800 text-white font-bold text-sm hover:bg-emerald-900 transition flex items-center space-x-2"
         >
           <PlusCircle className="w-4 h-4" />
           <span>Post a New Job</span>
@@ -589,66 +591,66 @@ function ResidentDashboard() {
 
       {/* Stats Cards */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div className="bg-slate-900 border border-slate-800 p-5 rounded-2xl">
-          <span className="text-slate-500 text-xs font-semibold uppercase">Active Listings</span>
-          <p className="text-3xl font-extrabold text-white mt-1">{activeCount}</p>
+        <div className="bg-white border border-slate-200 p-5 rounded-2xl shadow-sm">
+          <span className="text-slate-400 text-[10px] font-bold uppercase tracking-wider block">Active Listings</span>
+          <p className="text-3xl font-black text-slate-900 mt-1">{activeCount}</p>
         </div>
-        <div className="bg-slate-900 border border-slate-800 p-5 rounded-2xl">
-          <span className="text-slate-500 text-xs font-semibold uppercase">In Progress</span>
-          <p className="text-3xl font-extrabold text-white mt-1">{progressCount}</p>
+        <div className="bg-white border border-slate-200 p-5 rounded-2xl shadow-sm">
+          <span className="text-slate-400 text-[10px] font-bold uppercase tracking-wider block">In Progress</span>
+          <p className="text-3xl font-black text-slate-900 mt-1">{progressCount}</p>
         </div>
-        <div className="bg-slate-900 border border-slate-800 p-5 rounded-2xl">
-          <span className="text-slate-500 text-xs font-semibold uppercase">Completed</span>
-          <p className="text-3xl font-extrabold text-white mt-1">{completedCount}</p>
+        <div className="bg-white border border-slate-200 p-5 rounded-2xl shadow-sm">
+          <span className="text-slate-400 text-[10px] font-bold uppercase tracking-wider block">Completed</span>
+          <p className="text-3xl font-black text-slate-900 mt-1">{completedCount}</p>
         </div>
-        <div className="bg-slate-900 border border-slate-800 p-5 rounded-2xl">
-          <span className="text-slate-500 text-xs font-semibold uppercase">Avg Rating Given</span>
-          <p className="text-3xl font-extrabold text-white mt-1 flex items-center space-x-1">
+        <div className="bg-white border border-slate-200 p-5 rounded-2xl shadow-sm">
+          <span className="text-slate-400 text-[10px] font-bold uppercase tracking-wider block">Avg Rating Given</span>
+          <p className="text-3xl font-black text-slate-900 mt-1 flex items-center space-x-1">
             <span>4.5</span>
-            <Star className="w-5 h-5 text-amber-400 fill-amber-400 inline" />
+            <Star className="w-6 h-6 text-amber-400 fill-amber-400 inline" />
           </p>
         </div>
       </div>
 
       {/* Recent Jobs */}
-      <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6">
-        <h3 className="text-lg font-bold text-white mb-4">Recent Jobs</h3>
+      <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
+        <h3 className="text-lg font-bold text-slate-900 mb-4">Recent Jobs</h3>
         <div className="overflow-x-auto">
-          <table className="w-full text-sm text-left text-slate-400">
-            <thead className="text-xs text-slate-500 uppercase border-b border-slate-800">
+          <table className="w-full text-sm text-left text-slate-500">
+            <thead className="text-xs text-slate-400 uppercase border-b border-slate-200">
               <tr>
-                <th className="pb-3">Job Name</th>
-                <th className="pb-3">Category</th>
-                <th className="pb-3">Zone</th>
-                <th className="pb-3">Bids Received</th>
-                <th className="pb-3">Status</th>
-                <th className="pb-3 text-right">Action</th>
+                <th className="pb-3 font-semibold">Job Name</th>
+                <th className="pb-3 font-semibold">Category</th>
+                <th className="pb-3 font-semibold">Zone</th>
+                <th className="pb-3 font-semibold">Bids</th>
+                <th className="pb-3 font-semibold">Status</th>
+                <th className="pb-3 font-semibold text-right">Action</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-800/60">
+            <tbody className="divide-y divide-slate-100">
               {jobs.length === 0 ? (
                 <tr>
-                  <td colSpan="6" className="py-6 text-center text-slate-500 text-xs">
-                    No jobs posted yet. Click "Post a New Job" to start.
+                  <td colSpan="6" className="py-6 text-center text-slate-400 text-xs">
+                    No jobs posted yet.
                   </td>
                 </tr>
               ) : (
                 jobs.slice(0, 5).map(job => (
-                  <tr key={job.id} className="hover:bg-slate-950/40">
-                    <td className="py-4 font-semibold text-white">{job.title}</td>
-                    <td className="py-4">{job.category}</td>
+                  <tr key={job.id} className="hover:bg-slate-50/50">
+                    <td className="py-4 font-bold text-slate-900">{job.title}</td>
+                    <td className="py-4 text-slate-650">{job.category}</td>
                     <td className="py-4">{job.zone}</td>
                     <td className="py-4">
-                      <span className="px-2 py-0.5 rounded bg-slate-800 text-xs text-slate-300 font-semibold">
+                      <span className="px-2 py-0.5 rounded bg-slate-100 text-xs text-slate-700 font-bold">
                         {job.bids?.length || 0} bids
                       </span>
                     </td>
                     <td className="py-4">
-                      <span className={`px-2.5 py-1 rounded-full text-xs font-semibold capitalize ${
-                        job.status === 'open' ? 'bg-emerald-500/10 text-emerald-400' :
-                        job.status === 'in-progress' ? 'bg-blue-500/10 text-blue-400' :
-                        job.status === 'completed' ? 'bg-slate-800 text-slate-400' :
-                        'bg-red-500/10 text-red-400'
+                      <span className={`px-2.5 py-1 rounded-full text-xs font-bold capitalize ${
+                        job.status === 'open' ? 'bg-emerald-50 text-emerald-800' :
+                        job.status === 'in-progress' ? 'bg-blue-50 text-blue-800' :
+                        job.status === 'completed' ? 'bg-slate-100 text-slate-500' :
+                        'bg-red-50 text-red-800'
                       }`}>
                         {job.status}
                       </span>
@@ -656,7 +658,7 @@ function ResidentDashboard() {
                     <td className="py-4 text-right">
                       <Link 
                         to={`/resident/job/${job.id}`}
-                        className="text-emerald-400 hover:text-emerald-300 text-xs font-bold"
+                        className="text-emerald-800 hover:text-emerald-950 text-xs font-extrabold"
                       >
                         View Details
                       </Link>
@@ -693,20 +695,20 @@ function BrowseArtisans() {
   return (
     <div className="space-y-6 text-left">
       <div>
-        <h1 className="text-2xl font-bold text-white">Browse Artisans</h1>
-        <p className="text-slate-400 text-xs mt-1">Search and filter verified local tradespeople in Redemption City.</p>
+        <h1 className="text-2xl font-bold text-slate-900">Browse Artisans</h1>
+        <p className="text-slate-500 text-xs mt-1">Search and filter verified local tradespeople in Redemption City.</p>
       </div>
 
       {/* Filter Bar */}
-      <div className="bg-slate-900 border border-slate-800 p-4 rounded-2xl flex flex-col md:flex-row gap-4 items-center">
+      <div className="bg-white border border-slate-200 p-4 rounded-2xl flex flex-col md:flex-row gap-4 items-center shadow-sm">
         <div className="flex-1 w-full relative">
-          <Search className="w-4 h-4 text-slate-500 absolute left-3 top-3" />
+          <Search className="w-4 h-4 text-slate-450 absolute left-3 top-3" />
           <input 
             type="text" 
             placeholder="Search artisans by name, skill, or bio..." 
             value={search}
             onChange={e => setSearch(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 rounded-xl bg-slate-950 border border-slate-800 focus:outline-none focus:border-emerald-500 text-sm text-slate-200"
+            className="w-full pl-10 pr-4 py-2 rounded-xl bg-slate-50 border border-slate-250 focus:outline-none focus:border-emerald-850 text-sm text-slate-700 placeholder-slate-400"
           />
         </div>
 
@@ -714,7 +716,7 @@ function BrowseArtisans() {
           <select 
             value={categoryFilter}
             onChange={e => setCategoryFilter(e.target.value)}
-            className="flex-1 md:w-48 px-4 py-2 rounded-xl bg-slate-950 border border-slate-800 text-sm text-slate-200"
+            className="flex-1 md:w-48 px-4 py-2 rounded-xl bg-slate-50 border border-slate-250 text-sm text-slate-700 focus:outline-none"
           >
             <option value="All">All Categories</option>
             <option value="Plumbing">🚿 Plumbing</option>
@@ -729,7 +731,7 @@ function BrowseArtisans() {
           <select 
             value={zoneFilter}
             onChange={e => setZoneFilter(e.target.value)}
-            className="flex-1 md:w-36 px-4 py-2 rounded-xl bg-slate-950 border border-slate-800 text-sm text-slate-200"
+            className="flex-1 md:w-36 px-4 py-2 rounded-xl bg-slate-50 border border-slate-250 text-sm text-slate-700 focus:outline-none"
           >
             <option value="All">All Zones</option>
             <option value="Zone A">Zone A</option>
@@ -742,40 +744,40 @@ function BrowseArtisans() {
       {/* Artisan List */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {filtered.length === 0 ? (
-          <div className="col-span-2 p-12 text-center text-slate-500 text-sm bg-slate-900 border border-slate-800 rounded-2xl">
+          <div className="col-span-2 p-12 text-center text-slate-405 text-sm bg-white border border-slate-200 rounded-2xl shadow-sm">
             No artisans found matching the criteria.
           </div>
         ) : (
           filtered.map(art => (
-            <div key={art.uid} className="p-6 rounded-2xl bg-slate-900 border border-slate-800 flex items-start justify-between gap-4">
+            <div key={art.uid} className="p-6 rounded-2xl bg-white border border-slate-200 flex items-start justify-between gap-4 shadow-sm">
               <div className="flex items-start space-x-4">
-                <div className="w-12 h-12 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center font-bold text-lg border border-emerald-500/20 shadow">
+                <div className="w-12 h-12 rounded-xl bg-emerald-800 text-white flex items-center justify-center font-bold text-lg shadow-sm">
                   {art.fullName[0]}
                 </div>
                 <div className="space-y-1">
-                  <h3 className="font-bold text-white text-base">{art.fullName}</h3>
-                  <div className="flex items-center space-x-2 text-xs text-slate-400">
-                    <span className="text-emerald-400 font-semibold">{art.category}</span>
+                  <h3 className="font-bold text-slate-900 text-base">{art.fullName}</h3>
+                  <div className="flex items-center space-x-2 text-xs text-slate-500">
+                    <span className="text-emerald-805 font-bold">{art.category}</span>
                     <span>•</span>
-                    <span className="flex items-center"><MapPin className="w-3 h-3 mr-1" /> {art.zone}</span>
+                    <span className="flex items-center"><MapPin className="w-3 h-3 mr-1 text-slate-400" /> {art.zone}</span>
                   </div>
-                  <div className="flex items-center space-x-1.5 text-xs text-amber-400 pt-1">
-                    <Star className="w-3.5 h-3.5 fill-amber-400" />
+                  <div className="flex items-center space-x-1.5 text-xs text-amber-500 pt-1">
+                    <Star className="w-3.5 h-3.5 fill-amber-500" />
                     <span className="font-bold">{art.ratingAverage || 'New'}</span>
-                    <span className="text-slate-500">({art.ratingCount || 0} reviews)</span>
-                    <span className="text-slate-500">•</span>
-                    <span className="text-slate-400">{art.experienceYears}+ years exp</span>
+                    <span className="text-slate-400">({art.ratingCount || 0} reviews)</span>
+                    <span className="text-slate-400">•</span>
+                    <span className="text-slate-600">{art.experienceYears}+ years experience</span>
                   </div>
                 </div>
               </div>
 
               <div className="flex flex-col items-end justify-between h-full min-h-[90px]">
-                <span className="px-2 py-0.5 rounded bg-emerald-500/10 border border-emerald-500/20 text-[10px] font-bold text-emerald-400 uppercase">
+                <span className="px-2.5 py-1 rounded bg-emerald-50 text-[10px] font-bold text-emerald-800 uppercase tracking-wider">
                   Available
                 </span>
                 <Link 
                   to={`/resident/profile/${art.uid}`}
-                  className="px-3.5 py-1.5 rounded-lg bg-slate-800 text-xs font-semibold text-slate-200 hover:bg-slate-700 hover:text-white transition mt-4"
+                  className="px-3.5 py-1.5 rounded-lg bg-emerald-800 text-xs font-bold text-white hover:bg-emerald-900 shadow transition-all mt-4"
                 >
                   View Profile
                 </Link>
@@ -797,62 +799,62 @@ function ArtisanProfileView() {
   const reviews = getRatings().filter(r => r.artisanId === artisanId);
 
   if (!art) {
-    return <div className="text-left text-red-400">Artisan profile not found.</div>;
+    return <div className="text-left text-red-700">Artisan profile not found.</div>;
   }
 
   return (
-    <div className="space-y-6 text-left max-w-2xl mx-auto bg-slate-900 border border-slate-800 p-8 rounded-3xl shadow-xl">
-      <div className="flex flex-col sm:flex-row items-center sm:items-start justify-between gap-4 pb-6 border-b border-slate-800/80">
+    <div className="space-y-6 text-left max-w-2xl mx-auto bg-white border border-slate-200 p-8 rounded-3xl shadow-md">
+      <div className="flex flex-col sm:flex-row items-center sm:items-start justify-between gap-4 pb-6 border-b border-slate-100">
         <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4">
-          <div className="w-16 h-16 rounded-full bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 font-extrabold text-2xl">
+          <div className="w-16 h-16 rounded-full bg-emerald-800 text-white flex items-center justify-center font-black text-2xl shadow-sm">
             {art.fullName[0]}
           </div>
           <div className="text-center sm:text-left space-y-1">
-            <h1 className="text-xl font-bold text-white">{art.fullName}</h1>
-            <p className="text-sm text-emerald-400 font-semibold">{art.category} • {art.zone}</p>
-            <div className="flex items-center justify-center sm:justify-start space-x-1.5 text-amber-400 text-xs">
-              <Star className="w-3.5 h-3.5 fill-amber-400" />
+            <h1 className="text-xl font-bold text-slate-900">{art.fullName}</h1>
+            <p className="text-sm text-emerald-800 font-bold">{art.category} • {art.zone}</p>
+            <div className="flex items-center justify-center sm:justify-start space-x-1.5 text-amber-500 text-xs">
+              <Star className="w-3.5 h-3.5 fill-amber-500" />
               <span className="font-bold">{art.ratingAverage || 'New'}</span>
-              <span className="text-slate-500">({art.ratingCount || 0} ratings)</span>
-              <span className="text-slate-500">•</span>
-              <span className="text-slate-400">{art.experienceYears}+ years experience</span>
+              <span className="text-slate-400">({art.ratingCount || 0} ratings)</span>
+              <span className="text-slate-450">•</span>
+              <span className="text-slate-650">{art.experienceYears}+ years experience</span>
             </div>
           </div>
         </div>
-        <span className="px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-xs font-bold text-emerald-400">
+        <span className="px-3 py-1 rounded-full bg-emerald-50 border border-emerald-100 text-xs font-bold text-emerald-800">
           Verified Status
         </span>
       </div>
 
       <div className="space-y-2">
-        <h3 className="text-sm font-bold text-slate-300 uppercase tracking-wider">About</h3>
-        <p className="text-slate-400 text-sm leading-relaxed font-light">{art.bio}</p>
+        <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider">About</h3>
+        <p className="text-slate-600 text-sm leading-relaxed font-light">{art.bio}</p>
       </div>
 
       <div className="space-y-2">
-        <h3 className="text-sm font-bold text-slate-300 uppercase tracking-wider">Services Provided</h3>
+        <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider">Services</h3>
         <div className="flex flex-wrap gap-2">
-          <span className="px-3 py-1 rounded-lg bg-slate-950 text-xs text-slate-300 border border-slate-800">
-            • General {art.category} Fixes
+          <span className="px-3 py-1 rounded-lg bg-slate-50 text-xs text-slate-600 border border-slate-200">
+            • General {art.category} Installation & Repair
           </span>
-          <span className="px-3 py-1 rounded-lg bg-slate-950 text-xs text-slate-300 border border-slate-800">
-            • Emergency Dispatch
+          <span className="px-3 py-1 rounded-lg bg-slate-50 text-xs text-slate-600 border border-slate-200">
+            • Tap & Toilet Repair
           </span>
-          <span className="px-3 py-1 rounded-lg bg-slate-950 text-xs text-slate-300 border border-slate-800">
-            • Maintenance Checks
+          <span className="px-3 py-1 rounded-lg bg-slate-50 text-xs text-slate-600 border border-slate-200">
+            • Drain Cleaning
           </span>
         </div>
       </div>
 
       {/* Contact card panel */}
-      <div className="p-4 rounded-2xl bg-slate-950 border border-slate-800 flex items-center justify-between">
+      <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 flex items-center justify-between">
         <div>
-          <p className="text-xs text-slate-500">Need immediate help?</p>
-          <p className="text-sm font-bold text-white mt-0.5">{art.phone || 'No phone supplied'}</p>
+          <p className="text-xs text-slate-550">Need immediate help?</p>
+          <p className="text-sm font-bold text-slate-800 mt-0.5">{art.phone || 'No phone'}</p>
         </div>
         <a 
           href={`tel:${art.phone}`}
-          className="px-4 py-2 rounded-lg bg-emerald-500 text-slate-950 font-bold text-xs hover:bg-emerald-400 transition"
+          className="px-4 py-2 rounded-lg bg-emerald-800 text-white font-bold text-xs hover:bg-emerald-900 transition shadow-sm"
         >
           Call / Contact
         </a>
@@ -860,21 +862,21 @@ function ArtisanProfileView() {
 
       {/* Reviews Section */}
       <div className="space-y-4">
-        <h3 className="text-sm font-bold text-slate-300 uppercase tracking-wider">Recent Reviews ({reviews.length})</h3>
+        <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider">Recent Reviews ({reviews.length})</h3>
         <div className="space-y-3">
           {reviews.length === 0 ? (
-            <p className="text-xs text-slate-500 font-light">No reviews left yet for this artisan.</p>
+            <p className="text-xs text-slate-500 font-light italic">No reviews left yet for this artisan.</p>
           ) : (
             reviews.map(rev => (
-              <div key={rev.id} className="p-4 rounded-xl bg-slate-950/40 border border-slate-800/80 space-y-2">
+              <div key={rev.id} className="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
                 <div className="flex justify-between items-center text-xs">
-                  <span className="font-bold text-slate-300">{rev.residentName}</span>
-                  <div className="flex items-center text-amber-400 space-x-1">
-                    <Star className="w-3 h-3 fill-amber-400" />
+                  <span className="font-bold text-slate-800">{rev.residentName}</span>
+                  <div className="flex items-center text-amber-500 space-x-1">
+                    <Star className="w-3 h-3 fill-amber-500" />
                     <span>{rev.rating}</span>
                   </div>
                 </div>
-                <p className="text-xs text-slate-400 italic font-light">"{rev.reviewText}"</p>
+                <p className="text-xs text-slate-600 italic font-light">"{rev.reviewText}"</p>
               </div>
             ))
           )}
@@ -917,32 +919,32 @@ function PostJobPage() {
   };
 
   return (
-    <div className="max-w-xl mx-auto text-left bg-slate-900 border border-slate-800 p-8 rounded-3xl shadow-xl">
+    <div className="max-w-xl mx-auto text-left bg-white border border-slate-200 p-8 rounded-3xl shadow-md">
       <div className="mb-6">
-        <h1 className="text-xl font-bold text-white">Post a New Job</h1>
-        <p className="text-slate-400 text-xs mt-1">Describe what needs fixing, choose your zone, and list your budget.</p>
+        <h1 className="text-xl font-bold text-slate-900">Post a New Job</h1>
+        <p className="text-slate-500 text-xs mt-1">Describe what needs fixing, choose your zone, and list your budget.</p>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="space-y-1">
-          <label className="text-xs font-semibold text-slate-300">Job Title</label>
+          <label className="text-xs font-semibold text-slate-600">Job Title</label>
           <input 
             type="text" 
             placeholder="e.g. Fix kitchen tap"
             value={title}
             onChange={e => setTitle(e.target.value)}
-            className="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 focus:outline-none focus:border-emerald-500 text-sm text-white"
+            className="w-full px-4 py-2 rounded-xl bg-white border border-slate-300 focus:outline-none focus:border-emerald-800 text-sm text-slate-800"
             required
           />
         </div>
 
         <div className="grid grid-cols-2 gap-4">
           <div className="space-y-1">
-            <label className="text-xs font-semibold text-slate-300">Category</label>
+            <label className="text-xs font-semibold text-slate-600">Category</label>
             <select 
               value={category}
               onChange={e => setCategory(e.target.value)}
-              className="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 focus:outline-none focus:border-emerald-500 text-sm text-white"
+              className="w-full px-4 py-2 rounded-xl bg-white border border-slate-300 focus:outline-none focus:border-emerald-800 text-sm text-slate-800"
             >
               <option value="Plumbing">🚿 Plumbing</option>
               <option value="Electrical">⚡ Electrical</option>
@@ -955,11 +957,11 @@ function PostJobPage() {
           </div>
 
           <div className="space-y-1">
-            <label className="text-xs font-semibold text-slate-300">Zone</label>
+            <label className="text-xs font-semibold text-slate-600">Zone</label>
             <select 
               value={zone}
               onChange={e => setZone(e.target.value)}
-              className="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 focus:outline-none focus:border-emerald-500 text-sm text-white"
+              className="w-full px-4 py-2 rounded-xl bg-white border border-slate-300 focus:outline-none focus:border-emerald-800 text-sm text-slate-800"
             >
               <option value="Zone A">Zone A</option>
               <option value="Zone B">Zone B</option>
@@ -969,43 +971,43 @@ function PostJobPage() {
         </div>
 
         <div className="space-y-1">
-          <label className="text-xs font-semibold text-slate-300">Budget Details (Optional)</label>
+          <label className="text-xs font-semibold text-slate-600">Budget Details (Optional)</label>
           <input 
             type="text" 
             placeholder="e.g. ₦5,000 - ₦8,000"
             value={budget}
             onChange={e => setBudget(e.target.value)}
-            className="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 focus:outline-none focus:border-emerald-500 text-sm text-white"
+            className="w-full px-4 py-2 rounded-xl bg-white border border-slate-300 focus:outline-none focus:border-emerald-800 text-sm text-slate-800"
           />
         </div>
 
         <div className="space-y-1">
-          <label className="text-xs font-semibold text-slate-300">Location Address Details</label>
+          <label className="text-xs font-semibold text-slate-600">Location Address Details</label>
           <input 
             type="text" 
             placeholder="House Number, Street name, landmarks..."
             value={locationDetails}
             onChange={e => setLocationDetails(e.target.value)}
-            className="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 focus:outline-none focus:border-emerald-500 text-sm text-white"
+            className="w-full px-4 py-2 rounded-xl bg-white border border-slate-300 focus:outline-none focus:border-emerald-800 text-sm text-slate-800"
             required
           />
         </div>
 
         <div className="space-y-1">
-          <label className="text-xs font-semibold text-slate-300">Job Description</label>
+          <label className="text-xs font-semibold text-slate-600">Job Description</label>
           <textarea 
             placeholder="Describe what needs to be done. The more specific, the better the bids..."
             value={description}
             onChange={e => setDescription(e.target.value)}
             rows="4"
-            className="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 focus:outline-none focus:border-emerald-500 text-sm text-white resize-none"
+            className="w-full px-4 py-2.5 rounded-xl bg-white border border-slate-300 focus:outline-none focus:border-emerald-800 text-sm text-slate-800 resize-none"
             required
           />
         </div>
 
         <button 
           type="submit"
-          className="w-full py-3 rounded-xl bg-emerald-500 text-slate-950 font-bold hover:bg-emerald-400 transition"
+          className="w-full py-2.5 rounded-xl bg-emerald-800 hover:bg-emerald-900 text-white font-bold shadow transition"
         >
           Post Job
         </button>
@@ -1028,27 +1030,27 @@ function ResidentJobsPage() {
     <div className="space-y-6 text-left">
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-2xl font-bold text-white">My Jobs</h1>
-          <p className="text-slate-400 text-xs mt-1">Manage listings and view bids.</p>
+          <h1 className="text-2xl font-bold text-slate-900">My Jobs</h1>
+          <p className="text-slate-500 text-xs mt-1">Manage listings and view bids.</p>
         </div>
         <Link 
           to="/resident/post-job"
-          className="px-4 py-2 rounded-lg bg-emerald-500 text-slate-950 font-bold text-xs hover:bg-emerald-400 transition"
+          className="px-4 py-2 rounded-lg bg-emerald-800 text-white font-bold text-xs hover:bg-emerald-900 transition shadow"
         >
           Post a New Job
         </Link>
       </div>
 
       {/* Tabs */}
-      <div className="flex border-b border-slate-800 overflow-x-auto">
+      <div className="flex border-b border-slate-200 overflow-x-auto">
         {tabs.map(t => (
           <button
             key={t}
             onClick={() => setTab(t)}
-            className={`px-4 py-2.5 text-xs font-semibold uppercase tracking-wider border-b-2 whitespace-nowrap transition-colors ${
+            className={`px-4 py-2.5 text-xs font-bold uppercase tracking-wider border-b-2 whitespace-nowrap transition-colors ${
               tab === t 
-                ? 'border-emerald-500 text-emerald-400' 
-                : 'border-transparent text-slate-500 hover:text-slate-300'
+                ? 'border-emerald-800 text-emerald-800' 
+                : 'border-transparent text-slate-400 hover:text-slate-600'
             }`}
           >
             {t}
@@ -1059,36 +1061,36 @@ function ResidentJobsPage() {
       {/* Jobs Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {filtered.length === 0 ? (
-          <div className="col-span-2 p-12 text-center text-slate-500 text-xs bg-slate-900 border border-slate-800 rounded-2xl">
+          <div className="col-span-2 p-12 text-center text-slate-400 text-xs bg-white border border-slate-200 rounded-2xl shadow-sm">
             No jobs found in this category.
           </div>
         ) : (
           filtered.map(job => (
-            <div key={job.id} className="p-6 rounded-2xl bg-slate-900 border border-slate-800 flex flex-col justify-between space-y-4">
+            <div key={job.id} className="p-6 rounded-2xl bg-white border border-slate-200 flex flex-col justify-between space-y-4 shadow-sm">
               <div className="space-y-2">
                 <div className="flex justify-between items-start">
-                  <h3 className="font-bold text-white text-base leading-tight">{job.title}</h3>
+                  <h3 className="font-bold text-slate-900 text-base leading-tight">{job.title}</h3>
                   <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wide ${
-                    job.status === 'open' ? 'bg-emerald-500/10 text-emerald-400' :
-                    job.status === 'in-progress' ? 'bg-blue-500/10 text-blue-400' :
-                    job.status === 'completed' ? 'bg-slate-850 text-slate-400 border border-slate-800' :
-                    'bg-red-500/10 text-red-400'
+                    job.status === 'open' ? 'bg-emerald-50 text-emerald-800' :
+                    job.status === 'in-progress' ? 'bg-blue-50 text-blue-800' :
+                    job.status === 'completed' ? 'bg-slate-100 text-slate-500 border border-slate-200' :
+                    'bg-red-50 text-red-800'
                   }`}>
                     {job.status}
                   </span>
                 </div>
-                <div className="flex items-center space-x-2 text-xs text-slate-400">
-                  <span className="text-emerald-400 font-semibold">{job.category}</span>
+                <div className="flex items-center space-x-2 text-xs text-slate-500">
+                  <span className="text-emerald-800 font-bold">{job.category}</span>
                   <span>•</span>
                   <span>{job.zone}</span>
                 </div>
                 <p className="text-xs text-slate-500 line-clamp-2 font-light">{job.description}</p>
               </div>
 
-              <div className="flex items-center justify-between border-t border-slate-850 pt-3 text-xs">
+              <div className="flex items-center justify-between border-t border-slate-100 pt-3 text-xs">
                 <div>
-                  <span className="text-slate-500 block">Budget</span>
-                  <span className="font-bold text-slate-300">{job.budget}</span>
+                  <span className="text-slate-400 block font-semibold uppercase text-[9px]">Budget</span>
+                  <span className="font-bold text-slate-800">{job.budget}</span>
                 </div>
 
                 <div className="flex items-center space-x-2">
@@ -1102,7 +1104,7 @@ function ResidentJobsPage() {
                   )}
                   <Link 
                     to={`/resident/job/${job.id}`}
-                    className="px-3.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-750 text-slate-300 font-semibold transition"
+                    className="px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold transition text-[11px]"
                   >
                     View Details ({job.bids?.length || 0})
                   </Link>
@@ -1125,7 +1127,7 @@ function JobDetailsPage() {
   const bids = job ? job.bids || [] : [];
 
   if (!job) {
-    return <div className="text-left text-red-400">Job not found.</div>;
+    return <div className="text-left text-red-700">Job not found.</div>;
   }
 
   const handleHire = (artisanId, price) => {
@@ -1142,58 +1144,58 @@ function JobDetailsPage() {
 
   return (
     <div className="space-y-6 text-left max-w-3xl mx-auto">
-      <div className="bg-slate-900 border border-slate-800 p-6 rounded-3xl shadow-xl space-y-4">
+      <div className="bg-white border border-slate-200 p-6 rounded-3xl shadow-md space-y-4">
         <div className="flex justify-between items-start">
           <div>
-            <span className="px-2 py-0.5 rounded bg-emerald-500/10 border border-emerald-500/20 text-[10px] font-bold text-emerald-400 uppercase">
+            <span className="px-2 py-0.5 rounded bg-emerald-50 border border-emerald-100 text-[10px] font-bold text-emerald-800 uppercase tracking-wider">
               {job.category}
             </span>
-            <h1 className="text-xl font-bold text-white mt-1">{job.title}</h1>
+            <h1 className="text-xl font-bold text-slate-900 mt-1">{job.title}</h1>
           </div>
           <span className={`px-2.5 py-1 rounded-full text-xs font-bold uppercase ${
-            job.status === 'open' ? 'bg-emerald-500/10 text-emerald-400' :
-            job.status === 'in-progress' ? 'bg-blue-500/10 text-blue-400' :
-            job.status === 'completed' ? 'bg-slate-800 text-slate-400' :
-            'bg-red-500/10 text-red-400'
+            job.status === 'open' ? 'bg-emerald-50 text-emerald-800' :
+            job.status === 'in-progress' ? 'bg-blue-50 text-blue-800' :
+            job.status === 'completed' ? 'bg-slate-100 text-slate-500' :
+            'bg-red-50 text-red-800'
           }`}>
             {job.status}
           </span>
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-xs bg-slate-950 p-4 rounded-2xl border border-slate-850">
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-xs bg-slate-50 p-4 rounded-2xl border border-slate-200">
           <div>
-            <span className="text-slate-500 block">Zone Location</span>
-            <span className="font-bold text-slate-300">{job.zone}</span>
+            <span className="text-slate-450 block font-semibold uppercase text-[9px]">Zone Location</span>
+            <span className="font-bold text-slate-700">{job.zone}</span>
           </div>
           <div>
-            <span className="text-slate-500 block">Budget Range</span>
-            <span className="font-bold text-slate-300">{job.budget}</span>
+            <span className="text-slate-450 block font-semibold uppercase text-[9px]">Budget Range</span>
+            <span className="font-bold text-slate-700">{job.budget}</span>
           </div>
           <div>
-            <span className="text-slate-500 block">Date Posted</span>
-            <span className="font-bold text-slate-300">{new Date(job.createdAt).toLocaleDateString()}</span>
+            <span className="text-slate-450 block font-semibold uppercase text-[9px]">Date Posted</span>
+            <span className="font-bold text-slate-700">{new Date(job.createdAt).toLocaleDateString()}</span>
           </div>
         </div>
 
         <div className="space-y-2">
-          <h3 className="text-xs font-bold text-slate-300 uppercase tracking-wider">Description</h3>
-          <p className="text-slate-400 text-sm leading-relaxed font-light">{job.description}</p>
+          <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider">Description</h3>
+          <p className="text-slate-600 text-sm leading-relaxed font-light">{job.description}</p>
         </div>
 
         <div className="space-y-2">
-          <h3 className="text-xs font-bold text-slate-300 uppercase tracking-wider">Exact Location Details</h3>
-          <p className="text-slate-400 text-sm font-light">{job.locationDetails}</p>
+          <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider">Exact Location Details</h3>
+          <p className="text-slate-650 text-sm font-light">{job.locationDetails}</p>
         </div>
 
         {job.hiredArtisanId && (
-          <div className="p-4 bg-blue-500/5 border border-blue-500/20 rounded-2xl flex items-center justify-between">
+          <div className="p-4 bg-blue-50 border border-blue-100 rounded-2xl flex items-center justify-between">
             <div>
-              <span className="text-xs text-blue-400 font-bold block uppercase tracking-wider">Hired Artisan</span>
-              <span className="text-sm font-bold text-white">{job.hiredArtisanName}</span>
+              <span className="text-xs text-blue-800 font-bold block uppercase tracking-wider">Hired Artisan</span>
+              <span className="text-sm font-bold text-slate-900">{job.hiredArtisanName}</span>
             </div>
             <div>
-              <span className="text-xs text-slate-500 block text-right">Agreed Price</span>
-              <span className="text-sm font-extrabold text-blue-400">₦{(job.agreedPrice || 0).toLocaleString()}</span>
+              <span className="text-[10px] text-slate-400 block text-right font-bold uppercase">Agreed Price</span>
+              <span className="text-sm font-extrabold text-blue-800">₦{(job.agreedPrice || 0).toLocaleString()}</span>
             </div>
           </div>
         )}
@@ -1201,7 +1203,7 @@ function JobDetailsPage() {
         {job.status === 'open' && (
           <button 
             onClick={handleCancel}
-            className="w-full py-2.5 rounded-xl border border-red-500/20 bg-red-500/5 hover:bg-red-500/10 text-red-400 text-xs font-bold transition"
+            className="w-full py-2 rounded-xl border border-red-200 bg-red-50 hover:bg-red-100 text-red-800 text-xs font-bold transition shadow-sm"
           >
             Cancel Job
           </button>
@@ -1211,39 +1213,39 @@ function JobDetailsPage() {
       {/* Bids List */}
       {job.status === 'open' && (
         <div className="space-y-4">
-          <h2 className="text-lg font-bold text-white">Artisan Bids ({bids.length})</h2>
+          <h2 className="text-lg font-bold text-slate-900">Artisan Bids ({bids.length})</h2>
           
           <div className="space-y-3">
             {bids.length === 0 ? (
-              <p className="text-sm text-slate-500">Waiting for bids from artisans...</p>
+              <p className="text-sm text-slate-400 italic">Waiting for bids from artisans...</p>
             ) : (
               bids.map(bid => (
-                <div key={bid.artisanId} className="p-5 bg-slate-900 border border-slate-800 rounded-2xl flex flex-col md:flex-row justify-between gap-4">
+                <div key={bid.artisanId} className="p-5 bg-white border border-slate-200 rounded-2xl flex flex-col md:flex-row justify-between gap-4 shadow-sm">
                   <div className="space-y-2">
                     <div className="flex items-center space-x-3">
-                      <div className="w-9 h-9 rounded-full bg-slate-800 flex items-center justify-center font-bold text-emerald-400">
+                      <div className="w-9 h-9 rounded-full bg-emerald-55 flex items-center justify-center font-bold text-emerald-800 border border-emerald-100">
                         {bid.artisanName[0]}
                       </div>
                       <div>
-                        <h4 className="font-bold text-white text-sm">{bid.artisanName}</h4>
-                        <div className="flex items-center space-x-1.5 text-xs text-amber-400">
-                          <Star className="w-3 h-3 fill-amber-400" />
+                        <h4 className="font-bold text-slate-900 text-sm">{bid.artisanName}</h4>
+                        <div className="flex items-center space-x-1.5 text-xs text-amber-500">
+                          <Star className="w-3 h-3 fill-amber-500" />
                           <span className="font-bold">{bid.artisanRating}</span>
                         </div>
                       </div>
                     </div>
-                    <p className="text-xs text-slate-400 italic">"{bid.description}"</p>
+                    <p className="text-xs text-slate-600 italic font-light">"{bid.description}"</p>
                   </div>
 
                   <div className="flex md:flex-col justify-between items-end shrink-0">
                     <div className="text-right">
-                      <span className="text-[10px] text-slate-500 block">Bid Price</span>
-                      <span className="text-lg font-extrabold text-emerald-400">₦{Number(bid.price).toLocaleString()}</span>
+                      <span className="text-[10px] text-slate-400 block font-bold uppercase">Proposed Price</span>
+                      <span className="text-lg font-extrabold text-emerald-800">₦{Number(bid.price).toLocaleString()}</span>
                     </div>
 
                     <button 
                       onClick={() => handleHire(bid.artisanId, bid.price)}
-                      className="px-4 py-2 rounded-lg bg-emerald-500 text-slate-950 font-bold text-xs hover:bg-emerald-400 transition"
+                      className="px-4 py-2 rounded-lg bg-emerald-800 text-white font-bold text-xs hover:bg-emerald-900 transition shadow"
                     >
                       Accept Bid
                     </button>
@@ -1270,7 +1272,7 @@ function LeaveRatingPage() {
   const job = getJobs().find(j => j.id === jobId);
 
   if (!job) {
-    return <div className="text-left text-red-400">Job not found.</div>;
+    return <div className="text-left text-red-750 font-bold">Job not found.</div>;
   }
 
   const handleSubmit = (e) => {
@@ -1295,21 +1297,21 @@ function LeaveRatingPage() {
   };
 
   return (
-    <div className="max-w-md mx-auto text-left bg-slate-900 border border-slate-800 p-8 rounded-3xl shadow-xl space-y-6">
+    <div className="max-w-md mx-auto text-left bg-white border border-slate-200 p-8 rounded-3xl shadow-md space-y-6">
       <div className="text-center space-y-1">
-        <h1 className="text-xl font-bold text-white">Rate Your Experience</h1>
-        <p className="text-xs text-slate-400">Rate the quality of service for job: <strong className="text-slate-200">{job.title}</strong></p>
+        <h1 className="text-xl font-bold text-slate-900">Rate Your Experience</h1>
+        <p className="text-xs text-slate-500">Rate the quality of service for job: <strong className="text-slate-700">{job.title}</strong></p>
       </div>
 
-      <div className="p-4 bg-slate-950 border border-slate-850 rounded-2xl text-center">
-        <span className="text-[10px] text-slate-500 uppercase tracking-widest block font-bold mb-1">Artisan</span>
-        <span className="font-bold text-white text-base">{job.hiredArtisanName}</span>
+      <div className="p-4 bg-slate-50 border border-slate-200 rounded-2xl text-center">
+        <span className="text-[10px] text-slate-400 uppercase tracking-widest block font-bold mb-1">Artisan</span>
+        <span className="font-bold text-slate-900 text-base">{job.hiredArtisanName}</span>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Star Rating picker */}
         <div className="space-y-2">
-          <label className="text-xs font-semibold text-slate-300 block text-center">How would you rate the work?</label>
+          <label className="text-xs font-semibold text-slate-650 block text-center">How would you rate the work?</label>
           <div className="flex justify-center space-x-3">
             {[1, 2, 3, 4, 5].map((star) => (
               <button 
@@ -1320,8 +1322,8 @@ function LeaveRatingPage() {
               >
                 <Star className={`w-8 h-8 ${
                   star <= rating 
-                    ? 'text-amber-400 fill-amber-400' 
-                    : 'text-slate-700 hover:text-slate-500'
+                    ? 'text-amber-500 fill-amber-500' 
+                    : 'text-slate-200 hover:text-slate-350'
                 }`} />
               </button>
             ))}
@@ -1329,20 +1331,20 @@ function LeaveRatingPage() {
         </div>
 
         <div className="space-y-1">
-          <label className="text-xs font-semibold text-slate-300">Your Review (Optional)</label>
+          <label className="text-xs font-semibold text-slate-600">Your Review</label>
           <textarea 
             placeholder="Great work! Very professional and on time..."
             value={reviewText}
             onChange={e => setReviewText(e.target.value)}
             rows="4"
-            className="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 focus:outline-none focus:border-emerald-500 text-sm text-white resize-none"
+            className="w-full px-4 py-2.5 rounded-xl bg-white border border-slate-300 focus:outline-none focus:border-emerald-800 text-sm text-slate-800 resize-none"
             required
           />
         </div>
 
         <button 
           type="submit"
-          className="w-full py-3 rounded-xl bg-emerald-500 text-slate-950 font-bold hover:bg-emerald-400 transition"
+          className="w-full py-2.5 rounded-xl bg-emerald-800 hover:bg-emerald-900 text-white font-bold shadow transition"
         >
           Submit Review
         </button>
@@ -1374,12 +1376,12 @@ function ArtisanDashboard() {
     <div className="space-y-8 text-left">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-white">Welcome back,</h1>
-          <h2 className="text-xl text-blue-400 font-semibold">{currentUser.fullName}</h2>
+          <h1 className="text-xs text-slate-400 font-bold uppercase tracking-wider">Artisan Portal</h1>
+          <h2 className="text-2xl font-black text-slate-900 mt-1">Welcome back, {currentUser.fullName}</h2>
         </div>
         <Link 
           to="/artisan/find-jobs"
-          className="px-4 py-2 rounded-lg bg-emerald-500 text-slate-950 font-bold text-sm hover:bg-emerald-400 transition flex items-center space-x-2"
+          className="px-4 py-2 rounded-lg bg-emerald-800 text-white font-bold text-sm hover:bg-emerald-900 transition flex items-center space-x-2"
         >
           <Search className="w-4 h-4" />
           <span>Find Available Jobs</span>
@@ -1388,59 +1390,59 @@ function ArtisanDashboard() {
 
       {/* Stats Cards */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div className="bg-slate-900 border border-slate-800 p-5 rounded-2xl">
-          <span className="text-slate-500 text-xs font-semibold uppercase">Pending Bids</span>
-          <p className="text-3xl font-extrabold text-white mt-1">{pendingBidsCount}</p>
+        <div className="bg-white border border-slate-200 p-5 rounded-2xl shadow-sm">
+          <span className="text-slate-400 text-[10px] font-bold uppercase tracking-wider block">Pending Bids</span>
+          <p className="text-3xl font-black text-slate-900 mt-1">{pendingBidsCount}</p>
         </div>
-        <div className="bg-slate-900 border border-slate-800 p-5 rounded-2xl">
-          <span className="text-slate-500 text-xs font-semibold uppercase">In Progress</span>
-          <p className="text-3xl font-extrabold text-white mt-1">{inProgressCount}</p>
+        <div className="bg-white border border-slate-200 p-5 rounded-2xl shadow-sm">
+          <span className="text-slate-400 text-[10px] font-bold uppercase tracking-wider block">In Progress</span>
+          <p className="text-3xl font-black text-slate-900 mt-1">{inProgressCount}</p>
         </div>
-        <div className="bg-slate-900 border border-slate-800 p-5 rounded-2xl">
-          <span className="text-slate-500 text-xs font-semibold uppercase">Completed Jobs</span>
-          <p className="text-3xl font-extrabold text-white mt-1">{completedCount}</p>
+        <div className="bg-white border border-slate-200 p-5 rounded-2xl shadow-sm">
+          <span className="text-slate-400 text-[10px] font-bold uppercase tracking-wider block">Completed Jobs</span>
+          <p className="text-3xl font-black text-slate-900 mt-1">{completedCount}</p>
         </div>
-        <div className="bg-slate-900 border border-slate-800 p-5 rounded-2xl">
-          <span className="text-slate-500 text-xs font-semibold uppercase">Avg rating</span>
-          <p className="text-3xl font-extrabold text-white mt-1 flex items-center space-x-1">
+        <div className="bg-white border border-slate-200 p-5 rounded-2xl shadow-sm">
+          <span className="text-slate-400 text-[10px] font-bold uppercase tracking-wider block">Avg Rating</span>
+          <p className="text-3xl font-black text-slate-900 mt-1 flex items-center space-x-1">
             <span>{artisanProfile.ratingAverage || '0'}</span>
-            <Star className="w-5 h-5 text-amber-400 fill-amber-400 inline" />
+            <Star className="w-6 h-6 text-amber-400 fill-amber-400 inline" />
           </p>
         </div>
       </div>
 
       {/* Recent Jobs */}
-      <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6">
-        <h3 className="text-lg font-bold text-white mb-4">Your Recent Contracts</h3>
+      <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
+        <h3 className="text-lg font-bold text-slate-900 mb-4">Your Recent Contracts</h3>
         <div className="overflow-x-auto">
-          <table className="w-full text-sm text-left text-slate-400">
-            <thead className="text-xs text-slate-500 uppercase border-b border-slate-800">
+          <table className="w-full text-sm text-left text-slate-500">
+            <thead className="text-xs text-slate-400 uppercase border-b border-slate-200">
               <tr>
-                <th className="pb-3">Job Name</th>
-                <th className="pb-3">Resident</th>
-                <th className="pb-3">Agreed Price</th>
-                <th className="pb-3">Status</th>
-                <th className="pb-3 text-right">Action</th>
+                <th className="pb-3 font-semibold">Job Name</th>
+                <th className="pb-3 font-semibold">Resident</th>
+                <th className="pb-3 font-semibold">Agreed Price</th>
+                <th className="pb-3 font-semibold">Status</th>
+                <th className="pb-3 font-semibold text-right">Action</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-800/60">
+            <tbody className="divide-y divide-slate-100">
               {jobs.length === 0 ? (
                 <tr>
-                  <td colSpan="5" className="py-6 text-center text-slate-500 text-xs">
-                    No hired contracts yet. Navigate to "Find Jobs" to apply.
+                  <td colSpan="5" className="py-6 text-center text-slate-400 text-xs">
+                    No active contracts yet.
                   </td>
                 </tr>
               ) : (
                 jobs.slice(0, 5).map(job => (
-                  <tr key={job.id} className="hover:bg-slate-950/40">
-                    <td className="py-4 font-semibold text-white">{job.title}</td>
+                  <tr key={job.id} className="hover:bg-slate-50/50">
+                    <td className="py-4 font-bold text-slate-900">{job.title}</td>
                     <td className="py-4">{job.residentName}</td>
-                    <td className="py-4 text-emerald-400 font-bold">₦{(job.agreedPrice || 0).toLocaleString()}</td>
+                    <td className="py-4 text-emerald-805 font-bold">₦{(job.agreedPrice || 0).toLocaleString()}</td>
                     <td className="py-4">
-                      <span className={`px-2.5 py-1 rounded-full text-xs font-semibold capitalize ${
-                        job.status === 'in-progress' ? 'bg-blue-500/10 text-blue-400' :
-                        job.status === 'completed' ? 'bg-slate-800 text-slate-400' :
-                        'bg-red-500/10 text-red-400'
+                      <span className={`px-2.5 py-1 rounded-full text-xs font-bold capitalize ${
+                        job.status === 'in-progress' ? 'bg-blue-50 text-blue-800' :
+                        job.status === 'completed' ? 'bg-slate-100 text-slate-500 border border-slate-200' :
+                        'bg-red-50 text-red-800'
                       }`}>
                         {job.status}
                       </span>
@@ -1448,7 +1450,7 @@ function ArtisanDashboard() {
                     <td className="py-4 text-right">
                       <Link 
                         to={`/artisan/job/${job.id}`}
-                        className="text-emerald-400 hover:text-emerald-300 text-xs font-bold"
+                        className="text-emerald-800 hover:text-emerald-950 text-xs font-extrabold"
                       >
                         Manage
                       </Link>
@@ -1485,20 +1487,20 @@ function FindJobsPage() {
   return (
     <div className="space-y-6 text-left">
       <div>
-        <h1 className="text-2xl font-bold text-white">Find Jobs</h1>
-        <p className="text-slate-400 text-xs mt-1">Browse active listings posted by residents in Redemption City.</p>
+        <h1 className="text-2xl font-bold text-slate-900">Find Jobs</h1>
+        <p className="text-slate-500 text-xs mt-1">Browse active listings posted by residents in Redemption City.</p>
       </div>
 
       {/* Filter Bar */}
-      <div className="bg-slate-900 border border-slate-800 p-4 rounded-2xl flex flex-col md:flex-row gap-4 items-center">
+      <div className="bg-white border border-slate-200 p-4 rounded-2xl flex flex-col md:flex-row gap-4 items-center shadow-sm">
         <div className="flex-1 w-full relative">
-          <Search className="w-4 h-4 text-slate-500 absolute left-3 top-3" />
+          <Search className="w-4 h-4 text-slate-450 absolute left-3 top-3" />
           <input 
             type="text" 
             placeholder="Search active jobs..." 
             value={search}
             onChange={e => setSearch(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 rounded-xl bg-slate-950 border border-slate-800 focus:outline-none focus:border-emerald-500 text-sm text-slate-200"
+            className="w-full pl-10 pr-4 py-2 rounded-xl bg-slate-50 border border-slate-250 focus:outline-none focus:border-emerald-800 text-sm text-slate-700 placeholder-slate-400"
           />
         </div>
 
@@ -1506,7 +1508,7 @@ function FindJobsPage() {
           <select 
             value={categoryFilter}
             onChange={e => setCategoryFilter(e.target.value)}
-            className="flex-1 md:w-48 px-4 py-2 rounded-xl bg-slate-950 border border-slate-800 text-sm text-slate-200"
+            className="flex-1 md:w-48 px-4 py-2 rounded-xl bg-slate-50 border border-slate-255 text-sm text-slate-705 focus:outline-none"
           >
             <option value="All">All Categories</option>
             <option value="Plumbing">🚿 Plumbing</option>
@@ -1521,7 +1523,7 @@ function FindJobsPage() {
           <select 
             value={zoneFilter}
             onChange={e => setZoneFilter(e.target.value)}
-            className="flex-1 md:w-36 px-4 py-2 rounded-xl bg-slate-950 border border-slate-800 text-sm text-slate-200"
+            className="flex-1 md:w-36 px-4 py-2 rounded-xl bg-slate-50 border border-slate-255 text-sm text-slate-705 focus:outline-none"
           >
             <option value="All">All Zones</option>
             <option value="Zone A">Zone A</option>
@@ -1534,40 +1536,40 @@ function FindJobsPage() {
       {/* Jobs Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {filtered.length === 0 ? (
-          <div className="col-span-2 p-12 text-center text-slate-500 text-xs bg-slate-900 border border-slate-800 rounded-2xl">
-            No active jobs match these filters. Check back later!
+          <div className="col-span-2 p-12 text-center text-slate-405 text-xs bg-white border border-slate-200 rounded-2xl shadow-sm">
+            No active jobs match these filters.
           </div>
         ) : (
           filtered.map(job => {
             const hasBid = job.bids?.some(b => b.artisanId === currentUser.uid);
             return (
-              <div key={job.id} className="p-6 rounded-2xl bg-slate-900 border border-slate-800 flex flex-col justify-between space-y-4">
+              <div key={job.id} className="p-6 rounded-2xl bg-white border border-slate-200 flex flex-col justify-between space-y-4 shadow-sm">
                 <div className="space-y-2">
                   <div className="flex justify-between items-start">
-                    <h3 className="font-bold text-white text-base leading-tight">{job.title}</h3>
+                    <h3 className="font-bold text-slate-900 text-base leading-tight">{job.title}</h3>
                     {hasBid && (
-                      <span className="px-2 py-0.5 rounded bg-blue-500/10 border border-blue-500/20 text-[10px] font-bold text-blue-400 uppercase">
+                      <span className="px-2.5 py-0.5 rounded bg-blue-50 border border-blue-105 text-[10px] font-bold text-blue-800 uppercase tracking-wide">
                         Applied
                       </span>
                     )}
                   </div>
-                  <div className="flex items-center space-x-2 text-xs text-slate-400">
-                    <span className="text-emerald-400 font-semibold">{job.category}</span>
+                  <div className="flex items-center space-x-2 text-xs text-slate-505">
+                    <span className="text-emerald-805 font-bold">{job.category}</span>
                     <span>•</span>
                     <span>{job.zone}</span>
                   </div>
                   <p className="text-xs text-slate-500 line-clamp-2 font-light">{job.description}</p>
                 </div>
 
-                <div className="flex items-center justify-between border-t border-slate-850 pt-3 text-xs">
+                <div className="flex items-center justify-between border-t border-slate-100 pt-3 text-xs">
                   <div>
-                    <span className="text-slate-500 block">Resident Budget</span>
-                    <span className="font-bold text-slate-350">{job.budget}</span>
+                    <span className="text-slate-400 block font-semibold uppercase text-[9px]">Resident Budget</span>
+                    <span className="font-bold text-slate-700">{job.budget}</span>
                   </div>
 
                   <Link 
                     to={`/artisan/job/${job.id}`}
-                    className="px-3.5 py-1.5 rounded-lg bg-emerald-500 text-slate-950 font-bold hover:bg-emerald-400 transition"
+                    className="px-3.5 py-1.5 rounded-lg bg-emerald-800 text-white font-bold hover:bg-emerald-900 transition shadow"
                   >
                     View & Bid
                   </Link>
@@ -1594,7 +1596,7 @@ function ArtisanJobDetailsPage() {
   const job = getJobs().find(j => j.id === jobId);
 
   if (!job) {
-    return <div className="text-left text-red-400">Job not found.</div>;
+    return <div className="text-left text-red-700 font-bold">Job not found.</div>;
   }
 
   const handlePlaceBid = (e) => {
@@ -1626,59 +1628,59 @@ function ArtisanJobDetailsPage() {
 
   return (
     <div className="space-y-6 text-left max-w-3xl mx-auto">
-      <div className="bg-slate-900 border border-slate-800 p-6 rounded-3xl shadow-xl space-y-4">
+      <div className="bg-white border border-slate-200 p-6 rounded-3xl shadow-md space-y-4">
         <div className="flex justify-between items-start">
           <div>
-            <span className="px-2 py-0.5 rounded bg-emerald-500/10 border border-emerald-500/20 text-[10px] font-bold text-emerald-400 uppercase">
+            <span className="px-2 py-0.5 rounded bg-emerald-50 border border-emerald-100 text-[10px] font-bold text-emerald-800 uppercase tracking-wider">
               {job.category}
             </span>
-            <h1 className="text-xl font-bold text-white mt-1">{job.title}</h1>
+            <h1 className="text-xl font-bold text-slate-900 mt-1">{job.title}</h1>
           </div>
           <span className={`px-2.5 py-1 rounded-full text-xs font-bold uppercase ${
-            job.status === 'open' ? 'bg-emerald-500/10 text-emerald-400' :
-            job.status === 'in-progress' ? 'bg-blue-500/10 text-blue-400' :
-            job.status === 'completed' ? 'bg-slate-800 text-slate-400' :
-            'bg-red-500/10 text-red-400'
+            job.status === 'open' ? 'bg-emerald-50 text-emerald-800' :
+            job.status === 'in-progress' ? 'bg-blue-50 text-blue-800' :
+            job.status === 'completed' ? 'bg-slate-100 text-slate-500' :
+            'bg-red-50 text-red-800'
           }`}>
             {job.status}
           </span>
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-xs bg-slate-950 p-4 rounded-2xl border border-slate-850">
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-xs bg-slate-50 p-4 rounded-2xl border border-slate-200">
           <div>
-            <span className="text-slate-500 block">Resident Customer</span>
-            <span className="font-bold text-slate-300">{job.residentName}</span>
+            <span className="text-slate-400 block font-bold uppercase text-[9px]">Resident Customer</span>
+            <span className="font-bold text-slate-700">{job.residentName}</span>
           </div>
           <div>
-            <span className="text-slate-500 block">Budget Offered</span>
-            <span className="font-bold text-slate-300">{job.budget}</span>
+            <span className="text-slate-400 block font-bold uppercase text-[9px]">Budget Offered</span>
+            <span className="font-bold text-slate-700">{job.budget}</span>
           </div>
           <div>
-            <span className="text-slate-500 block">Location Area</span>
-            <span className="font-bold text-slate-300">{job.zone}</span>
+            <span className="text-slate-400 block font-bold uppercase text-[9px]">Location Area</span>
+            <span className="font-bold text-slate-700">{job.zone}</span>
           </div>
         </div>
 
         <div className="space-y-2">
-          <h3 className="text-xs font-bold text-slate-300 uppercase tracking-wider">Job Description</h3>
-          <p className="text-slate-400 text-sm leading-relaxed font-light">{job.description}</p>
+          <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider">Job Description</h3>
+          <p className="text-slate-600 text-sm leading-relaxed font-light">{job.description}</p>
         </div>
 
         {/* If hired for this job */}
         {job.hiredArtisanId === currentUser.uid && (
-          <div className="p-4 bg-emerald-500/5 border border-emerald-500/25 rounded-2xl space-y-4">
+          <div className="p-4 bg-emerald-50 border border-emerald-100 rounded-2xl space-y-4">
             <div className="flex justify-between items-center">
               <div>
-                <span className="text-[10px] text-emerald-400 font-bold block uppercase tracking-wider">Hired agreed price</span>
-                <span className="text-base font-extrabold text-white">₦{(job.agreedPrice || 0).toLocaleString()}</span>
+                <span className="text-[10px] text-emerald-800 font-bold block uppercase tracking-wider">Hired agreed price</span>
+                <span className="text-base font-extrabold text-slate-900">₦{(job.agreedPrice || 0).toLocaleString()}</span>
               </div>
-              <span className="text-xs text-slate-400 font-light">Location: {job.locationDetails}</span>
+              <span className="text-xs text-slate-500 font-light">Location: {job.locationDetails}</span>
             </div>
 
             {job.status === 'in-progress' && (
               <button 
                 onClick={handleMarkComplete}
-                className="w-full py-2.5 rounded-xl bg-emerald-500 text-slate-950 font-bold text-xs hover:bg-emerald-400 transition"
+                className="w-full py-2.5 rounded-xl bg-emerald-800 hover:bg-emerald-900 text-white font-bold text-xs shadow transition"
               >
                 Mark as Completed
               </button>
@@ -1689,47 +1691,47 @@ function ArtisanJobDetailsPage() {
 
       {/* Place a Bid form */}
       {job.status === 'open' && (
-        <div className="bg-slate-900 border border-slate-800 p-6 rounded-3xl shadow-xl space-y-4">
-          <h2 className="text-lg font-bold text-white">Place a Bid</h2>
+        <div className="bg-white border border-slate-200 p-6 rounded-3xl shadow-md space-y-4">
+          <h2 className="text-lg font-bold text-slate-900">Place a Bid</h2>
           
           {myBid ? (
-            <div className="p-4 rounded-2xl bg-blue-500/5 border border-blue-500/20 space-y-2 text-xs">
-              <p className="text-slate-350">You have already submitted a bid for this job:</p>
-              <div className="flex justify-between font-bold">
+            <div className="p-4 rounded-2xl bg-blue-50 border border-blue-100 space-y-2 text-xs">
+              <p className="text-slate-600">You have already submitted a bid for this job:</p>
+              <div className="flex justify-between font-bold text-slate-800">
                 <span>Proposed Price:</span>
-                <span className="text-emerald-400">₦{Number(myBid.price).toLocaleString()}</span>
+                <span className="text-emerald-805">₦{Number(myBid.price).toLocaleString()}</span>
               </div>
-              <p className="text-slate-400 italic">"{myBid.description}"</p>
+              <p className="text-slate-500 italic">"{myBid.description}"</p>
             </div>
           ) : (
             <form onSubmit={handlePlaceBid} className="space-y-4">
               <div className="space-y-1">
-                <label className="text-xs font-semibold text-slate-300">Your Bid Amount (₦)</label>
+                <label className="text-xs font-semibold text-slate-600">Your Bid Amount (₦)</label>
                 <input 
                   type="number" 
                   placeholder="e.g. 6500"
                   value={bidPrice}
                   onChange={e => setBidPrice(e.target.value)}
-                  className="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 focus:outline-none focus:border-emerald-500 text-sm text-white"
+                  className="w-full px-4 py-2 rounded-xl bg-white border border-slate-300 focus:outline-none focus:border-emerald-800 text-sm text-slate-800"
                   required
                 />
               </div>
 
               <div className="space-y-1">
-                <label className="text-xs font-semibold text-slate-300">Proposal cover letter</label>
+                <label className="text-xs font-semibold text-slate-600">Proposal message</label>
                 <textarea 
                   placeholder="Tell the resident why they should hire you, your experience, etc..."
                   value={bidDesc}
                   onChange={e => setBidDesc(e.target.value)}
                   rows="3"
-                  className="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 focus:outline-none focus:border-emerald-500 text-sm text-white resize-none"
+                  className="w-full px-4 py-2 rounded-xl bg-white border border-slate-300 focus:outline-none focus:border-emerald-800 text-sm text-slate-800 resize-none"
                   required
                 />
               </div>
 
               <button 
                 type="submit"
-                className="w-full py-2.5 rounded-xl bg-emerald-500 text-slate-950 font-bold hover:bg-emerald-400 transition"
+                className="w-full py-2.5 rounded-xl bg-emerald-800 hover:bg-emerald-900 text-white font-bold shadow transition"
               >
                 Submit Bid
               </button>
@@ -1754,20 +1756,20 @@ function ArtisanJobsPage() {
   return (
     <div className="space-y-6 text-left">
       <div>
-        <h1 className="text-2xl font-bold text-white">Your Contracts</h1>
-        <p className="text-slate-400 text-xs mt-1">Manage current agreements and past work history.</p>
+        <h1 className="text-2xl font-bold text-slate-900">Your Contracts</h1>
+        <p className="text-slate-500 text-xs mt-1">Manage active agreements and past history.</p>
       </div>
 
       {/* Tabs */}
-      <div className="flex border-b border-slate-800">
+      <div className="flex border-b border-slate-200">
         {tabs.map(t => (
           <button
             key={t}
             onClick={() => setTab(t)}
-            className={`px-4 py-2.5 text-xs font-semibold uppercase tracking-wider border-b-2 whitespace-nowrap transition-colors ${
+            className={`px-4 py-2.5 text-xs font-bold uppercase tracking-wider border-b-2 whitespace-nowrap transition-colors ${
               tab === t 
-                ? 'border-emerald-500 text-emerald-400' 
-                : 'border-transparent text-slate-500 hover:text-slate-300'
+                ? 'border-emerald-800 text-emerald-800' 
+                : 'border-transparent text-slate-400 hover:text-slate-600'
             }`}
           >
             {t}
@@ -1778,35 +1780,35 @@ function ArtisanJobsPage() {
       {/* List */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {filtered.length === 0 ? (
-          <div className="col-span-2 p-12 text-center text-slate-500 text-xs bg-slate-900 border border-slate-800 rounded-2xl">
+          <div className="col-span-2 p-12 text-center text-slate-400 text-xs bg-white border border-slate-200 rounded-2xl shadow-sm">
             No jobs found in this section.
           </div>
         ) : (
           filtered.map(job => (
-            <div key={job.id} className="p-6 rounded-2xl bg-slate-900 border border-slate-800 flex flex-col justify-between space-y-4">
+            <div key={job.id} className="p-6 rounded-2xl bg-white border border-slate-200 flex flex-col justify-between space-y-4 shadow-sm">
               <div className="space-y-2">
                 <div className="flex justify-between items-start">
-                  <h3 className="font-bold text-white text-base leading-tight">{job.title}</h3>
-                  <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wide ${
-                    job.status === 'in-progress' ? 'bg-blue-500/10 text-blue-400' :
-                    'bg-slate-800 text-slate-400'
+                  <h3 className="font-bold text-slate-900 text-base leading-tight">{job.title}</h3>
+                  <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider ${
+                    job.status === 'in-progress' ? 'bg-blue-50 text-blue-800' :
+                    'bg-slate-100 text-slate-550 border border-slate-200'
                   }`}>
                     {job.status}
                   </span>
                 </div>
-                <p className="text-xs text-slate-400">Customer: <strong className="text-slate-200">{job.residentName}</strong></p>
+                <p className="text-xs text-slate-500">Customer: <strong className="text-slate-700">{job.residentName}</strong></p>
                 <p className="text-xs text-slate-500 line-clamp-2 font-light">{job.description}</p>
               </div>
 
-              <div className="flex items-center justify-between border-t border-slate-850 pt-3 text-xs">
+              <div className="flex items-center justify-between border-t border-slate-100 pt-3 text-xs">
                 <div>
-                  <span className="text-slate-500 block">Agreed Price</span>
-                  <span className="font-bold text-emerald-400">₦{(job.agreedPrice || 0).toLocaleString()}</span>
+                  <span className="text-slate-400 block font-bold uppercase text-[9px]">Agreed Price</span>
+                  <span className="font-bold text-emerald-800">₦{(job.agreedPrice || 0).toLocaleString()}</span>
                 </div>
 
                 <Link 
                   to={`/artisan/job/${job.id}`}
-                  className="px-3.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-750 text-slate-300 font-semibold transition"
+                  className="px-3.5 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold transition text-[11px]"
                 >
                   Manage Contract
                 </Link>
@@ -1829,63 +1831,63 @@ function EarningsPage() {
   return (
     <div className="space-y-6 text-left max-w-4xl mx-auto">
       <div>
-        <h1 className="text-2xl font-bold text-white">Earnings</h1>
-        <p className="text-slate-400 text-xs mt-1">Track your payout history and payout statistics.</p>
+        <h1 className="text-2xl font-bold text-slate-900">Earnings</h1>
+        <p className="text-slate-505 text-xs mt-1">Track payouts and monthly revenue breakdown.</p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {/* Total Earnings Card */}
-        <div className="bg-slate-900 border border-slate-800 p-6 rounded-3xl flex flex-col justify-between min-h-[160px]">
-          <span className="text-slate-500 text-xs font-semibold uppercase tracking-wider">Total Earnings</span>
-          <p className="text-3xl font-extrabold text-white mt-1">₦{totalEarnings.toLocaleString()}</p>
-          <span className="text-[10px] text-emerald-400 font-medium">⚡ Instant Bank Settlement Enabled</span>
+        <div className="bg-white border border-slate-200 p-6 rounded-3xl flex flex-col justify-between min-h-[160px] shadow-sm">
+          <span className="text-slate-400 text-[10px] font-bold uppercase tracking-wider">Total Earnings</span>
+          <p className="text-3xl font-black text-slate-900 mt-1">₦{totalEarnings.toLocaleString()}</p>
+          <span className="text-[10px] text-emerald-800 font-bold">⚡ settled to bank account</span>
         </div>
 
         {/* Visual Custom Chart Bar Mock */}
-        <div className="bg-slate-900 border border-slate-800 p-6 rounded-3xl md:col-span-2 space-y-4">
+        <div className="bg-white border border-slate-200 p-6 rounded-3xl md:col-span-2 space-y-4 shadow-sm">
           <div className="flex justify-between items-center text-xs">
-            <span className="font-bold text-white">Monthly Revenue Breakdown</span>
-            <span className="text-slate-500">Last 4 weeks</span>
+            <span className="font-bold text-slate-800">Monthly Revenue</span>
+            <span className="text-slate-400 font-medium">Last 4 weeks</span>
           </div>
 
           {/* Simple Custom Bar Graphic */}
           <div className="flex items-end justify-between space-x-4 h-24 pt-4">
             <div className="flex-1 flex flex-col items-center space-y-2">
-              <div className="w-full bg-slate-800 rounded-t-lg h-6"></div>
-              <span className="text-[9px] text-slate-500">May 1-7</span>
+              <div className="w-full bg-slate-100 rounded-t-lg h-6 border border-slate-200/50"></div>
+              <span className="text-[9px] text-slate-400 font-semibold">May 1-7</span>
             </div>
             <div className="flex-1 flex flex-col items-center space-y-2">
-              <div className="w-full bg-emerald-500/40 rounded-t-lg h-12"></div>
-              <span className="text-[9px] text-slate-500">May 8-14</span>
+              <div className="w-full bg-emerald-100 rounded-t-lg h-12 border border-emerald-200/50 animate-pulse"></div>
+              <span className="text-[9px] text-slate-400 font-semibold">May 8-14</span>
             </div>
             <div className="flex-1 flex flex-col items-center space-y-2">
-              <div className="w-full bg-emerald-500 rounded-t-lg h-20"></div>
-              <span className="text-[9px] text-slate-500">May 15-21</span>
+              <div className="w-full bg-emerald-800 rounded-t-lg h-20 shadow-sm"></div>
+              <span className="text-[9px] text-slate-400 font-semibold">May 15-21</span>
             </div>
             <div className="flex-1 flex flex-col items-center space-y-2">
-              <div className="w-full bg-slate-800 rounded-t-lg.h-4"></div>
-              <span className="text-[9px] text-slate-500">May 22-28</span>
+              <div className="w-full bg-slate-100 rounded-t-lg h-4 border border-slate-200/50"></div>
+              <span className="text-[9px] text-slate-400 font-semibold">May 22-28</span>
             </div>
           </div>
         </div>
       </div>
 
       {/* Transactions */}
-      <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6">
-        <h3 className="text-lg font-bold text-white mb-4">Recent Transactions</h3>
-        <div className="divide-y divide-slate-800/60">
+      <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
+        <h3 className="text-lg font-bold text-slate-900 mb-4">Recent Transactions</h3>
+        <div className="divide-y divide-slate-100">
           {completedJobs.length === 0 ? (
-            <p className="py-6 text-center text-slate-500 text-xs font-light">No earnings transactions posted yet.</p>
+            <p className="py-6 text-center text-slate-400 text-xs font-light italic">No payouts settled yet.</p>
           ) : (
             completedJobs.map(job => (
               <div key={job.id} className="py-4 flex justify-between items-center text-sm">
                 <div>
-                  <h4 className="font-semibold text-white">{job.title}</h4>
+                  <h4 className="font-bold text-slate-900">{job.title}</h4>
                   <p className="text-xs text-slate-500 mt-0.5">Paid by {job.residentName} • {new Date(job.createdAt).toLocaleDateString()}</p>
                 </div>
                 <div className="text-right">
-                  <span className="font-bold text-emerald-400 block">+ ₦{(job.agreedPrice || 0).toLocaleString()}</span>
-                  <span className="text-[10px] text-slate-500">Settled</span>
+                  <span className="font-bold text-emerald-805 block">+ ₦{(job.agreedPrice || 0).toLocaleString()}</span>
+                  <span className="text-[10px] text-slate-400 font-bold uppercase">Paid</span>
                 </div>
               </div>
             ))
@@ -1920,42 +1922,42 @@ function ArtisanProfilePage() {
   };
 
   return (
-    <div className="max-w-xl mx-auto text-left bg-slate-900 border border-slate-800 p-8 rounded-3xl shadow-xl space-y-6">
+    <div className="max-w-xl mx-auto text-left bg-white border border-slate-200 p-8 rounded-3xl shadow-md space-y-6">
       <div>
-        <h1 className="text-xl font-bold text-white">Edit Profile Info</h1>
-        <p className="text-slate-400 text-xs mt-1">Keep your contact and skill information up to date.</p>
+        <h1 className="text-xl font-bold text-slate-900">Edit Profile Info</h1>
+        <p className="text-slate-500 text-xs mt-1">Keep your contact and skill information up to date.</p>
       </div>
 
       <form onSubmit={handleUpdate} className="space-y-4">
         <div className="space-y-1">
-          <label className="text-xs font-semibold text-slate-300">Full Name</label>
+          <label className="text-xs font-semibold text-slate-650">Full Name</label>
           <input 
             type="text" 
             value={fullName}
             onChange={e => setFullName(e.target.value)}
-            className="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 focus:outline-none focus:border-emerald-500 text-sm text-white"
+            className="w-full px-4 py-2 rounded-xl bg-white border border-slate-300 focus:outline-none focus:border-emerald-800 text-sm text-slate-800"
             required
           />
         </div>
 
         <div className="space-y-1">
-          <label className="text-xs font-semibold text-slate-300">Phone Number</label>
+          <label className="text-xs font-semibold text-slate-655">Phone Number</label>
           <input 
             type="text" 
             value={phone}
             onChange={e => setPhone(e.target.value)}
-            className="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 focus:outline-none focus:border-emerald-500 text-sm text-white"
+            className="w-full px-4 py-2 rounded-xl bg-white border border-slate-300 focus:outline-none focus:border-emerald-800 text-sm text-slate-800"
             required
           />
         </div>
 
         <div className="grid grid-cols-2 gap-4">
           <div className="space-y-1">
-            <label className="text-xs font-semibold text-slate-300">Zone Area</label>
+            <label className="text-xs font-semibold text-slate-655">Zone Area</label>
             <select 
               value={zone}
               onChange={e => setZone(e.target.value)}
-              className="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 focus:outline-none focus:border-emerald-500 text-sm text-white"
+              className="w-full px-4 py-2 rounded-xl bg-white border border-slate-300 focus:outline-none focus:border-emerald-800 text-sm text-slate-800"
             >
               <option value="Zone A">Zone A</option>
               <option value="Zone B">Zone B</option>
@@ -1964,31 +1966,31 @@ function ArtisanProfilePage() {
           </div>
 
           <div className="space-y-1">
-            <label className="text-xs font-semibold text-slate-300">Experience (Years)</label>
+            <label className="text-xs font-semibold text-slate-655">Experience (Years)</label>
             <input 
               type="number" 
               value={experience}
               onChange={e => setExperience(e.target.value)}
-              className="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 focus:outline-none focus:border-emerald-500 text-sm text-white"
+              className="w-full px-4 py-2 rounded-xl bg-white border border-slate-300 focus:outline-none focus:border-emerald-800 text-sm text-slate-800"
               required
             />
           </div>
         </div>
 
         <div className="space-y-1">
-          <label className="text-xs font-semibold text-slate-300">Professional Bio</label>
+          <label className="text-xs font-semibold text-slate-655">Professional Bio</label>
           <textarea 
             value={bio}
             onChange={e => setBio(e.target.value)}
             rows="4"
-            className="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 focus:outline-none focus:border-emerald-500 text-sm text-white resize-none"
+            className="w-full px-4 py-2.5 rounded-xl bg-white border border-slate-300 focus:outline-none focus:border-emerald-800 text-sm text-slate-800 resize-none"
             required
           />
         </div>
 
         <button 
           type="submit"
-          className="w-full py-3 rounded-xl bg-emerald-500 text-slate-950 font-bold hover:bg-emerald-400 transition"
+          className="w-full py-2.5 rounded-xl bg-emerald-800 hover:bg-emerald-900 text-white font-bold shadow transition"
         >
           Save Changes
         </button>
@@ -2014,51 +2016,51 @@ function AdminDashboard() {
   return (
     <div className="space-y-8 text-left">
       <div>
-        <h1 className="text-2xl font-bold text-white">Admin Control Panel</h1>
-        <p className="text-slate-400 text-xs mt-1">Overview of Redemption City's service marketplace network.</p>
+        <h1 className="text-2xl font-bold text-slate-900">Admin Dashboard</h1>
+        <p className="text-slate-500 text-xs mt-1">Platform management console for Redemption City.</p>
       </div>
 
       {/* Stats Cards */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div className="bg-slate-900 border border-slate-800 p-5 rounded-2xl">
-          <span className="text-slate-500 text-xs font-semibold uppercase">Pending Verification</span>
-          <p className="text-3xl font-extrabold text-amber-500 mt-1">{pendingArtisans.length}</p>
+        <div className="bg-white border border-slate-200 p-5 rounded-2xl shadow-sm">
+          <span className="text-slate-400 text-[10px] font-bold uppercase tracking-wider block">Pending Verification</span>
+          <p className="text-3xl font-black text-amber-600 mt-1">{pendingArtisans.length}</p>
         </div>
-        <div className="bg-slate-900 border border-slate-800 p-5 rounded-2xl">
-          <span className="text-slate-500 text-xs font-semibold uppercase">Active Artisans</span>
-          <p className="text-3xl font-extrabold text-emerald-400 mt-1">{activeArtisans.length}</p>
+        <div className="bg-white border border-slate-200 p-5 rounded-2xl shadow-sm">
+          <span className="text-slate-400 text-[10px] font-bold uppercase tracking-wider block">Active Artisans</span>
+          <p className="text-3xl font-black text-emerald-805 mt-1">{activeArtisans.length}</p>
         </div>
-        <div className="bg-slate-900 border border-slate-800 p-5 rounded-2xl">
-          <span className="text-slate-500 text-xs font-semibold uppercase">Total Jobs Posted</span>
-          <p className="text-3xl font-extrabold text-white mt-1">{jobs.length}</p>
+        <div className="bg-white border border-slate-200 p-5 rounded-2xl shadow-sm">
+          <span className="text-slate-400 text-[10px] font-bold uppercase tracking-wider block">Total Jobs Posted</span>
+          <p className="text-3xl font-black text-slate-900 mt-1">{jobs.length}</p>
         </div>
-        <div className="bg-slate-900 border border-slate-800 p-5 rounded-2xl">
-          <span className="text-slate-500 text-xs font-semibold uppercase">Total Residents</span>
-          <p className="text-3xl font-extrabold text-white mt-1">389</p>
+        <div className="bg-white border border-slate-200 p-5 rounded-2xl shadow-sm">
+          <span className="text-slate-400 text-[10px] font-bold uppercase tracking-wider block">Total Residents</span>
+          <p className="text-3xl font-black text-slate-900 mt-1">389</p>
         </div>
       </div>
 
       {/* Quick pending approval links */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="bg-slate-900 border border-slate-800 p-6 rounded-2xl space-y-4">
-          <div className="flex justify-between items-center border-b border-slate-850 pb-3">
-            <h3 className="font-bold text-white text-base">Verification Queue</h3>
-            <Link to="/admin/pending" className="text-xs text-emerald-400 hover:underline">View Queue</Link>
+        <div className="bg-white border border-slate-200 p-6 rounded-2xl space-y-4 shadow-sm">
+          <div className="flex justify-between items-center border-b border-slate-100 pb-3">
+            <h3 className="font-bold text-slate-900 text-base">Verification Queue</h3>
+            <Link to="/admin/pending" className="text-xs text-emerald-800 font-bold hover:underline">View Queue</Link>
           </div>
           
-          <div className="divide-y divide-slate-800/40">
+          <div className="divide-y divide-slate-100">
             {pendingArtisans.length === 0 ? (
-              <p className="py-4 text-xs text-slate-500">No applications pending verification.</p>
+              <p className="py-4 text-xs text-slate-400 italic">No applications pending verification.</p>
             ) : (
               pendingArtisans.slice(0, 3).map(art => (
                 <div key={art.uid} className="py-3 flex justify-between items-center text-xs">
                   <div>
-                    <h4 className="font-semibold text-white">{art.fullName}</h4>
+                    <h4 className="font-bold text-slate-900">{art.fullName}</h4>
                     <p className="text-[10px] text-slate-500 mt-0.5">{art.category} • {art.zone}</p>
                   </div>
                   <Link 
                     to={`/admin/artisan/${art.uid}`}
-                    className="px-2.5 py-1 rounded bg-emerald-500 text-slate-950 font-bold text-[10px] hover:bg-emerald-400 transition"
+                    className="px-2.5 py-1 rounded bg-emerald-800 text-white font-bold text-[10px] hover:bg-emerald-900 shadow-sm"
                   >
                     Verify
                   </Link>
@@ -2068,23 +2070,23 @@ function AdminDashboard() {
           </div>
         </div>
 
-        <div className="bg-slate-900 border border-slate-800 p-6 rounded-2xl space-y-4">
-          <div className="flex justify-between items-center border-b border-slate-850 pb-3">
-            <h3 className="font-bold text-white text-base">System Job Logs</h3>
-            <Link to="/admin/all-jobs" className="text-xs text-emerald-400 hover:underline">All Jobs</Link>
+        <div className="bg-white border border-slate-200 p-6 rounded-2xl space-y-4 shadow-sm">
+          <div className="flex justify-between items-center border-b border-slate-100 pb-3">
+            <h3 className="font-bold text-slate-900 text-base">System Job Logs</h3>
+            <Link to="/admin/all-jobs" className="text-xs text-emerald-800 font-bold hover:underline">All Jobs</Link>
           </div>
           
-          <div className="divide-y divide-slate-800/40">
+          <div className="divide-y divide-slate-100">
             {jobs.slice(0, 3).map(job => (
               <div key={job.id} className="py-3 flex justify-between items-center text-xs">
                 <div>
-                  <h4 className="font-semibold text-white">{job.title}</h4>
-                  <p className="text-[10px] text-slate-500 mt-0.5">By {job.residentName} • Status: {job.status}</p>
+                  <h4 className="font-bold text-slate-900">{job.title}</h4>
+                  <p className="text-[10px] text-slate-550 mt-0.5">By {job.residentName} • Status: {job.status}</p>
                 </div>
                 <span className={`px-2 py-0.5 rounded text-[9px] font-bold uppercase ${
-                  job.status === 'open' ? 'bg-emerald-500/10 text-emerald-400' :
-                  job.status === 'in-progress' ? 'bg-blue-500/10 text-blue-400' :
-                  'bg-slate-800 text-slate-400'
+                  job.status === 'open' ? 'bg-emerald-50 text-emerald-800' :
+                  job.status === 'in-progress' ? 'bg-blue-50 text-blue-800' :
+                  'bg-slate-100 text-slate-500'
                 }`}>
                   {job.status}
                 </span>
@@ -2115,21 +2117,21 @@ function PendingArtisansPage() {
   return (
     <div className="space-y-6 text-left">
       <div>
-        <h1 className="text-2xl font-bold text-white">Pending Registrations</h1>
-        <p className="text-slate-400 text-xs mt-1">Review credentials and approve new trade contractors.</p>
+        <h1 className="text-2xl font-bold text-slate-900">Pending Registrations</h1>
+        <p className="text-slate-500 text-xs mt-1">Review credentials and approve new trade contractors.</p>
       </div>
 
-      <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6">
-        <div className="divide-y divide-slate-800/60">
+      <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
+        <div className="divide-y divide-slate-100">
           {artisans.length === 0 ? (
-            <p className="py-6 text-center text-slate-500 text-xs">No pending artisan registration applications found.</p>
+            <p className="py-6 text-center text-slate-400 text-xs italic">No pending applications found.</p>
           ) : (
             artisans.map(art => (
               <div key={art.uid} className="py-5 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                 <div className="space-y-1">
-                  <h3 className="font-bold text-white text-base">{art.fullName}</h3>
-                  <div className="flex items-center space-x-2 text-xs text-slate-400">
-                    <span className="text-emerald-400 font-semibold">{art.category}</span>
+                  <h3 className="font-bold text-slate-900 text-base">{art.fullName}</h3>
+                  <div className="flex items-center space-x-2 text-xs text-slate-500">
+                    <span className="text-emerald-805 font-bold">{art.category}</span>
                     <span>•</span>
                     <span>{art.zone}</span>
                     <span>•</span>
@@ -2141,19 +2143,19 @@ function PendingArtisansPage() {
                 <div className="flex items-center space-x-3 w-full md:w-auto">
                   <Link 
                     to={`/admin/artisan/${art.uid}`}
-                    className="flex-1 md:flex-none px-3.5 py-1.5 rounded-lg bg-slate-800 text-slate-200 text-xs font-bold hover:bg-slate-750 transition text-center"
+                    className="flex-1 md:flex-none px-3.5 py-1.5 rounded-lg bg-slate-100 text-slate-700 text-xs font-bold hover:bg-slate-200 transition text-center"
                   >
                     View Details
                   </Link>
                   <button 
                     onClick={() => handleApprove(art.uid)}
-                    className="flex-1 md:flex-none px-3.5 py-1.5 rounded-lg bg-emerald-500 text-slate-950 text-xs font-bold hover:bg-emerald-400 transition"
+                    className="flex-1 md:flex-none px-3.5 py-1.5 rounded-lg bg-emerald-800 text-white text-xs font-bold hover:bg-emerald-900 transition shadow-sm"
                   >
                     Approve
                   </button>
                   <button 
                     onClick={() => handleReject(art.uid)}
-                    className="flex-1 md:flex-none px-3.5 py-1.5 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 text-xs font-bold hover:bg-red-500/20 transition"
+                    className="flex-1 md:flex-none px-3.5 py-1.5 rounded-lg border border-red-200 bg-red-50 text-red-805 text-xs font-bold hover:bg-red-100 transition"
                   >
                     Reject
                   </button>
@@ -2176,7 +2178,7 @@ function AdminArtisanDetailsPage() {
   const art = getArtisans().find(a => a.uid === artisanId);
 
   if (!art) {
-    return <div className="text-left text-red-400">Artisan application data not found.</div>;
+    return <div className="text-left text-red-700">Artisan application data not found.</div>;
   }
 
   const handleApprove = () => {
@@ -2192,43 +2194,43 @@ function AdminArtisanDetailsPage() {
   };
 
   return (
-    <div className="space-y-6 text-left max-w-2xl mx-auto bg-slate-900 border border-slate-800 p-8 rounded-3xl shadow-xl">
-      <div className="pb-6 border-b border-slate-800/80">
-        <h1 className="text-xl font-bold text-white">Review Registration Application</h1>
-        <p className="text-xs text-slate-400 mt-1">Pending verification details for {art.fullName}.</p>
+    <div className="space-y-6 text-left max-w-2xl mx-auto bg-white border border-slate-200 p-8 rounded-3xl shadow-md">
+      <div className="pb-6 border-b border-slate-100">
+        <h1 className="text-xl font-bold text-slate-900">Review Registration</h1>
+        <p className="text-xs text-slate-500 mt-1">Pending verification details for {art.fullName}.</p>
       </div>
 
-      <div className="grid grid-cols-2 gap-4 text-xs bg-slate-950 p-4 rounded-2xl border border-slate-850">
+      <div className="grid grid-cols-2 gap-4 text-xs bg-slate-50 p-4 rounded-2xl border border-slate-200">
         <div>
-          <span className="text-slate-500 block">Experience</span>
-          <span className="font-bold text-slate-350">{art.experienceYears} Years</span>
+          <span className="text-slate-400 block font-bold uppercase text-[9px]">Experience</span>
+          <span className="font-bold text-slate-700">{art.experienceYears} Years</span>
         </div>
         <div>
-          <span className="text-slate-500 block">Service Category</span>
-          <span className="font-bold text-slate-350">{art.category}</span>
+          <span className="text-slate-400 block font-bold uppercase text-[9px]">Service Category</span>
+          <span className="font-bold text-slate-700">{art.category}</span>
         </div>
         <div>
-          <span className="text-slate-500 block">Zone Area</span>
-          <span className="font-bold text-slate-350">{art.zone}</span>
+          <span className="text-slate-400 block font-bold uppercase text-[9px]">Zone Area</span>
+          <span className="font-bold text-slate-700">{art.zone}</span>
         </div>
         <div>
-          <span className="text-slate-500 block">Contact Info</span>
-          <span className="font-bold text-slate-350">{art.phone || 'No phone'}</span>
+          <span className="text-slate-400 block font-bold uppercase text-[9px]">Contact Info</span>
+          <span className="font-bold text-slate-700">{art.phone || 'No phone'}</span>
         </div>
       </div>
 
       <div className="space-y-2">
-        <h3 className="text-xs font-bold text-slate-300 uppercase tracking-wider">Professional Bio</h3>
-        <p className="text-slate-400 text-sm leading-relaxed font-light">{art.bio}</p>
+        <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider">Professional Bio</h3>
+        <p className="text-slate-600 text-sm leading-relaxed font-light">{art.bio}</p>
       </div>
 
       {/* Simulated Document Uploads */}
       <div className="space-y-2">
-        <h3 className="text-xs font-bold text-slate-300 uppercase tracking-wider">Uploaded Certificates / IDs</h3>
-        <div className="p-4 rounded-2xl bg-slate-950 border border-slate-800 flex items-center space-x-3 text-xs text-slate-400">
-          <UploadCloud className="w-5 h-5 text-emerald-400" />
+        <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider">Uploaded Certificates / IDs</h3>
+        <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 flex items-center space-x-3 text-xs text-slate-600">
+          <UploadCloud className="w-5 h-5 text-emerald-805" />
           <div>
-            <p className="font-semibold text-white">national_id_card.pdf</p>
+            <p className="font-bold text-slate-800">national_id_card.pdf</p>
             <p className="text-[10px] text-slate-500">Government-issued Identity Document verified</p>
           </div>
         </div>
@@ -2237,13 +2239,13 @@ function AdminArtisanDetailsPage() {
       <div className="flex gap-4 pt-4">
         <button 
           onClick={handleApprove}
-          className="flex-1 py-3 rounded-xl bg-emerald-500 text-slate-950 font-bold hover:bg-emerald-400 transition"
+          className="flex-1 py-2.5 rounded-xl bg-emerald-800 hover:bg-emerald-900 text-white font-bold shadow transition"
         >
           Approve & Verify
         </button>
         <button 
           onClick={handleReject}
-          className="flex-1 py-3 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 font-bold hover:bg-red-500/20 transition"
+          className="flex-1 py-2.5 rounded-xl border border-red-200 bg-red-50 text-red-800 font-bold hover:bg-red-100 transition"
         >
           Reject Application
         </button>
@@ -2269,26 +2271,26 @@ function AllArtisansPage() {
   return (
     <div className="space-y-6 text-left">
       <div>
-        <h1 className="text-2xl font-bold text-white">System Artisans</h1>
-        <p className="text-slate-400 text-xs mt-1">Overview of registered trade professionals in the database.</p>
+        <h1 className="text-2xl font-bold text-slate-900">All Artisans</h1>
+        <p className="text-slate-500 text-xs mt-1">Overview of registered trade professionals in the database.</p>
       </div>
 
-      <div className="bg-slate-900 border border-slate-800 p-4 rounded-2xl flex flex-col md:flex-row gap-4 items-center">
+      <div className="bg-white border border-slate-200 p-4 rounded-2xl flex flex-col md:flex-row gap-4 items-center shadow-sm">
         <div className="flex-1 w-full relative">
-          <Search className="w-4 h-4 text-slate-500 absolute left-3 top-3" />
+          <Search className="w-4 h-4 text-slate-450 absolute left-3 top-3" />
           <input 
             type="text" 
             placeholder="Search artisans by name..." 
             value={search}
             onChange={e => setSearch(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 rounded-xl bg-slate-950 border border-slate-800 focus:outline-none focus:border-emerald-500 text-sm text-slate-200"
+            className="w-full pl-10 pr-4 py-2 rounded-xl bg-slate-50 border border-slate-250 focus:outline-none focus:border-emerald-800 text-sm text-slate-705 placeholder-slate-400"
           />
         </div>
 
         <select 
           value={categoryFilter}
           onChange={e => setCategoryFilter(e.target.value)}
-          className="w-full md:w-48 px-4 py-2 rounded-xl bg-slate-950 border border-slate-800 text-sm text-slate-200"
+          className="w-full md:w-48 px-4 py-2 rounded-xl bg-slate-50 border border-slate-250 text-sm text-slate-705 focus:outline-none"
         >
           <option value="All">All Categories</option>
           <option value="Plumbing">Plumbing</option>
@@ -2299,36 +2301,36 @@ function AllArtisansPage() {
         </select>
       </div>
 
-      <div className="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden">
+      <div className="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm">
         <div className="overflow-x-auto">
-          <table className="w-full text-sm text-left text-slate-400">
-            <thead className="text-xs text-slate-500 uppercase bg-slate-950/60 border-b border-slate-800">
+          <table className="w-full text-sm text-left text-slate-500">
+            <thead className="text-xs text-slate-400 uppercase bg-slate-50 border-b border-slate-200">
               <tr>
-                <th className="p-4">Name</th>
-                <th className="p-4">Category</th>
-                <th className="p-4">Zone</th>
-                <th className="p-4">Rating</th>
-                <th className="p-4">Status</th>
-                <th className="p-4 text-right">Details</th>
+                <th className="p-4 font-semibold">Name</th>
+                <th className="p-4 font-semibold">Category</th>
+                <th className="p-4 font-semibold">Zone</th>
+                <th className="p-4 font-semibold">Rating</th>
+                <th className="p-4 font-semibold">Status</th>
+                <th className="p-4 text-right font-semibold">Details</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-800/60">
+            <tbody className="divide-y divide-slate-100">
               {filtered.map(art => (
-                <tr key={art.uid} className="hover:bg-slate-950/30">
-                  <td className="p-4 font-semibold text-white">{art.fullName}</td>
+                <tr key={art.uid} className="hover:bg-slate-50/50">
+                  <td className="p-4 font-bold text-slate-900">{art.fullName}</td>
                   <td className="p-4">{art.category}</td>
                   <td className="p-4">{art.zone}</td>
                   <td className="p-4">
-                    <span className="flex items-center text-amber-400">
-                      <Star className="w-3.5 h-3.5 fill-amber-400 mr-1" />
+                    <span className="flex items-center text-amber-500">
+                      <Star className="w-3.5 h-3.5 fill-amber-500 mr-1" />
                       {art.ratingAverage || '0'}
                     </span>
                   </td>
                   <td className="p-4">
-                    <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider ${
-                      art.status === 'approved' ? 'bg-emerald-500/10 text-emerald-400' :
-                      art.status === 'pending' ? 'bg-amber-500/10 text-amber-400' :
-                      'bg-red-500/10 text-red-400'
+                    <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${
+                      art.status === 'approved' ? 'bg-emerald-50 text-emerald-800' :
+                      art.status === 'pending' ? 'bg-amber-50 text-amber-800' :
+                      'bg-red-50 text-red-800'
                     }`}>
                       {art.status}
                     </span>
@@ -2336,7 +2338,7 @@ function AllArtisansPage() {
                   <td className="p-4 text-right">
                     <Link 
                       to={`/admin/artisan/${art.uid}`}
-                      className="text-emerald-400 hover:text-emerald-300 text-xs font-bold"
+                      className="text-emerald-805 hover:text-emerald-950 text-xs font-bold"
                     >
                       Verify Info
                     </Link>
@@ -2359,39 +2361,39 @@ function AllJobsPage() {
   return (
     <div className="space-y-6 text-left">
       <div>
-        <h1 className="text-2xl font-bold text-white">System Job Board Log</h1>
-        <p className="text-slate-400 text-xs mt-1">Audit active service listings, contract prices, and bids.</p>
+        <h1 className="text-2xl font-bold text-slate-900">All Jobs</h1>
+        <p className="text-slate-500 text-xs mt-1">Audit active service listings, contract prices, and bids.</p>
       </div>
 
-      <div className="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden">
+      <div className="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm">
         <div className="overflow-x-auto">
-          <table className="w-full text-sm text-left text-slate-400">
-            <thead className="text-xs text-slate-500 uppercase bg-slate-950/60 border-b border-slate-800">
+          <table className="w-full text-sm text-left text-slate-500">
+            <thead className="text-xs text-slate-400 uppercase bg-slate-50 border-b border-slate-200">
               <tr>
-                <th className="p-4">Job Title</th>
-                <th className="p-4">Category</th>
-                <th className="p-4">Resident</th>
-                <th className="p-4">Hired Artisan</th>
-                <th className="p-4">Budget / Payout</th>
-                <th className="p-4">Status</th>
+                <th className="p-4 font-semibold">Job Title</th>
+                <th className="p-4 font-semibold">Category</th>
+                <th className="p-4 font-semibold">Resident</th>
+                <th className="p-4 font-semibold">Hired Artisan</th>
+                <th className="p-4 font-semibold">Budget / Price</th>
+                <th className="p-4 font-semibold">Status</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-800/60">
+            <tbody className="divide-y divide-slate-100">
               {jobs.map(job => (
-                <tr key={job.id} className="hover:bg-slate-950/30">
-                  <td className="p-4 font-semibold text-white">{job.title}</td>
+                <tr key={job.id} className="hover:bg-slate-50/50">
+                  <td className="p-4 font-bold text-slate-900">{job.title}</td>
                   <td className="p-4">{job.category}</td>
                   <td className="p-4">{job.residentName}</td>
-                  <td className="p-4">{job.hiredArtisanName || <span className="text-slate-650">Not hired yet</span>}</td>
-                  <td className="p-4 font-bold text-slate-350">
+                  <td className="p-4">{job.hiredArtisanName || <span className="text-slate-400 font-light italic">None</span>}</td>
+                  <td className="p-4 font-bold text-slate-800">
                     {job.agreedPrice ? `₦${job.agreedPrice.toLocaleString()}` : job.budget}
                   </td>
                   <td className="p-4">
-                    <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider ${
-                      job.status === 'open' ? 'bg-emerald-500/10 text-emerald-400' :
-                      job.status === 'in-progress' ? 'bg-blue-500/10 text-blue-400' :
-                      job.status === 'completed' ? 'bg-slate-850 text-slate-400' :
-                      'bg-red-500/10 text-red-400'
+                    <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${
+                      job.status === 'open' ? 'bg-emerald-50 text-emerald-800' :
+                      job.status === 'in-progress' ? 'bg-blue-50 text-blue-800' :
+                      job.status === 'completed' ? 'bg-slate-100 text-slate-500' :
+                      'bg-red-50 text-red-800'
                     }`}>
                       {job.status}
                     </span>
@@ -2417,52 +2419,52 @@ function ReportsPage() {
   return (
     <div className="space-y-6 text-left max-w-4xl mx-auto">
       <div>
-        <h1 className="text-2xl font-bold text-white">Reports & System Metrics</h1>
-        <p className="text-slate-400 text-xs mt-1">Statistical analysis of Redemption City's service marketplace transactions.</p>
+        <h1 className="text-2xl font-bold text-slate-900">Reports & Analytics</h1>
+        <p className="text-slate-505 text-xs mt-1">Platform operational and revenue charts.</p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="bg-slate-900 border border-slate-800 p-6 rounded-3xl">
-          <span className="text-slate-500 text-xs font-semibold uppercase">Platform Volume</span>
-          <p className="text-3xl font-extrabold text-white mt-1">{jobs.length} Jobs</p>
-          <span className="text-[10px] text-slate-500">Cumulative postings</span>
+        <div className="bg-white border border-slate-200 p-6 rounded-3xl shadow-sm">
+          <span className="text-slate-400 text-[10px] font-bold uppercase tracking-wider">Platform Volume</span>
+          <p className="text-3xl font-black text-slate-900 mt-1">{jobs.length} Jobs</p>
+          <span className="text-[10px] text-slate-450">Total posts</span>
         </div>
-        <div className="bg-slate-900 border border-slate-800 p-6 rounded-3xl">
-          <span className="text-slate-500 text-xs font-semibold uppercase">Completed Projects</span>
-          <p className="text-3xl font-extrabold text-emerald-400 mt-1">{completed.length} Jobs</p>
-          <span className="text-[10px] text-slate-500">Success rate: {Math.round((completed.length / (jobs.length || 1)) * 100)}%</span>
+        <div className="bg-white border border-slate-200 p-6 rounded-3xl shadow-sm">
+          <span className="text-slate-400 text-[10px] font-bold uppercase tracking-wider">Completed</span>
+          <p className="text-3xl font-black text-emerald-805 mt-1">{completed.length} Jobs</p>
+          <span className="text-[10px] text-slate-450">Success: {Math.round((completed.length / (jobs.length || 1)) * 100)}%</span>
         </div>
-        <div className="bg-slate-900 border border-slate-800 p-6 rounded-3xl">
-          <span className="text-slate-500 text-xs font-semibold uppercase">Platform Gross Settlement</span>
-          <p className="text-3xl font-extrabold text-emerald-400 mt-1">₦{revenue.toLocaleString()}</p>
-          <span className="text-[10px] text-slate-500">Total settled payouts</span>
+        <div className="bg-white border border-slate-200 p-6 rounded-3xl shadow-sm">
+          <span className="text-slate-400 text-[10px] font-bold uppercase tracking-wider">Gross Settlement</span>
+          <p className="text-3xl font-black text-emerald-805 mt-1">₦{revenue.toLocaleString()}</p>
+          <span className="text-[10px] text-slate-450">Total payouts processed</span>
         </div>
       </div>
 
       {/* Graphical Overview representation */}
-      <div className="bg-slate-900 border border-slate-800 p-6 rounded-3xl space-y-6">
+      <div className="bg-white border border-slate-200 p-6 rounded-3xl space-y-6 shadow-sm">
         <div>
-          <h3 className="font-bold text-white text-base">Weekly Activity Overview</h3>
-          <p className="text-xs text-slate-500">Represented in active posts per week</p>
+          <h3 className="font-bold text-slate-900 text-base">Weekly Activity Overview</h3>
+          <p className="text-xs text-slate-500">Active jobs volume weekly metrics</p>
         </div>
 
         {/* CSS Graph Line Mock */}
-        <div className="relative h-48 border border-slate-800/80 rounded-2xl bg-slate-950 p-6 flex flex-col justify-between">
+        <div className="relative h-48 border border-slate-200 rounded-2xl bg-slate-50 p-6 flex flex-col justify-between">
           <div className="flex items-end justify-between h-36">
-            <div className="h-10 w-2.5 bg-emerald-500/20 rounded-full flex flex-col justify-end">
-              <div className="h-6 w-full bg-emerald-500 rounded-full"></div>
+            <div className="h-10 w-2.5 bg-emerald-100 rounded-full flex flex-col justify-end">
+              <div className="h-6 w-full bg-emerald-800 rounded-full shadow-sm"></div>
             </div>
-            <div className="h-20 w-2.5 bg-emerald-500/20 rounded-full flex flex-col justify-end">
-              <div className="h-14 w-full bg-emerald-500 rounded-full animate-pulse"></div>
+            <div className="h-20 w-2.5 bg-emerald-100 rounded-full flex flex-col justify-end">
+              <div className="h-14 w-full bg-emerald-800 rounded-full shadow-sm"></div>
             </div>
-            <div className="h-32 w-2.5 bg-emerald-500/20 rounded-full flex flex-col justify-end">
-              <div className="h-24 w-full bg-emerald-500 rounded-full"></div>
+            <div className="h-32 w-2.5 bg-emerald-100 rounded-full flex flex-col justify-end">
+              <div className="h-24 w-full bg-emerald-800 rounded-full shadow-sm"></div>
             </div>
-            <div className="h-16 w-2.5 bg-emerald-500/20 rounded-full flex flex-col justify-end">
-              <div className="h-8 w-full bg-emerald-500 rounded-full"></div>
+            <div className="h-16 w-2.5 bg-emerald-100 rounded-full flex flex-col justify-end">
+              <div className="h-8 w-full bg-emerald-800 rounded-full shadow-sm"></div>
             </div>
           </div>
-          <div className="flex justify-between text-[10px] text-slate-500">
+          <div className="flex justify-between text-[9px] text-slate-450 font-bold uppercase tracking-wide">
             <span>May 1-7</span>
             <span>May 8-14</span>
             <span>May 15-21</span>
@@ -2477,38 +2479,38 @@ function ReportsPage() {
 // 25. Settings
 function SettingsPage() {
   return (
-    <div className="space-y-6 text-left max-w-xl mx-auto bg-slate-900 border border-slate-800 p-8 rounded-3xl shadow-xl">
+    <div className="space-y-6 text-left max-w-xl mx-auto bg-white border border-slate-200 p-8 rounded-3xl shadow-md">
       <div>
-        <h1 className="text-xl font-bold text-white">General Settings</h1>
-        <p className="text-slate-400 text-xs mt-1">Configure categories, zones, and platform parameters.</p>
+        <h1 className="text-xl font-bold text-slate-900">General Settings</h1>
+        <p className="text-slate-500 text-xs mt-1">Configure categories, zones, and verification thresholds.</p>
       </div>
 
       <div className="space-y-4">
-        <div className="p-4 bg-slate-950 border border-slate-850 rounded-2xl space-y-2">
-          <h3 className="text-sm font-bold text-white">Manage Service Zones</h3>
-          <p className="text-xs text-slate-500">Add or edit operational boundaries within Redemption City.</p>
+        <div className="p-4 bg-slate-50 border border-slate-200 rounded-2xl space-y-2">
+          <h3 className="text-sm font-bold text-slate-800">Manage Service Zones</h3>
+          <p className="text-xs text-slate-500">Edit active service zones inside Redemption City.</p>
           <div className="flex flex-wrap gap-2 pt-2">
-            <span className="px-2.5 py-1 rounded bg-slate-900 text-xs text-slate-350 border border-slate-800">Zone A (Active)</span>
-            <span className="px-2.5 py-1 rounded bg-slate-900 text-xs text-slate-350 border border-slate-800">Zone B (Active)</span>
-            <span className="px-2.5 py-1 rounded bg-slate-900 text-xs text-slate-350 border border-slate-800">Zone C (Active)</span>
+            <span className="px-2.5 py-1 rounded bg-white text-xs text-slate-700 border border-slate-200 font-semibold shadow-sm">Zone A (Active)</span>
+            <span className="px-2.5 py-1 rounded bg-white text-xs text-slate-700 border border-slate-200 font-semibold shadow-sm">Zone B (Active)</span>
+            <span className="px-2.5 py-1 rounded bg-white text-xs text-slate-700 border border-slate-200 font-semibold shadow-sm">Zone C (Active)</span>
           </div>
         </div>
 
-        <div className="p-4 bg-slate-950 border border-slate-850 rounded-2xl space-y-2">
-          <h3 className="text-sm font-bold text-white">Artisan Verification Rules</h3>
+        <div className="p-4 bg-slate-50 border border-slate-200 rounded-2xl space-y-2">
+          <h3 className="text-sm font-bold text-slate-800">Verification Rules</h3>
           <div className="flex items-center justify-between text-xs pt-1">
-            <span className="text-slate-400">Require government identity document</span>
-            <span className="text-emerald-400 font-bold">Enabled</span>
+            <span className="text-slate-500">Verify government identity documents</span>
+            <span className="text-emerald-800 font-bold">Always Required</span>
           </div>
           <div className="flex items-center justify-between text-xs">
-            <span className="text-slate-400">Require certifications for electricians</span>
-            <span className="text-emerald-400 font-bold">Enabled</span>
+            <span className="text-slate-500">Verify trade license certifications</span>
+            <span className="text-emerald-800 font-bold">Required</span>
           </div>
         </div>
 
         <button 
           onClick={() => alert('Settings saved!')}
-          className="w-full py-3 rounded-xl bg-emerald-500 text-slate-950 font-bold hover:bg-emerald-400 transition"
+          className="w-full py-2.5 rounded-xl bg-emerald-800 hover:bg-emerald-900 text-white font-bold shadow transition"
         >
           Save Platform Changes
         </button>
@@ -2566,7 +2568,7 @@ export default function App() {
           </Route>
 
           {/* Catch-all redirection */}
-          <Route path="*" element={<Link to="/" className="text-center p-12 text-sm text-emerald-400 block hover:underline">Page not found. Return to Home</Link>} />
+          <Route path="*" element={<Link to="/" className="text-center p-12 text-sm text-emerald-800 block hover:underline">Page not found. Return to Home</Link>} />
         </Routes>
       </BrowserRouter>
     </AuthProvider>

@@ -79,31 +79,32 @@ export default function ProtectedLayout({ allowedRoles }) {
   const navItems = getNavItems();
 
   return (
-    <div className="min-h-screen bg-slate-950 flex flex-col md:flex-row text-slate-100 font-sans">
+    <div className="min-h-screen bg-slate-50 flex flex-col md:flex-row text-slate-800 font-sans">
       
       {/* SIDEBAR FOR DESKTOP */}
-      <aside className="hidden md:flex flex-col w-64 bg-slate-900 border-r border-slate-800/80 sticky top-0 h-screen p-5 justify-between">
-        <div className="space-y-8">
+      <aside className="hidden md:flex flex-col w-64 bg-white border-r border-slate-200 sticky top-0 h-screen p-5 justify-between shadow-sm">
+        <div className="space-y-6">
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-3 group">
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-emerald-500 to-amber-500 flex items-center justify-center shadow-md">
-              <svg className="w-5 h-5 text-slate-950" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+            <div className="w-9 h-9 rounded-xl bg-emerald-800 flex items-center justify-center shadow-md">
+              <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
               </svg>
             </div>
-            <span className="text-lg font-bold bg-gradient-to-r from-white to-emerald-400 bg-clip-text text-transparent">
-              CampCraft
-            </span>
+            <div>
+              <span className="text-lg font-bold text-slate-900 block leading-tight">CampCraft</span>
+              <span className="text-[9px] text-slate-500 font-medium tracking-tight">Redemption City's Finder</span>
+            </div>
           </Link>
 
           {/* User profile capsule in sidebar */}
-          <div className="p-3 bg-slate-950/50 rounded-xl border border-slate-800 flex items-center space-x-3">
-            <div className="w-10 h-10 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center font-bold text-emerald-400">
+          <div className="p-3 bg-slate-50 rounded-xl border border-slate-200 flex items-center space-x-3">
+            <div className="w-10 h-10 rounded-full bg-emerald-800 flex items-center justify-center font-bold text-white shadow-sm">
               {currentUser.fullName ? currentUser.fullName[0].toUpperCase() : 'U'}
             </div>
             <div className="min-w-0 flex-1">
-              <h4 className="text-xs font-bold text-white truncate">{currentUser.fullName}</h4>
-              <p className="text-[10px] uppercase font-semibold text-emerald-500 tracking-wider">
+              <h4 className="text-xs font-bold text-slate-800 truncate">{currentUser.fullName}</h4>
+              <p className="text-[10px] uppercase font-bold text-emerald-800 tracking-wider">
                 {currentUser.role}
               </p>
             </div>
@@ -120,11 +121,11 @@ export default function ProtectedLayout({ allowedRoles }) {
                   to={item.path}
                   className={`flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-150 ${
                     isActive 
-                      ? 'bg-emerald-500 text-slate-950 font-bold shadow-md shadow-emerald-500/10' 
-                      : 'text-slate-400 hover:text-white hover:bg-slate-800/50'
+                      ? 'bg-emerald-50 text-emerald-800 font-bold border-l-4 border-emerald-800' 
+                      : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/60'
                   }`}
                 >
-                  <Icon className="w-4 h-4 shrink-0" />
+                  <Icon className={`w-4 h-4 shrink-0 ${isActive ? 'text-emerald-800' : 'text-slate-400'}`} />
                   <span>{item.label}</span>
                 </Link>
               );
@@ -135,25 +136,25 @@ export default function ProtectedLayout({ allowedRoles }) {
         {/* Logout button at bottom of sidebar */}
         <button
           onClick={handleLogout}
-          className="flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-400 hover:text-red-400 hover:bg-red-500/10 transition-colors mt-auto"
+          className="flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-500 hover:text-red-700 hover:bg-red-50 transition-colors mt-auto"
         >
-          <LogOut className="w-4 h-4" />
+          <LogOut className="w-4 h-4 text-slate-450" />
           <span>Logout</span>
         </button>
       </aside>
 
       {/* MOBILE HEADER */}
-      <header className="md:hidden bg-slate-900 border-b border-slate-800 p-4 flex items-center justify-between sticky top-0 z-40">
-        <Link to="/" className="flex items-center space-x-3">
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-emerald-500 to-amber-500 flex items-center justify-center text-slate-950 font-bold text-sm">
+      <header className="md:hidden bg-white border-b border-slate-200 p-4 flex items-center justify-between sticky top-0 z-40">
+        <Link to="/" className="flex items-center space-x-2">
+          <div className="w-8 h-8 rounded-lg bg-emerald-800 flex items-center justify-center text-white font-bold text-sm">
             ⛺
           </div>
-          <span className="font-bold text-white">CampCraft</span>
+          <span className="font-bold text-slate-950">CampCraft</span>
         </Link>
 
         <button 
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          className="p-1 rounded-md text-slate-400 hover:text-white focus:outline-none"
+          className="p-1 rounded-md text-slate-500 hover:text-slate-900 focus:outline-none"
         >
           {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
         </button>
@@ -161,37 +162,39 @@ export default function ProtectedLayout({ allowedRoles }) {
 
       {/* MOBILE SIDEBAR MODAL OVERLAY */}
       {mobileMenuOpen && (
-        <div className="md:hidden fixed inset-0 z-30 bg-slate-950/90 flex flex-col p-6 space-y-6 pt-24 animate-fade-in">
-          {navItems.map((item) => {
-            const Icon = item.icon;
-            const isActive = location.pathname.startsWith(item.path);
-            return (
-              <Link
-                key={item.path}
-                to={item.path}
-                onClick={() => setMobileMenuOpen(false)}
-                className={`flex items-center space-x-4 px-4 py-3 rounded-xl text-base font-semibold transition-all ${
-                  isActive 
-                    ? 'bg-emerald-500 text-slate-950 shadow-lg shadow-emerald-500/10' 
-                    : 'text-slate-300 hover:text-white hover:bg-slate-900'
-                }`}
-              >
-                <Icon className="w-5 h-5" />
-                <span>{item.label}</span>
-              </Link>
-            );
-          })}
-          
-          <button
-            onClick={() => {
-              setMobileMenuOpen(false);
-              handleLogout();
-            }}
-            className="flex items-center space-x-4 px-4 py-3 rounded-xl text-base font-semibold text-slate-400 hover:text-red-400 transition-colors"
-          >
-            <LogOut className="w-5 h-5" />
-            <span>Logout</span>
-          </button>
+        <div className="md:hidden fixed inset-0 z-30 bg-slate-950/40 flex flex-col p-6 space-y-6 pt-24 backdrop-blur-sm">
+          <div className="bg-white rounded-2xl p-6 shadow-xl flex flex-col space-y-4">
+            {navItems.map((item) => {
+              const Icon = item.icon;
+              const isActive = location.pathname.startsWith(item.path);
+              return (
+                <Link
+                  key={item.path}
+                  to={item.path}
+                  onClick={() => setMobileMenuOpen(false)}
+                  className={`flex items-center space-x-4 px-4 py-3 rounded-xl text-base font-semibold transition-all ${
+                    isActive 
+                      ? 'bg-emerald-50 text-emerald-800 border-l-4 border-emerald-800' 
+                      : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
+                  }`}
+                >
+                  <Icon className="w-5 h-5" />
+                  <span>{item.label}</span>
+                </Link>
+              );
+            })}
+            
+            <button
+              onClick={() => {
+                setMobileMenuOpen(false);
+                handleLogout();
+              }}
+              className="flex items-center space-x-4 px-4 py-3 rounded-xl text-base font-semibold text-slate-500 hover:text-red-700 hover:bg-red-50 transition-colors"
+            >
+              <LogOut className="w-5 h-5" />
+              <span>Logout</span>
+            </button>
+          </div>
         </div>
       )}
 
