@@ -14,7 +14,8 @@ import {
   BarChart3,
   Menu,
   X,
-  FileText
+  FileText,
+  Home
 } from 'lucide-react';
 
 export default function ProtectedLayout({ allowedRoles }) {
@@ -147,7 +148,7 @@ export default function ProtectedLayout({ allowedRoles }) {
       <header className="md:hidden bg-white border-b border-slate-200 p-4 flex items-center justify-between sticky top-0 z-40">
         <Link to="/" className="flex items-center space-x-2">
           <div className="w-8 h-8 rounded-lg bg-emerald-800 flex items-center justify-center text-white font-bold text-sm">
-            ⛺
+            <Home className="w-4 h-4" />
           </div>
           <span className="font-bold text-slate-950">CampCraft</span>
         </Link>

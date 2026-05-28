@@ -5,7 +5,8 @@ import { useAuth } from './contexts/AuthContext';
 import ProtectedLayout from './components/ProtectedLayout';
 import { 
   Star, Search, MapPin, AlertCircle, Wrench, UploadCloud, ChevronRight,
-  PlusCircle, User, Settings
+  PlusCircle, User, Settings, Droplets, Zap, Hammer, Paintbrush,
+  Flame, Cpu, WashingMachine, ShieldCheck, Home
 } from 'lucide-react';
 
 // ==========================================
@@ -16,13 +17,13 @@ import {
 function LandingPage() {
   const { currentUser } = useAuth();
   const categories = [
-    { name: 'Plumbing', icon: '🚿', color: 'bg-emerald-50 text-emerald-800' },
-    { name: 'Electrical', icon: '⚡', color: 'bg-emerald-50 text-emerald-800' },
-    { name: 'Carpentry', icon: '🪚', color: 'bg-emerald-50 text-emerald-800' },
-    { name: 'Painting', icon: '🎨', color: 'bg-emerald-50 text-emerald-800' },
-    { name: 'Welding', icon: '🔥', color: 'bg-emerald-50 text-emerald-800' },
-    { name: 'Generator Repair', icon: '⚙️', color: 'bg-emerald-50 text-emerald-800' },
-    { name: 'Laundry Services', icon: '🧺', color: 'bg-emerald-50 text-emerald-800' },
+    { name: 'Plumbing', Icon: Droplets },
+    { name: 'Electrical', Icon: Zap },
+    { name: 'Carpentry', Icon: Hammer },
+    { name: 'Painting', Icon: Paintbrush },
+    { name: 'Welding', Icon: Flame },
+    { name: 'Generator Repair', Icon: Cpu },
+    { name: 'Laundry Services', Icon: WashingMachine },
   ];
 
   return (
@@ -31,8 +32,8 @@ function LandingPage() {
       <header className="border-b border-slate-200 bg-white sticky top-0 z-50 shadow-sm">
         <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center space-x-3">
-            <div className="w-9 h-9 rounded-xl bg-emerald-800 flex items-center justify-center text-white font-extrabold shadow-md">
-              ⛺
+            <div className="w-9 h-9 rounded-xl bg-emerald-800 flex items-center justify-center text-white shadow-md">
+              <Home className="w-5 h-5" />
             </div>
             <div>
               <span className="text-base font-bold text-slate-900 block leading-tight">CampCraft</span>
@@ -107,8 +108,12 @@ function LandingPage() {
               <h3 className="text-xl font-extrabold text-slate-900 mt-1">Verified Professionals Only</h3>
             </div>
             <div className="flex justify-center space-x-2">
-              <span className="px-2.5 py-1 rounded bg-slate-100 text-[10px] font-bold text-slate-600">🛡️ 100% Insured</span>
-              <span className="px-2.5 py-1 rounded bg-slate-100 text-[10px] font-bold text-slate-600">⚡ Verified Ratings</span>
+              <span className="px-2.5 py-1 rounded bg-slate-100 text-[10px] font-bold text-slate-600 flex items-center gap-1">
+                <ShieldCheck className="w-3 h-3" /> 100% Insured
+              </span>
+              <span className="px-2.5 py-1 rounded bg-slate-100 text-[10px] font-bold text-slate-600 flex items-center gap-1">
+                <Zap className="w-3 h-3" /> Verified Ratings
+              </span>
             </div>
           </div>
         </div>
@@ -128,21 +133,26 @@ function LandingPage() {
         </div>
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 px-4">
-          {categories.map((c, i) => (
-            <Link 
-              key={i} 
-              to="/login"
-              className={`p-6 rounded-2xl bg-white border border-slate-200 hover:border-emerald-800 hover:shadow-md transition-all flex flex-col justify-between h-32 text-left group`}
-            >
-              <div className="flex items-center justify-between">
-                <span className="text-2xl">{c.icon}</span>
-                <span className="text-[10px] uppercase font-bold text-slate-450 tracking-wider">Browse</span>
-              </div>
-              <div>
-                <h4 className="font-extrabold text-slate-900 group-hover:text-emerald-800 transition-colors">{c.name}</h4>
-              </div>
-            </Link>
-          ))}
+          {categories.map((c, i) => {
+            const CatIcon = c.Icon;
+            return (
+              <Link 
+                key={i} 
+                to="/login"
+                className="p-6 rounded-2xl bg-white border border-slate-200 hover:border-emerald-800 hover:shadow-md transition-all flex flex-col justify-between h-32 text-left group"
+              >
+                <div className="flex items-center justify-between">
+                  <span className="w-9 h-9 rounded-xl bg-emerald-50 flex items-center justify-center text-emerald-800 border border-emerald-100">
+                    <CatIcon className="w-5 h-5" />
+                  </span>
+                  <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Browse</span>
+                </div>
+                <div>
+                  <h4 className="font-extrabold text-slate-900 group-hover:text-emerald-800 transition-colors">{c.name}</h4>
+                </div>
+              </Link>
+            );
+          })}
         </div>
       </section>
 
@@ -202,7 +212,9 @@ function RegisterPage() {
     <div className="min-h-screen bg-slate-50 text-slate-800 flex flex-col justify-center items-center px-4 py-12 relative">
       <div className="absolute top-8 left-8">
         <Link to="/" className="flex items-center space-x-2 font-bold text-slate-900 text-lg">
-          <span className="w-8 h-8 rounded-lg bg-emerald-800 flex items-center justify-center text-white">⛺</span>
+          <span className="w-8 h-8 rounded-lg bg-emerald-800 flex items-center justify-center text-white">
+            <Home className="w-4 h-4" />
+          </span>
           <span>CampCraft</span>
         </Link>
       </div>
@@ -355,13 +367,13 @@ function RegisterPage() {
                     onChange={e => setCategory(e.target.value)}
                     className="w-full px-4 py-2 rounded-xl bg-white border border-slate-300 focus:outline-none focus:border-emerald-800 text-sm text-slate-800"
                   >
-                    <option value="Plumbing">🚿 Plumbing</option>
-                    <option value="Electrical">⚡ Electrical</option>
-                    <option value="Carpentry">🪚 Carpentry</option>
-                    <option value="Painting">🎨 Painting</option>
-                    <option value="Welding">🔥 Welding</option>
-                    <option value="Generator Repair">⚙️ Generator Repair</option>
-                    <option value="Laundry Services">🧺 Laundry Services</option>
+                    <option value="Plumbing">Plumbing</option>
+                    <option value="Electrical">Electrical</option>
+                    <option value="Carpentry">Carpentry</option>
+                    <option value="Painting">Painting</option>
+                    <option value="Welding">Welding</option>
+                    <option value="Generator Repair">Generator Repair</option>
+                    <option value="Laundry Services">Laundry Services</option>
                   </select>
                 </div>
 
@@ -434,7 +446,9 @@ function LoginPage() {
     <div className="min-h-screen bg-slate-50 text-slate-800 flex flex-col justify-center items-center px-4 py-12 relative">
       <div className="absolute top-8 left-8">
         <Link to="/" className="flex items-center space-x-2 font-bold text-slate-900 text-lg">
-          <span className="w-8 h-8 rounded-lg bg-emerald-800 flex items-center justify-center text-white">⛺</span>
+          <span className="w-8 h-8 rounded-lg bg-emerald-800 flex items-center justify-center text-white">
+            <Home className="w-4 h-4" />
+          </span>
           <span>CampCraft</span>
         </Link>
       </div>
@@ -511,7 +525,9 @@ function ForgotPasswordPage() {
     <div className="min-h-screen bg-slate-50 text-slate-800 flex flex-col justify-center items-center px-4 py-12 relative">
       <div className="absolute top-8 left-8">
         <Link to="/" className="flex items-center space-x-2 font-bold text-slate-900 text-lg">
-          <span className="w-8 h-8 rounded-lg bg-emerald-800 flex items-center justify-center text-white">⛺</span>
+          <span className="w-8 h-8 rounded-lg bg-emerald-800 flex items-center justify-center text-white">
+            <Home className="w-4 h-4" />
+          </span>
           <span>CampCraft</span>
         </Link>
       </div>
@@ -719,13 +735,13 @@ function BrowseArtisans() {
             className="flex-1 md:w-48 px-4 py-2 rounded-xl bg-slate-50 border border-slate-250 text-sm text-slate-700 focus:outline-none"
           >
             <option value="All">All Categories</option>
-            <option value="Plumbing">🚿 Plumbing</option>
-            <option value="Electrical">⚡ Electrical</option>
-            <option value="Carpentry">🪚 Carpentry</option>
-            <option value="Painting">🎨 Painting</option>
-            <option value="Welding">🔥 Welding</option>
-            <option value="Generator Repair">⚙️ Generator Repair</option>
-            <option value="Laundry Services">🧺 Laundry Services</option>
+            <option value="Plumbing">Plumbing</option>
+            <option value="Electrical">Electrical</option>
+            <option value="Carpentry">Carpentry</option>
+            <option value="Painting">Painting</option>
+            <option value="Welding">Welding</option>
+            <option value="Generator Repair">Generator Repair</option>
+            <option value="Laundry Services">Laundry Services</option>
           </select>
 
           <select 
@@ -946,13 +962,13 @@ function PostJobPage() {
               onChange={e => setCategory(e.target.value)}
               className="w-full px-4 py-2 rounded-xl bg-white border border-slate-300 focus:outline-none focus:border-emerald-800 text-sm text-slate-800"
             >
-              <option value="Plumbing">🚿 Plumbing</option>
-              <option value="Electrical">⚡ Electrical</option>
-              <option value="Carpentry">🪚 Carpentry</option>
-              <option value="Painting">🎨 Painting</option>
-              <option value="Welding">🔥 Welding</option>
-              <option value="Generator Repair">⚙️ Generator Repair</option>
-              <option value="Laundry Services">🧺 Laundry Services</option>
+              <option value="Plumbing">Plumbing</option>
+              <option value="Electrical">Electrical</option>
+              <option value="Carpentry">Carpentry</option>
+              <option value="Painting">Painting</option>
+              <option value="Welding">Welding</option>
+              <option value="Generator Repair">Generator Repair</option>
+              <option value="Laundry Services">Laundry Services</option>
             </select>
           </div>
 
@@ -1511,13 +1527,13 @@ function FindJobsPage() {
             className="flex-1 md:w-48 px-4 py-2 rounded-xl bg-slate-50 border border-slate-255 text-sm text-slate-705 focus:outline-none"
           >
             <option value="All">All Categories</option>
-            <option value="Plumbing">🚿 Plumbing</option>
-            <option value="Electrical">⚡ Electrical</option>
-            <option value="Carpentry">🪚 Carpentry</option>
-            <option value="Painting">🎨 Painting</option>
-            <option value="Welding">🔥 Welding</option>
-            <option value="Generator Repair">⚙️ Generator Repair</option>
-            <option value="Laundry Services">🧺 Laundry Services</option>
+            <option value="Plumbing">Plumbing</option>
+            <option value="Electrical">Electrical</option>
+            <option value="Carpentry">Carpentry</option>
+            <option value="Painting">Painting</option>
+            <option value="Welding">Welding</option>
+            <option value="Generator Repair">Generator Repair</option>
+            <option value="Laundry Services">Laundry Services</option>
           </select>
 
           <select 
