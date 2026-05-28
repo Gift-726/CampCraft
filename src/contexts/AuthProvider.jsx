@@ -11,7 +11,7 @@ import { AuthContext } from './AuthContext';
 
 // Check if Firebase is valid or if we should use Mock Mode
 const isFirebaseMock = () => {
-  const apiKey = import.meta.env.VITE_FIREBASE_API_KEY;
+  const apiKey = (import.meta.env.VITE_FIREBASE_API_KEY || '').trim().replace(/[,"']+$/, '');
   return !apiKey || apiKey === 'your_api_key_here' || apiKey === '';
 };
 
@@ -248,27 +248,50 @@ export function AuthProvider({ children }) {
   // --- AUTH ACTIONS ---
 
   const login = async (email, password) => {
-    if (isMock) {
+    // Helper: try mock login
+    const tryMockLogin = (emailKey) => {
+      initMockDatabase();
       const mockUsers = getMockData('cc_users');
-      const user = mockUsers[email.toLowerCase()];
+      const user = mockUsers[emailKey];
       if (user) {
         setCurrentUser(user);
         localStorage.setItem('cc_current_user', JSON.stringify(user));
         return user;
-      } else {
-        throw new Error('User not found in mock database. Try resident@example.com, artisan@example.com, or admin@example.com');
       }
+      return null;
+    };
+
+    if (isMock) {
+      const user = tryMockLogin(email.toLowerCase());
+      if (user) return user;
+      throw new Error('User not found. Try resident@example.com, artisan@example.com, or admin@example.com');
     } else {
-      const userCredential = await signInWithEmailAndPassword(auth, email, password);
-      const userDoc = await getDoc(doc(db, 'users', userCredential.user.uid));
-      const userData = userDoc.exists() ? userDoc.data() : { role: 'resident' };
-      const fullUser = {
-        uid: userCredential.user.uid,
-        email: userCredential.user.email,
-        ...userData
-      };
-      setCurrentUser(fullUser);
-      return fullUser;
+      try {
+        const userCredential = await signInWithEmailAndPassword(auth, email, password);
+        const userDoc = await getDoc(doc(db, 'users', userCredential.user.uid));
+        const userData = userDoc.exists() ? userDoc.data() : { role: 'resident' };
+        const fullUser = {
+          uid: userCredential.user.uid,
+          email: userCredential.user.email,
+          ...userData
+        };
+        setCurrentUser(fullUser);
+        return fullUser;
+      } catch (firebaseErr) {
+        // If user doesn't exist in Firebase yet, fall back to mock database
+        // This allows demo accounts to work even when Firebase Auth is connected
+        const code = firebaseErr?.code || '';
+        if (code === 'auth/invalid-credential' || code === 'auth/user-not-found' || code === 'auth/wrong-password') {
+          const user = tryMockLogin(email.toLowerCase());
+          if (user) return user;
+        }
+        // Re-throw with a friendlier message
+        throw new Error(
+          code === 'auth/invalid-credential' || code === 'auth/user-not-found' || code === 'auth/wrong-password'
+            ? 'Invalid email or password. Check your credentials and try again.'
+            : firebaseErr.message
+        );
+      }
     }
   };
 
