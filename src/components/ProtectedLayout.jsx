@@ -76,7 +76,7 @@ export default function ProtectedLayout({ allowedRoles }) {
   const navItems = getNavItems();
   const initials = currentUser.fullName
     ? currentUser.fullName.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase()
-    : 'U';
+    : (currentUser.email ? currentUser.email.split('@')[0].slice(0, 2).toUpperCase() : 'U');
 
   return (
     <div className="min-h-screen bg-slate-50 flex text-slate-800 font-sans">
@@ -181,7 +181,7 @@ export default function ProtectedLayout({ allowedRoles }) {
                 {initials}
               </div>
               <div className="hidden sm:block text-left">
-                <p className="text-xs font-bold text-slate-800 leading-tight">{currentUser.fullName}</p>
+                <p className="text-xs font-bold text-slate-800 leading-tight">{currentUser.fullName || currentUser.email || 'User'}</p>
                 <p className="text-[10px] text-slate-500 capitalize">{currentUser.role}</p>
               </div>
               <ChevronDown className="w-3.5 h-3.5 text-slate-400 hidden sm:block" />
