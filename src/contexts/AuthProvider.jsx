@@ -468,8 +468,16 @@ export function AuthProvider({ children }) {
       setJobs(updated);
       return newJob;
     } else {
+      const cleanJobData = {};
+      Object.keys(jobData).forEach(key => {
+        if (jobData[key] !== undefined) {
+          cleanJobData[key] = jobData[key];
+        }
+      });
+      
       const newJob = {
-        ...jobData,
+        residentName: jobData.residentName || currentUser?.fullName || currentUser?.email || 'Resident',
+        ...cleanJobData,
         status: 'open',
         bids: [],
         createdAt: Date.now()
@@ -598,12 +606,12 @@ export function AuthProvider({ children }) {
     } else {
       const userRef = doc(db, 'users', uid);
       const artisanRef = doc(db, 'artisans', uid);
-      await updateDoc(userRef, {
+      await setDoc(userRef, {
         fullName: profileData.fullName,
         phone: profileData.phone,
         zone: profileData.zone
-      });
-      await updateDoc(artisanRef, profileData);
+      }, { merge: true });
+      await setDoc(artisanRef, profileData, { merge: true });
       if (currentUser && currentUser.uid === uid) {
         setCurrentUser(prev => ({ ...prev, ...profileData }));
       }
@@ -623,7 +631,7 @@ export function AuthProvider({ children }) {
       }
     } else {
       const userRef = doc(db, 'users', uid);
-      await updateDoc(userRef, profileData);
+      await setDoc(userRef, profileData, { merge: true });
       setCurrentUser(prev => ({ ...prev, ...profileData }));
     }
   };
