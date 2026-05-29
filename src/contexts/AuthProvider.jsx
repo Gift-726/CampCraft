@@ -5,7 +5,7 @@ import {
   signOut, 
   onAuthStateChanged 
 } from 'firebase/auth';
-import { doc, getDoc, setDoc } from 'firebase/firestore';
+import { doc, getDoc, setDoc, updateDoc, addDoc, collection, onSnapshot } from 'firebase/firestore';
 import { auth, db } from '../firebase';
 import { AuthContext } from './AuthContext';
 
@@ -213,7 +213,7 @@ export function AuthProvider({ children }) {
   useEffect(() => {
     if (isMock) return;
     try {
-      const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      const unsubscribeAuth = onAuthStateChanged(auth, async (user) => {
         if (user) {
           const userDocRef = doc(db, 'users', user.uid);
           const userDoc = await getDoc(userDocRef);
@@ -238,7 +238,30 @@ export function AuthProvider({ children }) {
         console.error("Firebase auth error:", error);
         setLoading(false);
       });
-      return unsubscribe;
+
+      const unsubscribeJobs = onSnapshot(collection(db, 'jobs'), (snapshot) => {
+        const jobsList = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        jobsList.sort((a, b) => b.createdAt - a.createdAt);
+        setJobs(jobsList);
+      }, (err) => console.error("Firestore jobs listener error:", err));
+
+      const unsubscribeArtisans = onSnapshot(collection(db, 'artisans'), (snapshot) => {
+        const artisansList = snapshot.docs.map(doc => ({ uid: doc.id, ...doc.data() }));
+        setArtisans(artisansList);
+      }, (err) => console.error("Firestore artisans listener error:", err));
+
+      const unsubscribeRatings = onSnapshot(collection(db, 'ratings'), (snapshot) => {
+        const ratingsList = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        ratingsList.sort((a, b) => b.createdAt - a.createdAt);
+        setRatings(ratingsList);
+      }, (err) => console.error("Firestore ratings listener error:", err));
+
+      return () => {
+        unsubscribeAuth();
+        unsubscribeJobs();
+        unsubscribeArtisans();
+        unsubscribeRatings();
+      };
     } catch (err) {
       console.error("Firebase initialization failed.", err);
       setTimeout(() => setLoading(false), 0);
@@ -431,7 +454,7 @@ export function AuthProvider({ children }) {
   const getArtisans = () => artisans;
   const getRatings = () => ratings;
 
-  const createJob = (jobData) => {
+  const createJob = async (jobData) => {
     if (isMock) {
       const newJob = {
         id: 'j_' + Date.now(),
@@ -444,10 +467,18 @@ export function AuthProvider({ children }) {
       saveMockData('cc_jobs', updated);
       setJobs(updated);
       return newJob;
+    } else {
+      const newJob = {
+        ...jobData,
+        status: 'open',
+        bids: [],
+        createdAt: Date.now()
+      };
+      await addDoc(collection(db, 'jobs'), newJob);
     }
   };
 
-  const placeBid = (jobId, bidData) => {
+  const placeBid = async (jobId, bidData) => {
     if (isMock) {
       const updated = jobs.map(j => {
         if (j.id === jobId) {
@@ -461,10 +492,19 @@ export function AuthProvider({ children }) {
       });
       saveMockData('cc_jobs', updated);
       setJobs(updated);
+    } else {
+      const jobRef = doc(db, 'jobs', jobId);
+      const jobDoc = await getDoc(jobRef);
+      if (jobDoc.exists()) {
+        const job = jobDoc.data();
+        const cleanBids = (job.bids || []).filter(b => b.artisanId !== bidData.artisanId);
+        const updatedBids = [...cleanBids, { ...bidData, createdAt: Date.now() }];
+        await updateDoc(jobRef, { bids: updatedBids });
+      }
     }
   };
 
-  const hireArtisanForJob = (jobId, artisanId, price) => {
+  const hireArtisanForJob = async (jobId, artisanId, price) => {
     if (isMock) {
       const artisan = artisans.find(a => a.uid === artisanId);
       const updated = jobs.map(j => {
@@ -481,10 +521,21 @@ export function AuthProvider({ children }) {
       });
       saveMockData('cc_jobs', updated);
       setJobs(updated);
+    } else {
+      const jobRef = doc(db, 'jobs', jobId);
+      const artisanRef = doc(db, 'artisans', artisanId);
+      const artisanDoc = await getDoc(artisanRef);
+      const artisanName = artisanDoc.exists() ? artisanDoc.data().fullName : 'Hired Artisan';
+      await updateDoc(jobRef, {
+        status: 'in-progress',
+        hiredArtisanId: artisanId,
+        hiredArtisanName: artisanName,
+        agreedPrice: Number(price)
+      });
     }
   };
 
-  const completeJob = (jobId) => {
+  const completeJob = async (jobId) => {
     if (isMock) {
       const updated = jobs.map(j => {
         if (j.id === jobId) {
@@ -494,10 +545,13 @@ export function AuthProvider({ children }) {
       });
       saveMockData('cc_jobs', updated);
       setJobs(updated);
+    } else {
+      const jobRef = doc(db, 'jobs', jobId);
+      await updateDoc(jobRef, { status: 'completed' });
     }
   };
 
-  const cancelJob = (jobId) => {
+  const cancelJob = async (jobId) => {
     if (isMock) {
       const updated = jobs.map(j => {
         if (j.id === jobId) {
@@ -507,18 +561,24 @@ export function AuthProvider({ children }) {
       });
       saveMockData('cc_jobs', updated);
       setJobs(updated);
+    } else {
+      const jobRef = doc(db, 'jobs', jobId);
+      await updateDoc(jobRef, { status: 'cancelled' });
     }
   };
 
-  const updateArtisanStatus = (uid, status) => {
+  const updateArtisanStatus = async (uid, status) => {
     if (isMock) {
       const updated = artisans.map(a => a.uid === uid ? { ...a, status } : a);
       saveMockData('cc_artisans', updated);
       setArtisans(updated);
+    } else {
+      const artisanRef = doc(db, 'artisans', uid);
+      await updateDoc(artisanRef, { status });
     }
   };
 
-  const updateArtisanProfile = (uid, profileData) => {
+  const updateArtisanProfile = async (uid, profileData) => {
     if (isMock) {
       const updated = artisans.map(a => a.uid === uid ? { ...a, ...profileData } : a);
       saveMockData('cc_artisans', updated);
@@ -535,10 +595,40 @@ export function AuthProvider({ children }) {
           localStorage.setItem('cc_current_user', JSON.stringify(newCurrentUser));
         }
       }
+    } else {
+      const userRef = doc(db, 'users', uid);
+      const artisanRef = doc(db, 'artisans', uid);
+      await updateDoc(userRef, {
+        fullName: profileData.fullName,
+        phone: profileData.phone,
+        zone: profileData.zone
+      });
+      await updateDoc(artisanRef, profileData);
+      if (currentUser && currentUser.uid === uid) {
+        setCurrentUser(prev => ({ ...prev, ...profileData }));
+      }
     }
   };
 
-  const submitRating = (ratingData) => {
+  const updateResidentProfile = async (uid, profileData) => {
+    if (isMock) {
+      const mockUsers = getMockData('cc_users');
+      const email = Object.keys(mockUsers).find(k => mockUsers[k].uid === uid);
+      if (email) {
+        mockUsers[email] = { ...mockUsers[email], ...profileData };
+        saveMockData('cc_users', mockUsers);
+        const newCurrentUser = { ...currentUser, ...profileData };
+        setCurrentUser(newCurrentUser);
+        localStorage.setItem('cc_current_user', JSON.stringify(newCurrentUser));
+      }
+    } else {
+      const userRef = doc(db, 'users', uid);
+      await updateDoc(userRef, profileData);
+      setCurrentUser(prev => ({ ...prev, ...profileData }));
+    }
+  };
+
+  const submitRating = async (ratingData) => {
     if (isMock) {
       const newRating = {
         id: 'r_' + Date.now(),
@@ -565,6 +655,26 @@ export function AuthProvider({ children }) {
       });
       saveMockData('cc_artisans', updatedArtisans);
       setArtisans(updatedArtisans);
+    } else {
+      const ratingPayload = {
+        ...ratingData,
+        createdAt: Date.now()
+      };
+      await addDoc(collection(db, 'ratings'), ratingPayload);
+
+      // Update artisan average rating
+      const artisanRef = doc(db, 'artisans', ratingData.artisanId);
+      const artisanDoc = await getDoc(artisanRef);
+      if (artisanDoc.exists()) {
+        const art = artisanDoc.data();
+        const currentTotal = (art.ratingAverage || 0) * (art.ratingCount || 0);
+        const newCount = (art.ratingCount || 0) + 1;
+        const newAvg = Number(((currentTotal + ratingData.rating) / newCount).toFixed(1));
+        await updateDoc(artisanRef, {
+          ratingAverage: newAvg,
+          ratingCount: newCount
+        });
+      }
     }
   };
 
@@ -588,6 +698,7 @@ export function AuthProvider({ children }) {
       cancelJob,
       updateArtisanStatus,
       updateArtisanProfile,
+      updateResidentProfile,
       submitRating
     }}>
       {!loading && children}

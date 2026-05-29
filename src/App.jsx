@@ -6,7 +6,7 @@ import ProtectedLayout from './components/ProtectedLayout';
 import { 
   Star, Search, MapPin, AlertCircle, Wrench, UploadCloud, ChevronRight,
   PlusCircle, User, Settings, Droplets, Zap, Hammer, Paintbrush,
-  Flame, Cpu, WashingMachine, ShieldCheck, Home
+  Flame, Cpu, WashingMachine, ShieldCheck, Home, Briefcase
 } from 'lucide-react';
 
 // ==========================================
@@ -30,26 +30,20 @@ function LandingPage() {
     <div className="min-h-screen bg-slate-50 text-slate-800 font-sans">
       {/* Header */}
       <header className="border-b border-slate-200 bg-white sticky top-0 z-50 shadow-sm">
-        <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
-          <div className="flex items-center space-x-3">
-            <div className="w-9 h-9 rounded-xl bg-emerald-800 flex items-center justify-center text-white shadow-md">
-              <Home className="w-5 h-5" />
-            </div>
-            <div>
-              <span className="text-base font-bold text-slate-900 block leading-tight">CampCraft</span>
-              <span className="text-[9px] text-slate-500 font-medium tracking-tight">Redemption City's Finder</span>
-            </div>
+        <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+          <div className="flex items-center">
+            <img src="/campcraft-logo.png" alt="CampCraft" className="h-14 w-auto object-contain logo-tint" />
           </div>
           <nav className="hidden md:flex space-x-8 text-sm text-slate-600 font-medium">
-            <a href="#how" className="hover:text-emerald-805 transition-colors">How It Works</a>
-            <a href="#categories" className="hover:text-emerald-805 transition-colors">Categories</a>
-            <a href="#about" className="hover:text-emerald-805 transition-colors">About</a>
+            <a href="#how" className="hover:text-emerald-800 transition-colors">How It Works</a>
+            <a href="#categories" className="hover:text-emerald-800 transition-colors">Categories</a>
+            <a href="#about" className="hover:text-emerald-800 transition-colors">About</a>
           </nav>
           <div className="flex items-center space-x-4">
             {currentUser ? (
               <Link 
                 to={`/${currentUser.role}/dashboard`}
-                className="px-4 py-2 rounded-lg bg-emerald-805 text-white font-bold text-sm hover:bg-emerald-900 transition"
+                className="px-4 py-2 rounded-lg bg-emerald-800 text-white font-bold text-sm hover:bg-emerald-900 transition"
               >
                 Dashboard
               </Link>
@@ -69,7 +63,7 @@ function LandingPage() {
       </header>
 
       {/* Hero Section */}
-      <section className="max-w-6xl mx-auto px-4 py-16 md:py-24 flex flex-col md:flex-row items-center justify-between gap-12">
+      <section className="max-w-6xl mx-auto px-4 py-8 md:py-12 flex flex-col md:flex-row items-center justify-between gap-8">
         <div className="flex-1 space-y-6 text-left">
           <h1 className="text-4xl md:text-5xl font-extrabold text-slate-900 leading-tight">
             Find Trusted Artisans <br/>
@@ -94,33 +88,61 @@ function LandingPage() {
               Join as Artisan
             </Link>
           </div>
-        </div>
-        
-        {/* Right side illustration representation */}
-        <div className="flex-1 w-full max-w-md md:max-w-none relative aspect-[4/3] rounded-3xl bg-white border border-slate-200 p-8 flex items-center justify-center overflow-hidden shadow-md">
-          <div className="absolute inset-0 bg-emerald-50/50 blur-3xl rounded-full"></div>
-          <div className="z-10 text-center space-y-4">
-            <div className="w-20 h-20 mx-auto rounded-2xl bg-emerald-50 flex items-center justify-center text-emerald-800 border border-emerald-100 shadow-sm">
-              <Wrench className="w-10 h-10" />
+          
+          {/* Trust Banner / Stats */}
+          <div className="pt-6 grid grid-cols-3 gap-4 border-t border-slate-200">
+            <div>
+              <div className="text-xl md:text-2xl font-black text-emerald-800">50+</div>
+              <div className="text-[10px] text-slate-500 uppercase tracking-wider font-semibold">Verified Artisans</div>
             </div>
             <div>
-              <p className="text-xs font-bold text-emerald-800 tracking-widest uppercase">Redemption Network</p>
-              <h3 className="text-xl font-extrabold text-slate-900 mt-1">Verified Professionals Only</h3>
+              <div className="text-xl md:text-2xl font-black text-emerald-800">100%</div>
+              <div className="text-[10px] text-slate-500 uppercase tracking-wider font-semibold">Secure Hires</div>
             </div>
-            <div className="flex justify-center space-x-2">
-              <span className="px-2.5 py-1 rounded bg-slate-100 text-[10px] font-bold text-slate-600 flex items-center gap-1">
-                <ShieldCheck className="w-3 h-3" /> 100% Insured
-              </span>
-              <span className="px-2.5 py-1 rounded bg-slate-100 text-[10px] font-bold text-slate-600 flex items-center gap-1">
-                <Zap className="w-3 h-3" /> Verified Ratings
-              </span>
+            <div>
+              <div className="text-xl md:text-2xl font-black text-emerald-800">24/7</div>
+              <div className="text-[10px] text-slate-500 uppercase tracking-wider font-semibold">Support</div>
             </div>
+          </div>
+        </div>
+        
+        {/* Right side hero illustration */}
+        <div className="flex-1 w-full max-w-md md:max-w-none flex items-center justify-center">
+          <img
+            src="/right-hero.png"
+            alt="Trusted artisans in Redemption City"
+            className="w-full h-auto object-contain drop-shadow-lg"
+          />
+        </div>
+      </section>
+
+      {/* How It Works Section */}
+      <section id="how" className="max-w-6xl mx-auto px-4 py-12 border-t border-slate-200 space-y-8">
+        <div className="text-center max-w-xl mx-auto space-y-2">
+          <h2 className="text-2xl md:text-3xl font-black text-slate-900">How It Works</h2>
+          <p className="text-slate-500 text-sm font-light">Simple steps to get your home tasks solved in Redemption City.</p>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm text-left space-y-4">
+            <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-800 flex items-center justify-center font-black">1</div>
+            <h3 className="text-base font-bold text-slate-900">Post a Job Request</h3>
+            <p className="text-slate-500 text-xs md:text-sm leading-relaxed font-light">Specify what repair or service you need, set your budget, and post it to our board.</p>
+          </div>
+          <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm text-left space-y-4">
+            <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-800 flex items-center justify-center font-black">2</div>
+            <h3 className="text-base font-bold text-slate-900">Compare Artisan Bids</h3>
+            <p className="text-slate-500 text-xs md:text-sm leading-relaxed font-light">Verified local professionals will bid on your job. Compare reviews, experience, and pricing.</p>
+          </div>
+          <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm text-left space-y-4">
+            <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-800 flex items-center justify-center font-black">3</div>
+            <h3 className="text-base font-bold text-slate-900">Hire and Track</h3>
+            <p className="text-slate-500 text-xs md:text-sm leading-relaxed font-light">Choose the best fit, monitor task progress, and release payment only when fully satisfied.</p>
           </div>
         </div>
       </section>
 
       {/* Popular Categories */}
-      <section id="categories" className="max-w-6xl mx-auto px-4 py-16 border-t border-slate-200 space-y-8 bg-white rounded-3xl shadow-sm mb-16">
+      <section id="categories" className="max-w-6xl mx-auto px-4 py-12 border-t border-slate-200 space-y-8 bg-white rounded-3xl shadow-sm mb-12">
         <div className="flex items-end justify-between px-4">
           <div>
             <h2 className="text-2xl font-bold text-slate-900">Popular Categories</h2>
@@ -153,6 +175,56 @@ function LandingPage() {
               </Link>
             );
           })}
+        </div>
+      </section>
+
+      {/* About Section */}
+      <section id="about" className="max-w-6xl mx-auto px-4 py-12 border-t border-slate-200 space-y-8 mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+          <div className="space-y-6">
+            <h2 className="text-2xl md:text-3xl font-black text-slate-900 leading-tight">Why Choose CampCraft?</h2>
+            <p className="text-slate-500 text-sm leading-relaxed font-light">
+              CampCraft is built specifically for Redemption City residents to ensure safe, transparent, and prompt home maintenance services. We bridge the gap between skill and need with accountability.
+            </p>
+            <div className="space-y-4">
+              <div className="flex items-start space-x-3">
+                <span className="w-6 h-6 rounded-full bg-emerald-50 text-emerald-800 flex items-center justify-center shrink-0 text-xs font-bold">✓</span>
+                <div>
+                  <h4 className="text-sm font-bold text-slate-900">Rigorous Artisan Vetting</h4>
+                  <p className="text-slate-500 text-xs font-light">Every artisan profile is reviewed by our admin team with background checks before approval.</p>
+                </div>
+              </div>
+              <div className="flex items-start space-x-3">
+                <span className="w-6 h-6 rounded-full bg-emerald-50 text-emerald-800 flex items-center justify-center shrink-0 text-xs font-bold">✓</span>
+                <div>
+                  <h4 className="text-sm font-bold text-slate-900">No Hidden Charges</h4>
+                  <p className="text-slate-500 text-xs font-light">All pricing and negotiation happen transparently on our platform before work starts.</p>
+                </div>
+              </div>
+              <div className="flex items-start space-x-3">
+                <span className="w-6 h-6 rounded-full bg-emerald-50 text-emerald-800 flex items-center justify-center shrink-0 text-xs font-bold">✓</span>
+                <div>
+                  <h4 className="text-sm font-bold text-slate-900">Community Driven Trust</h4>
+                  <p className="text-slate-500 text-xs font-light">Honest resident feedback and rating system ensures consistently high standard of service.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="bg-emerald-800 text-white p-8 rounded-3xl space-y-6 relative overflow-hidden shadow-lg">
+            <div className="absolute right-0 bottom-0 translate-x-12 translate-y-12 w-48 h-48 rounded-full bg-emerald-700/50"></div>
+            <h3 className="text-xl md:text-2xl font-black relative z-10">Ready to hire or showcase your skills?</h3>
+            <p className="text-emerald-100 text-xs md:text-sm font-light relative z-10 leading-relaxed">
+              Join thousands of residents and trade experts today. Get work done or grow your business.
+            </p>
+            <div className="flex flex-row items-center gap-4 relative z-10 pt-2">
+              <Link to="/register" className="px-5 py-2.5 rounded-xl bg-white text-emerald-800 font-bold hover:bg-slate-50 text-xs md:text-sm shadow transition-all">
+                Get Started
+              </Link>
+              <Link to="/login" className="px-5 py-2.5 rounded-xl border border-emerald-600 hover:bg-emerald-750 text-white font-bold text-xs md:text-sm transition-all">
+                Sign In
+              </Link>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -211,11 +283,8 @@ function RegisterPage() {
   return (
     <div className="min-h-screen bg-slate-50 text-slate-800 flex flex-col justify-center items-center px-4 py-12 relative">
       <div className="absolute top-8 left-8">
-        <Link to="/" className="flex items-center space-x-2 font-bold text-slate-900 text-lg">
-          <span className="w-8 h-8 rounded-lg bg-emerald-800 flex items-center justify-center text-white">
-            <Home className="w-4 h-4" />
-          </span>
-          <span>CampCraft</span>
+        <Link to="/">
+          <img src="/campcraft-logo.png" alt="CampCraft" className="h-14 w-auto object-contain logo-tint" />
         </Link>
       </div>
 
@@ -258,19 +327,6 @@ function RegisterPage() {
               <div>
                 <h4 className="font-extrabold text-slate-900 group-hover:text-emerald-850">Artisan</h4>
                 <p className="text-xs text-slate-500">Offer your skills and find jobs</p>
-              </div>
-            </button>
-
-            <button 
-              onClick={() => setRole('admin')}
-              className="w-full p-4 rounded-2xl bg-white border border-slate-200 hover:border-emerald-800 hover:bg-emerald-50/20 transition flex items-center space-x-4 text-left group"
-            >
-              <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-800 flex items-center justify-center border border-emerald-100">
-                <Settings className="w-5 h-5" />
-              </div>
-              <div>
-                <h4 className="font-extrabold text-slate-900 group-hover:text-emerald-850">Admin</h4>
-                <p className="text-xs text-slate-500">Manage and verify accounts</p>
               </div>
             </button>
 
@@ -445,11 +501,8 @@ function LoginPage() {
   return (
     <div className="min-h-screen bg-slate-50 text-slate-800 flex flex-col justify-center items-center px-4 py-12 relative">
       <div className="absolute top-8 left-8">
-        <Link to="/" className="flex items-center space-x-2 font-bold text-slate-900 text-lg">
-          <span className="w-8 h-8 rounded-lg bg-emerald-800 flex items-center justify-center text-white">
-            <Home className="w-4 h-4" />
-          </span>
-          <span>CampCraft</span>
+        <Link to="/">
+          <img src="/campcraft-logo.png" alt="CampCraft" className="h-14 w-auto object-contain logo-tint" />
         </Link>
       </div>
 
@@ -524,11 +577,8 @@ function ForgotPasswordPage() {
   return (
     <div className="min-h-screen bg-slate-50 text-slate-800 flex flex-col justify-center items-center px-4 py-12 relative">
       <div className="absolute top-8 left-8">
-        <Link to="/" className="flex items-center space-x-2 font-bold text-slate-900 text-lg">
-          <span className="w-8 h-8 rounded-lg bg-emerald-800 flex items-center justify-center text-white">
-            <Home className="w-4 h-4" />
-          </span>
-          <span>CampCraft</span>
+        <Link to="/">
+          <img src="/campcraft-logo.png" alt="CampCraft" className="h-14 w-auto object-contain logo-tint" />
         </Link>
       </div>
 
@@ -582,110 +632,318 @@ function ForgotPasswordPage() {
 
 // 5. Resident Dashboard
 function ResidentDashboard() {
-  const { currentUser, getJobs } = useAuth();
-  const jobs = getJobs().filter(j => j.residentId === currentUser.uid);
+  const { currentUser, getJobs, getArtisans, getRatings } = useAuth();
+  const allJobs   = getJobs().filter(j => j.residentId === currentUser.uid);
+  const artisans  = getArtisans().filter(a => a.status === 'approved');
+  const ratings   = getRatings().filter(r => r.residentId === currentUser.uid);
 
-  const activeCount = jobs.filter(j => j.status === 'open').length;
-  const progressCount = jobs.filter(j => j.status === 'in-progress').length;
-  const completedCount = jobs.filter(j => j.status === 'completed').length;
+  const postedCount    = allJobs.length;
+  const progressCount  = allJobs.filter(j => j.status === 'in-progress').length;
+  const completedCount = allJobs.filter(j => j.status === 'completed').length;
+  const cancelledCount = allJobs.filter(j => j.status === 'cancelled').length;
+  const openCount      = allJobs.filter(j => j.status === 'open').length;
+  const avgRating = ratings.length
+    ? (ratings.reduce((s, r) => s + r.rating, 0) / ratings.length).toFixed(1)
+    : '—';
+
+  const [jobTab, setJobTab] = useState('all');
+  const filteredJobs = jobTab === 'all' ? allJobs
+    : allJobs.filter(j => j.status === jobTab);
+
+  const categoryIcons = {
+    Plumbing: Droplets, Electrical: Zap, Carpentry: Hammer,
+    Painting: Paintbrush, Welding: Flame, 'Generator Repair': Cpu,
+    'Laundry Services': WashingMachine,
+  };
+
+  const catColors = {
+    Plumbing: 'bg-blue-50 text-blue-700',
+    Electrical: 'bg-yellow-50 text-yellow-700',
+    Carpentry: 'bg-amber-50 text-amber-700',
+    Painting: 'bg-purple-50 text-purple-700',
+    Welding: 'bg-red-50 text-red-700',
+    'Generator Repair': 'bg-slate-100 text-slate-700',
+    'Laundry Services': 'bg-teal-50 text-teal-700',
+  };
+
+  const statusStyle = s => ({
+    'open':        'bg-emerald-50 text-emerald-700',
+    'in-progress': 'bg-blue-50 text-blue-700',
+    'completed':   'bg-slate-100 text-slate-600',
+    'cancelled':   'bg-red-50 text-red-700',
+  }[s] || 'bg-slate-100 text-slate-600');
+
+  const jobColorDot = s => ({
+    'open': 'bg-emerald-500', 'in-progress': 'bg-blue-500',
+    'completed': 'bg-slate-400', 'cancelled': 'bg-red-400',
+  }[s] || 'bg-slate-300');
 
   return (
-    <div className="space-y-8 text-left">
-      <div className="flex items-center justify-between">
+    <div className="space-y-6 text-left">
+
+      {/* ── WELCOME HEADER ── */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <div>
-          <h1 className="text-xs text-slate-400 font-bold uppercase tracking-wider">Resident Portal</h1>
-          <h2 className="text-2xl font-black text-slate-900 mt-1">Welcome back, {currentUser.fullName}</h2>
-        </div>
-        <Link 
-          to="/resident/post-job" 
-          className="px-4 py-2 rounded-lg bg-emerald-800 text-white font-bold text-sm hover:bg-emerald-900 transition flex items-center space-x-2"
-        >
-          <PlusCircle className="w-4 h-4" />
-          <span>Post a New Job</span>
-        </Link>
-      </div>
-
-      {/* Stats Cards */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div className="bg-white border border-slate-200 p-5 rounded-2xl shadow-sm">
-          <span className="text-slate-400 text-[10px] font-bold uppercase tracking-wider block">Active Listings</span>
-          <p className="text-3xl font-black text-slate-900 mt-1">{activeCount}</p>
-        </div>
-        <div className="bg-white border border-slate-200 p-5 rounded-2xl shadow-sm">
-          <span className="text-slate-400 text-[10px] font-bold uppercase tracking-wider block">In Progress</span>
-          <p className="text-3xl font-black text-slate-900 mt-1">{progressCount}</p>
-        </div>
-        <div className="bg-white border border-slate-200 p-5 rounded-2xl shadow-sm">
-          <span className="text-slate-400 text-[10px] font-bold uppercase tracking-wider block">Completed</span>
-          <p className="text-3xl font-black text-slate-900 mt-1">{completedCount}</p>
-        </div>
-        <div className="bg-white border border-slate-200 p-5 rounded-2xl shadow-sm">
-          <span className="text-slate-400 text-[10px] font-bold uppercase tracking-wider block">Avg Rating Given</span>
-          <p className="text-3xl font-black text-slate-900 mt-1 flex items-center space-x-1">
-            <span>4.5</span>
-            <Star className="w-6 h-6 text-amber-400 fill-amber-400 inline" />
-          </p>
+          <p className="text-slate-500 text-sm">Find trusted artisans and get your jobs done.</p>
+          <h1 className="text-2xl font-black text-slate-900 mt-0.5">
+            Welcome back, {currentUser.fullName} 👋
+          </h1>
         </div>
       </div>
 
-      {/* Recent Jobs */}
-      <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
-        <h3 className="text-lg font-bold text-slate-900 mb-4">Recent Jobs</h3>
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm text-left text-slate-500">
-            <thead className="text-xs text-slate-400 uppercase border-b border-slate-200">
-              <tr>
-                <th className="pb-3 font-semibold">Job Name</th>
-                <th className="pb-3 font-semibold">Category</th>
-                <th className="pb-3 font-semibold">Zone</th>
-                <th className="pb-3 font-semibold">Bids</th>
-                <th className="pb-3 font-semibold">Status</th>
-                <th className="pb-3 font-semibold text-right">Action</th>
+      {/* ── STAT CARDS ── */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        {[
+          { label: 'Jobs Posted',     value: postedCount,    icon: Briefcase,  bg: 'bg-emerald-50', color: 'text-emerald-700' },
+          { label: 'In Progress',     value: progressCount,  icon: Wrench,     bg: 'bg-blue-50',    color: 'text-blue-700' },
+          { label: 'Completed',       value: completedCount, icon: ShieldCheck,bg: 'bg-amber-50',   color: 'text-amber-600' },
+          { label: 'Avg. Rating Given', value: avgRating,   icon: Star,       bg: 'bg-slate-50',   color: 'text-slate-700' },
+        ].map(({ label, value, icon: Icon, bg, color }) => (
+          <div key={label} className="bg-white border border-slate-200 rounded-2xl p-5 flex items-center gap-4 shadow-sm">
+            <div className={`w-11 h-11 rounded-xl ${bg} ${color} flex items-center justify-center shrink-0`}>
+              <Icon className="w-5 h-5" />
+            </div>
+            <div>
+              <p className="text-2xl font-black text-slate-900 leading-tight">{value}</p>
+              <p className="text-[11px] text-slate-500 font-medium mt-0.5">{label}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* ── THREE-COLUMN ROW ── */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
+
+        {/* RECENT JOBS */}
+        <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm space-y-4">
+          <div className="flex items-center justify-between">
+            <h2 className="font-bold text-slate-900">Recent Jobs</h2>
+            <Link to="/resident/my-jobs" className="text-xs text-emerald-700 font-semibold hover:underline flex items-center gap-1">
+              View all jobs <ChevronRight className="w-3.5 h-3.5" />
+            </Link>
+          </div>
+
+          <div className="space-y-3">
+            {allJobs.length === 0 ? (
+              <p className="text-xs text-slate-400 text-center py-4">No jobs posted yet.</p>
+            ) : allJobs.slice(0, 4).map(job => {
+              const CatIcon = categoryIcons[job.category] || Wrench;
+              const dotColor = jobColorDot(job.status);
+              const catColor = catColors[job.category] || 'bg-slate-50 text-slate-600';
+              return (
+                <div key={job.id} className="flex items-center gap-3 py-2 border-b border-slate-100 last:border-0">
+                  <div className={`w-9 h-9 rounded-xl ${catColor} flex items-center justify-center shrink-0`}>
+                    <CatIcon className="w-4 h-4" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-semibold text-slate-900 truncate">{job.title}</p>
+                    <p className="text-[11px] text-slate-500 mt-0.5 flex items-center gap-1">
+                      <span className="text-emerald-700 font-medium">{job.category}</span>
+                      <span>•</span> {job.zone}
+                    </p>
+                  </div>
+                  <span className={`shrink-0 px-2.5 py-1 rounded-full text-[10px] font-bold capitalize ${statusStyle(job.status)}`}>
+                    {job.status === 'in-progress' ? 'In Progress' : job.status.charAt(0).toUpperCase() + job.status.slice(1)}
+                  </span>
+                </div>
+              );
+            })}
+          </div>
+
+          <Link
+            to="/resident/post-job"
+            className="flex items-center justify-center gap-2 w-full py-2.5 border-2 border-dashed border-slate-200 rounded-xl text-sm font-semibold text-slate-500 hover:border-emerald-400 hover:text-emerald-700 transition"
+          >
+            <PlusCircle className="w-4 h-4" /> Post a New Job
+          </Link>
+        </div>
+
+        {/* RECOMMENDED ARTISANS */}
+        <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm space-y-4">
+          <div className="flex items-center justify-between">
+            <h2 className="font-bold text-slate-900">Recommended Artisans</h2>
+            <Link to="/resident/browse" className="text-xs text-emerald-700 font-semibold hover:underline flex items-center gap-1">
+              View all artisans <ChevronRight className="w-3.5 h-3.5" />
+            </Link>
+          </div>
+
+          <div className="space-y-3">
+            {artisans.slice(0, 4).map(art => (
+              <div key={art.uid} className="flex items-center gap-3">
+                <div className="w-9 h-9 rounded-full bg-emerald-800 text-white flex items-center justify-center font-bold text-sm shrink-0">
+                  {art.fullName[0]}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-semibold text-slate-900 truncate">{art.fullName}</p>
+                  <p className="text-[11px] text-slate-500 mt-0.5 flex items-center gap-1">
+                    <span className="text-emerald-700 font-medium">{art.category}</span>
+                    <span>•</span> {art.zone}
+                  </p>
+                  <div className="flex items-center gap-1 mt-0.5">
+                    <Star className="w-3 h-3 fill-amber-400 text-amber-400" />
+                    <span className="text-[11px] font-bold text-slate-700">{art.ratingAverage}</span>
+                    <span className="text-[10px] text-slate-400">({art.ratingCount} reviews)</span>
+                  </div>
+                </div>
+                <Link
+                  to={`/resident/profile/${art.uid}`}
+                  className="shrink-0 px-3 py-1.5 text-[11px] font-bold text-emerald-800 border border-emerald-200 rounded-lg hover:bg-emerald-50 transition"
+                >
+                  View Profile
+                </Link>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* POPULAR CATEGORIES + CTA */}
+        <div className="space-y-4">
+          <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="font-bold text-slate-900">Popular Categories</h2>
+              <Link to="/resident/browse" className="text-xs text-emerald-700 font-semibold hover:underline">View all →</Link>
+            </div>
+            <div className="grid grid-cols-4 gap-3">
+              {Object.entries(categoryIcons).map(([name, Icon]) => {
+                const cc = catColors[name] || 'bg-slate-50 text-slate-600';
+                return (
+                  <Link
+                    key={name}
+                    to="/resident/browse"
+                    className="flex flex-col items-center gap-1.5 group"
+                  >
+                    <div className={`w-11 h-11 rounded-xl ${cc} flex items-center justify-center group-hover:scale-110 transition-transform`}>
+                      <Icon className="w-5 h-5" />
+                    </div>
+                    <span className="text-[10px] text-slate-600 font-medium text-center leading-tight">{name}</span>
+                  </Link>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* CTA card */}
+          <div className="bg-emerald-800 rounded-2xl p-5 flex items-end justify-between overflow-hidden relative">
+            <div className="space-y-2 z-10">
+              <p className="text-white font-bold text-sm leading-snug">Can't find what you need?</p>
+              <p className="text-emerald-200 text-[11px] leading-relaxed">
+                Post a job and let our trusted artisans come to you.
+              </p>
+              <Link
+                to="/resident/post-job"
+                className="inline-block mt-1 px-4 py-2 bg-white text-emerald-800 text-xs font-bold rounded-xl hover:bg-emerald-50 transition shadow"
+              >
+                Post a Job Now
+              </Link>
+            </div>
+            <div className="absolute right-2 bottom-0 text-7xl opacity-20 select-none">🔨</div>
+          </div>
+        </div>
+      </div>
+
+      {/* ── JOBS OVERVIEW TABLE ── */}
+      <div className="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
+        <div className="p-5 border-b border-slate-100">
+          <h2 className="font-bold text-slate-900 text-base">Jobs Overview</h2>
+        </div>
+
+        {/* Filter tabs */}
+        <div className="flex items-center gap-1 px-5 pt-4 pb-2 overflow-x-auto">
+          {[
+            { key: 'all',         label: 'All Jobs',   count: postedCount },
+            { key: 'open',        label: 'Open',       count: openCount },
+            { key: 'in-progress', label: 'In Progress',count: progressCount },
+            { key: 'completed',   label: 'Completed',  count: completedCount },
+            { key: 'cancelled',   label: 'Cancelled',  count: cancelledCount },
+          ].map(tab => (
+            <button
+              key={tab.key}
+              onClick={() => setJobTab(tab.key)}
+              className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition ${
+                jobTab === tab.key
+                  ? 'bg-emerald-50 text-emerald-800'
+                  : 'text-slate-500 hover:text-slate-700 hover:bg-slate-50'
+              }`}
+            >
+              {tab.label}
+              <span className={`px-1.5 py-0.5 rounded-md text-[10px] font-bold ${
+                jobTab === tab.key ? 'bg-emerald-100 text-emerald-800' : 'bg-slate-100 text-slate-500'
+              }`}>
+                {tab.count}
+              </span>
+            </button>
+          ))}
+        </div>
+
+        {/* Table */}
+        <div className="overflow-x-auto px-5 pb-5">
+          <table className="w-full text-sm text-left">
+            <thead>
+              <tr className="text-[11px] text-slate-400 uppercase font-semibold border-b border-slate-100">
+                <th className="pb-3 pt-2">Job Title</th>
+                <th className="pb-3 pt-2">Category</th>
+                <th className="pb-3 pt-2">Zone</th>
+                <th className="pb-3 pt-2">Artisan</th>
+                <th className="pb-3 pt-2">Status</th>
+                <th className="pb-3 pt-2">Posted On</th>
+                <th className="pb-3 pt-2">Action</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
-              {jobs.length === 0 ? (
+              {filteredJobs.length === 0 ? (
                 <tr>
-                  <td colSpan="6" className="py-6 text-center text-slate-400 text-xs">
-                    No jobs posted yet.
+                  <td colSpan={7} className="py-10 text-center text-slate-400 text-xs">
+                    No jobs found.
                   </td>
                 </tr>
-              ) : (
-                jobs.slice(0, 5).map(job => (
-                  <tr key={job.id} className="hover:bg-slate-50/50">
-                    <td className="py-4 font-bold text-slate-900">{job.title}</td>
-                    <td className="py-4 text-slate-650">{job.category}</td>
-                    <td className="py-4">{job.zone}</td>
-                    <td className="py-4">
-                      <span className="px-2 py-0.5 rounded bg-slate-100 text-xs text-slate-700 font-bold">
-                        {job.bids?.length || 0} bids
+              ) : filteredJobs.map(job => {
+                const CatIcon = categoryIcons[job.category] || Wrench;
+                const cc = catColors[job.category] || 'bg-slate-50 text-slate-600';
+                return (
+                  <tr key={job.id} className="hover:bg-slate-50/60 transition">
+                    <td className="py-3.5">
+                      <div className="flex items-center gap-2.5">
+                        <div className={`w-8 h-8 rounded-lg ${cc} flex items-center justify-center shrink-0`}>
+                          <CatIcon className="w-4 h-4" />
+                        </div>
+                        <span className="font-semibold text-slate-800 text-sm">{job.title}</span>
+                      </div>
+                    </td>
+                    <td className="py-3.5 text-slate-600">{job.category}</td>
+                    <td className="py-3.5 text-slate-600">{job.zone}</td>
+                    <td className="py-3.5 text-slate-600">
+                      {job.hiredArtisanName || <span className="text-slate-400">—</span>}
+                    </td>
+                    <td className="py-3.5">
+                      <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold capitalize ${statusStyle(job.status)}`}>
+                        {job.status === 'in-progress' ? 'In Progress' : job.status.charAt(0).toUpperCase() + job.status.slice(1)}
                       </span>
                     </td>
-                    <td className="py-4">
-                      <span className={`px-2.5 py-1 rounded-full text-xs font-bold capitalize ${
-                        job.status === 'open' ? 'bg-emerald-50 text-emerald-800' :
-                        job.status === 'in-progress' ? 'bg-blue-50 text-blue-800' :
-                        job.status === 'completed' ? 'bg-slate-100 text-slate-500' :
-                        'bg-red-50 text-red-800'
-                      }`}>
-                        {job.status}
-                      </span>
+                    <td className="py-3.5 text-slate-500 text-xs">
+                      {new Date(job.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
                     </td>
-                    <td className="py-4 text-right">
-                      <Link 
+                    <td className="py-3.5">
+                      <Link
                         to={`/resident/job/${job.id}`}
-                        className="text-emerald-800 hover:text-emerald-950 text-xs font-extrabold"
+                        className="px-3 py-1.5 text-[11px] font-bold border border-slate-200 rounded-lg text-slate-700 hover:border-emerald-400 hover:text-emerald-700 transition"
                       >
                         View Details
                       </Link>
                     </td>
                   </tr>
-                ))
-              )}
+                );
+              })}
             </tbody>
           </table>
         </div>
+
+        <div className="border-t border-slate-100 px-5 py-3 text-center">
+          <Link to="/resident/my-jobs" className="text-xs font-semibold text-emerald-700 hover:underline flex items-center justify-center gap-1">
+            View all jobs <ChevronRight className="w-3.5 h-3.5" />
+          </Link>
+        </div>
       </div>
+
     </div>
   );
 }
@@ -914,24 +1172,29 @@ function PostJobPage() {
   const [budget, setBudget] = useState('');
   const [description, setDescription] = useState('');
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!title || !description || !locationDetails) {
       alert('Please fill out title, description, and location details.');
       return;
     }
 
-    createJob({
-      title,
-      category,
-      zone,
-      locationDetails,
-      budget: budget || 'Contact for Budget',
-      residentId: currentUser.uid,
-      residentName: currentUser.fullName
-    });
-
-    navigate('/resident/my-jobs');
+    try {
+      await createJob({
+        title,
+        category,
+        zone,
+        locationDetails,
+        budget: budget || 'Contact for Budget',
+        residentId: currentUser.uid,
+        residentName: currentUser.fullName,
+        description
+      });
+      navigate('/resident/my-jobs');
+    } catch (err) {
+      console.error("Error creating job:", err);
+      alert("Failed to create job: " + err.message);
+    }
   };
 
   return (
@@ -2535,6 +2798,247 @@ function SettingsPage() {
   );
 }
 
+// 26. Messages Page
+function MessagesPage() {
+  const [activeChat, setActiveChat] = useState(0);
+  const chats = [
+    { name: 'John Plumbing Expert', avatar: 'JP', lastMsg: 'I can come over by 4 PM to check the leak.', date: 'Today, 11:30 AM', unread: true },
+    { name: 'Emeka Electricals', avatar: 'EE', lastMsg: 'The ceiling fan installation is complete. Thanks!', date: 'Yesterday', unread: false },
+    { name: 'WoodMaster Carpentry', avatar: 'WC', lastMsg: 'Sure, I will send a quote for the wardrobe repair.', date: 'May 25', unread: false }
+  ];
+
+  return (
+    <div className="bg-white border border-slate-200 rounded-3xl overflow-hidden shadow-sm h-[calc(100vh-160px)] flex text-left">
+      {/* Inbox Sidebar */}
+      <div className="w-85 border-r border-slate-200 flex flex-col h-full bg-slate-50/50">
+        <div className="p-4 border-b border-slate-200 bg-white">
+          <h2 className="text-base font-bold text-slate-900">Messages</h2>
+          <p className="text-[10px] text-slate-500 mt-0.5">Chat with your hired artisans</p>
+        </div>
+        <div className="flex-1 overflow-y-auto divide-y divide-slate-100">
+          {chats.map((c, i) => (
+            <button
+              key={i}
+              onClick={() => setActiveChat(i)}
+              className={`w-full p-4 text-left flex items-start space-x-3 transition hover:bg-slate-100/50 ${activeChat === i ? 'bg-emerald-50/40' : ''}`}
+            >
+              <div className="w-10 h-10 rounded-xl bg-emerald-800 text-white flex items-center justify-center font-bold text-sm shrink-0">
+                {c.avatar}
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="flex justify-between items-baseline mb-1">
+                  <h4 className="text-xs font-bold text-slate-800 truncate">{c.name}</h4>
+                  <span className="text-[10px] text-slate-400 font-medium shrink-0">{c.date}</span>
+                </div>
+                <p className={`text-xs truncate ${c.unread ? 'text-slate-900 font-semibold' : 'text-slate-500'}`}>{c.lastMsg}</p>
+              </div>
+              {c.unread && <span className="w-2 h-2 rounded-full bg-emerald-650 shrink-0 self-center"></span>}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Chat Thread */}
+      <div className="flex-1 flex flex-col h-full bg-white">
+        <div className="p-4 border-b border-slate-200 flex items-center space-x-3">
+          <div className="w-10 h-10 rounded-xl bg-emerald-800 text-white flex items-center justify-center font-bold text-sm">
+            {chats[activeChat].avatar}
+          </div>
+          <div>
+            <h3 className="text-sm font-bold text-slate-900 leading-tight">{chats[activeChat].name}</h3>
+            <p className="text-[10px] text-emerald-700 font-medium">Online</p>
+          </div>
+        </div>
+
+        <div className="flex-1 p-4 overflow-y-auto space-y-4 bg-slate-50/30">
+          <div className="flex justify-center">
+            <span className="bg-slate-100 text-slate-500 text-[10px] px-2.5 py-1 rounded-full font-bold uppercase tracking-wider">Today</span>
+          </div>
+
+          <div className="flex items-start space-x-2.5 max-w-lg">
+            <div className="w-8 h-8 rounded-full bg-emerald-850 text-white flex items-center justify-center font-bold text-xs shrink-0">
+              {chats[activeChat].avatar}
+            </div>
+            <div className="bg-white border border-slate-200 text-slate-800 p-3.5 rounded-2xl rounded-tl-none shadow-sm text-xs leading-relaxed">
+              Hello! Regarding your kitchen tap leak job, I have the replacement seals ready.
+            </div>
+          </div>
+
+          <div className="flex items-start space-x-2.5 justify-end max-w-lg ml-auto">
+            <div className="bg-emerald-800 text-white p-3.5 rounded-2xl rounded-tr-none shadow-sm text-xs leading-relaxed">
+              That's great! When can you come by to fix it?
+            </div>
+          </div>
+
+          <div className="flex items-start space-x-2.5 max-w-lg">
+            <div className="w-8 h-8 rounded-full bg-emerald-850 text-white flex items-center justify-center font-bold text-xs shrink-0">
+              {chats[activeChat].avatar}
+            </div>
+            <div className="bg-white border border-slate-200 text-slate-800 p-3.5 rounded-2xl rounded-tl-none shadow-sm text-xs leading-relaxed">
+              {chats[activeChat].lastMsg}
+            </div>
+          </div>
+        </div>
+
+        <div className="p-4 border-t border-slate-200 bg-white">
+          <form onSubmit={e => e.preventDefault()} className="flex items-center space-x-2">
+            <input
+              type="text"
+              placeholder="Write a message..."
+              className="flex-1 px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-emerald-500 text-xs text-slate-700"
+            />
+            <button
+              type="submit"
+              className="p-2.5 rounded-xl bg-emerald-800 hover:bg-emerald-900 text-white transition shadow-sm"
+            >
+              <span className="material-icons-round text-sm block">send</span>
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// 27. Resident Reviews Page
+function ResidentReviewsPage() {
+  const { currentUser, ratings } = useAuth();
+  const myReviews = ratings.filter(r => r.residentId === currentUser.uid);
+
+  return (
+    <div className="space-y-6 text-left max-w-2xl mx-auto">
+      <div>
+        <h1 className="text-xl font-bold text-slate-900">My Reviews</h1>
+        <p className="text-slate-500 text-xs mt-1">Feedback and ratings you have given to service providers.</p>
+      </div>
+
+      {myReviews.length === 0 ? (
+        <div className="text-center p-12 bg-white border border-slate-200 rounded-3xl shadow-sm space-y-3">
+          <span className="material-icons-round text-4xl text-slate-350 block">rate_review</span>
+          <p className="text-sm text-slate-500 font-light">You haven't left any reviews yet.</p>
+        </div>
+      ) : (
+        <div className="space-y-4">
+          {myReviews.map((rev) => (
+            <div key={rev.id} className="p-6 bg-white border border-slate-200 rounded-3xl shadow-sm space-y-3">
+              <div className="flex justify-between items-start">
+                <div>
+                  <h3 className="font-bold text-slate-950 text-sm">{rev.artisanName}</h3>
+                  <p className="text-[10px] text-slate-400 font-semibold uppercase mt-0.5">Hired Expert</p>
+                </div>
+                <div className="flex items-center space-x-1 bg-amber-50 border border-amber-100 text-amber-700 px-2.5 py-1 rounded-full text-xs font-black">
+                  <Star className="w-3.5 h-3.5 fill-amber-500 text-amber-500 shrink-0" />
+                  <span>{rev.rating}</span>
+                </div>
+              </div>
+              <p className="text-slate-650 text-xs md:text-sm leading-relaxed font-light">{rev.comment || rev.reviewText}</p>
+              <div className="text-[10px] text-slate-400 font-medium pt-1">
+                Reviewed on {new Date(rev.createdAt).toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' })}
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// 28. Resident Profile Page
+function ResidentProfilePage() {
+  const { currentUser, updateResidentProfile } = useAuth();
+  const [fullName, setFullName] = useState(currentUser?.fullName || '');
+  const [phone, setPhone] = useState(currentUser?.phone || '');
+  const [zone, setZone] = useState(currentUser?.zone || 'Zone A');
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
+
+  const handleUpdate = async (e) => {
+    e.preventDefault();
+    setSuccess(false);
+    setLoading(true);
+    try {
+      await updateResidentProfile(currentUser.uid, { fullName, phone, zone });
+      setSuccess(true);
+    } catch (err) {
+      alert(err.message || 'Failed to update profile.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="max-w-xl mx-auto text-left bg-white border border-slate-200 p-8 rounded-3xl shadow-md">
+      <div className="mb-6">
+        <h1 className="text-xl font-bold text-slate-900">Profile Settings</h1>
+        <p className="text-slate-500 text-xs mt-1">Manage your account details and contact information.</p>
+      </div>
+
+      {success && (
+        <div className="mb-4 p-3 bg-emerald-50 border border-emerald-100 text-emerald-800 text-xs rounded-xl flex items-center space-x-2">
+          <span className="material-icons-round text-sm">check_circle</span>
+          <span>Profile updated successfully!</span>
+        </div>
+      )}
+
+      <form onSubmit={handleUpdate} className="space-y-4">
+        <div className="space-y-1">
+          <label className="text-xs font-semibold text-slate-600">Full Name</label>
+          <input 
+            type="text" 
+            value={fullName}
+            onChange={e => setFullName(e.target.value)}
+            className="w-full px-4 py-2 rounded-xl bg-white border border-slate-300 focus:outline-none focus:border-emerald-800 text-sm text-slate-800"
+            required
+          />
+        </div>
+
+        <div className="space-y-1">
+          <label className="text-xs font-semibold text-slate-600">Email Address</label>
+          <input 
+            type="email" 
+            value={currentUser?.email || ''}
+            className="w-full px-4 py-2 rounded-xl bg-slate-100 border border-slate-200 text-sm text-slate-500 focus:outline-none"
+            disabled
+          />
+        </div>
+
+        <div className="grid grid-cols-2 gap-4">
+          <div className="space-y-1">
+            <label className="text-xs font-semibold text-slate-600">Phone Number</label>
+            <input 
+              type="tel" 
+              value={phone}
+              onChange={e => setPhone(e.target.value)}
+              className="w-full px-4 py-2 rounded-xl bg-white border border-slate-300 focus:outline-none focus:border-emerald-800 text-sm text-slate-800"
+              required
+            />
+          </div>
+
+          <div className="space-y-1">
+            <label className="text-xs font-semibold text-slate-600">Zone Location</label>
+            <select 
+              value={zone}
+              onChange={e => setZone(e.target.value)}
+              className="w-full px-4 py-2 rounded-xl bg-white border border-slate-300 focus:outline-none focus:border-emerald-800 text-sm text-slate-800"
+            >
+              <option value="Zone A">Zone A</option>
+              <option value="Zone B">Zone B</option>
+              <option value="Zone C">Zone C</option>
+            </select>
+          </div>
+        </div>
+
+        <button 
+          type="submit"
+          disabled={loading}
+          className="w-full py-2.5 rounded-xl bg-emerald-800 hover:bg-emerald-900 text-white font-bold shadow transition disabled:opacity-50 mt-2"
+        >
+          {loading ? 'Saving...' : 'Save Profile Changes'}
+        </button>
+      </form>
+    </div>
+  );
+}
 
 // ==========================================
 // CORE APP ROUTER WRAPPER
@@ -2560,6 +3064,9 @@ export default function App() {
             <Route path="/resident/my-jobs" element={<ResidentJobsPage />} />
             <Route path="/resident/job/:jobId" element={<JobDetailsPage />} />
             <Route path="/resident/leave-rating/:jobId" element={<LeaveRatingPage />} />
+            <Route path="/resident/messages" element={<MessagesPage />} />
+            <Route path="/resident/reviews" element={<ResidentReviewsPage />} />
+            <Route path="/resident/profile" element={<ResidentProfilePage />} />
           </Route>
 
           {/* Protected Artisan Routing */}

@@ -1,0 +1,40 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Helper function to check if the requesting user is an Admin
+    function isAdmin() {
+      return request.auth != null && 
+        exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+
+    // 1. Users Collection rules
+    match /users/{userId} {
+      // Any logged-in user can read profiles (e.g. residents browsing artisans)
+      allow read: if request.auth != null;
+      // Users can write to their own profile, or admins can edit profiles
+      allow write: if request.auth != null && (request.auth.uid == userId || isAdmin());
+    }
+
+    // 2. Artisans Collection rules
+    match /artisans/{artisanId} {
+      // Anyone logged-in can view artisan details
+      allow read: if request.auth != null;
+      // Artisans can write to their own profile, or admins can edit profiles (e.g. approve status)
+      allow write: if request.auth != null && (request.auth.uid == artisanId || isAdmin());
+    }
+
+    // 3. Jobs Collection rules
+    match /jobs/{jobId} {
+      // Any authenticated user can read, create, and edit jobs (bid placement, status updates, ratings)
+      allow read, write: if request.auth != null;
+    }
+
+    // 4. Ratings Collection rules
+    match /ratings/{ratingId} {
+      allow read, write: if request.auth != null;
+    }
+  }
+}
