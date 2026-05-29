@@ -1299,7 +1299,11 @@ function PostJobPage() {
 function ResidentJobsPage() {
   const { currentUser, getJobs } = useAuth();
   const [tab, setTab] = useState('All'); // 'All' | 'open' | 'in-progress' | 'completed' | 'cancelled'
-  const jobs = getJobs().filter(j => j.residentId === currentUser.uid);
+  const allJobs = getJobs();
+  console.log("ResidentJobsPage - currentUser:", currentUser);
+  console.log("ResidentJobsPage - all database jobs:", allJobs);
+  const jobs = allJobs.filter(j => j.residentId === currentUser?.uid);
+  console.log("ResidentJobsPage - filtered jobs for user:", jobs);
 
   const filtered = jobs.filter(j => tab === 'All' || j.status === tab);
 

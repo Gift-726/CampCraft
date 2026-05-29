@@ -241,6 +241,7 @@ export function AuthProvider({ children }) {
 
       const unsubscribeJobs = onSnapshot(collection(db, 'jobs'), (snapshot) => {
         const jobsList = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        console.log("Firestore onSnapshot jobs count:", jobsList.length, jobsList);
         jobsList.sort((a, b) => b.createdAt - a.createdAt);
         setJobs(jobsList);
       }, (err) => console.error("Firestore jobs listener error:", err));
@@ -482,7 +483,9 @@ export function AuthProvider({ children }) {
         bids: [],
         createdAt: Date.now()
       };
-      await addDoc(collection(db, 'jobs'), newJob);
+      console.log("Firestore createJob writing job:", newJob);
+      const docRef = await addDoc(collection(db, 'jobs'), newJob);
+      console.log("Firestore createJob success, doc ID:", docRef.id);
     }
   };
 
