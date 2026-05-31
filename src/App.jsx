@@ -49,7 +49,7 @@ function LandingPage() {
               </Link>
             ) : (
               <>
-                <Link to="/login" className="text-sm font-semibold text-slate-600 hover:text-slate-900 transition">Login</Link>
+                <Link to="/login" className="hidden md:inline text-sm font-semibold text-slate-600 hover:text-slate-900 transition">Login</Link>
                 <Link 
                   to="/register" 
                   className="px-4 py-2 rounded-lg bg-emerald-800 text-white font-bold text-sm hover:bg-emerald-900 transition shadow-sm"
@@ -109,9 +109,14 @@ function LandingPage() {
         {/* Right side hero illustration */}
         <div className="flex-1 w-full max-w-md md:max-w-none flex items-center justify-center">
           <img
+            src="/mobile_hero.png"
+            alt="Trusted artisans in Redemption City"
+            className="block md:hidden w-full h-auto object-contain drop-shadow-lg"
+          />
+          <img
             src="/right-hero.png"
             alt="Trusted artisans in Redemption City"
-            className="w-full h-auto object-contain drop-shadow-lg"
+            className="hidden md:block w-full h-auto object-contain drop-shadow-lg"
           />
         </div>
       </section>
@@ -179,58 +184,60 @@ function LandingPage() {
       </section>
 
       {/* About Section */}
-      <section id="about" className="max-w-6xl mx-auto px-4 py-12 border-t border-slate-200 space-y-8 mb-12">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-          <div className="space-y-6">
-            <h2 className="text-2xl md:text-3xl font-black text-slate-900 leading-tight">Why Choose CampCraft?</h2>
-            <p className="text-slate-500 text-sm leading-relaxed font-light">
-              CampCraft is built specifically for Redemption City residents to ensure safe, transparent, and prompt home maintenance services. We bridge the gap between skill and need with accountability.
-            </p>
-            <div className="space-y-4">
-              <div className="flex items-start space-x-3">
-                <span className="w-6 h-6 rounded-full bg-emerald-50 text-emerald-800 flex items-center justify-center shrink-0 text-xs font-bold">✓</span>
-                <div>
-                  <h4 className="text-sm font-bold text-slate-900">Rigorous Artisan Vetting</h4>
-                  <p className="text-slate-500 text-xs font-light">Every artisan profile is reviewed by our admin team with background checks before approval.</p>
-                </div>
-              </div>
-              <div className="flex items-start space-x-3">
-                <span className="w-6 h-6 rounded-full bg-emerald-50 text-emerald-800 flex items-center justify-center shrink-0 text-xs font-bold">✓</span>
-                <div>
-                  <h4 className="text-sm font-bold text-slate-900">No Hidden Charges</h4>
-                  <p className="text-slate-500 text-xs font-light">All pricing and negotiation happen transparently on our platform before work starts.</p>
-                </div>
-              </div>
-              <div className="flex items-start space-x-3">
-                <span className="w-6 h-6 rounded-full bg-emerald-50 text-emerald-800 flex items-center justify-center shrink-0 text-xs font-bold">✓</span>
-                <div>
-                  <h4 className="text-sm font-bold text-slate-900">Community Driven Trust</h4>
-                  <p className="text-slate-500 text-xs font-light">Honest resident feedback and rating system ensures consistently high standard of service.</p>
-                </div>
-              </div>
+      <section id="about" className="max-w-6xl mx-auto px-4 py-12 border-t border-slate-200 space-y-12 mb-12">
+        <div className="text-center max-w-2xl mx-auto space-y-3">
+          <h2 className="text-2xl md:text-3xl font-black text-slate-900 leading-tight">Why Choose CampCraft?</h2>
+          <p className="text-slate-500 text-sm leading-relaxed font-light">
+            CampCraft is built specifically for Redemption City residents to ensure safe, transparent, and prompt home maintenance services. We bridge the gap between skill and need with accountability.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-4">
+          <div className="flex items-start space-x-3 bg-white p-5 rounded-2xl border border-slate-200 shadow-sm animate-fade-in">
+            <span className="w-6 h-6 rounded-full bg-emerald-50 text-emerald-800 flex items-center justify-center shrink-0 text-xs font-bold">✓</span>
+            <div>
+              <h4 className="text-sm font-bold text-slate-900">Rigorous Artisan Vetting</h4>
+              <p className="text-slate-500 text-xs leading-relaxed font-light mt-1">Every artisan profile is reviewed by our admin team with background checks before approval.</p>
             </div>
           </div>
-          <div className="bg-emerald-800 text-white p-8 rounded-3xl space-y-6 relative overflow-hidden shadow-lg">
-            <div className="absolute right-0 bottom-0 translate-x-12 translate-y-12 w-48 h-48 rounded-full bg-emerald-700/50"></div>
-            <h3 className="text-xl md:text-2xl font-black relative z-10">Ready to hire or showcase your skills?</h3>
-            <p className="text-emerald-100 text-xs md:text-sm font-light relative z-10 leading-relaxed">
+          <div className="flex items-start space-x-3 bg-white p-5 rounded-2xl border border-slate-200 shadow-sm animate-fade-in">
+            <span className="w-6 h-6 rounded-full bg-emerald-50 text-emerald-800 flex items-center justify-center shrink-0 text-xs font-bold">✓</span>
+            <div>
+              <h4 className="text-sm font-bold text-slate-900">No Hidden Charges</h4>
+              <p className="text-slate-500 text-xs leading-relaxed font-light mt-1">All pricing and negotiation happen transparently on our platform before work starts.</p>
+            </div>
+          </div>
+          <div className="flex items-start space-x-3 bg-white p-5 rounded-2xl border border-slate-200 shadow-sm animate-fade-in">
+            <span className="w-6 h-6 rounded-full bg-emerald-50 text-emerald-800 flex items-center justify-center shrink-0 text-xs font-bold">✓</span>
+            <div>
+              <h4 className="text-sm font-bold text-slate-900">Community Driven Trust</h4>
+              <p className="text-slate-500 text-xs leading-relaxed font-light mt-1">Honest resident feedback and rating system ensures consistently high standard of service.</p>
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-emerald-800 text-white p-8 md:p-10 rounded-3xl relative overflow-hidden shadow-lg flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+          <div className="absolute right-0 bottom-0 translate-x-12 translate-y-12 w-48 h-48 rounded-full bg-emerald-700/50 pointer-events-none"></div>
+          <div className="space-y-2 relative z-10 max-w-2xl text-left">
+            <h3 className="text-xl md:text-2xl font-black">Ready to hire or showcase your skills?</h3>
+            <p className="text-emerald-100 text-xs md:text-sm font-light leading-relaxed">
               Join thousands of residents and trade experts today. Get work done or grow your business.
             </p>
-            <div className="flex flex-row items-center gap-4 relative z-10 pt-2">
-              <Link to="/register" className="px-5 py-2.5 rounded-xl bg-white text-emerald-800 font-bold hover:bg-slate-50 text-xs md:text-sm shadow transition-all">
-                Get Started
-              </Link>
-              <Link to="/login" className="px-5 py-2.5 rounded-xl border border-emerald-600 hover:bg-emerald-750 text-white font-bold text-xs md:text-sm transition-all">
-                Sign In
-              </Link>
-            </div>
+          </div>
+          <div className="flex flex-row items-center gap-4 relative z-10 shrink-0">
+            <Link to="/register" className="px-5 py-2.5 rounded-xl bg-white text-emerald-800 font-bold hover:bg-slate-50 text-xs md:text-sm shadow transition-all">
+              Get Started
+            </Link>
+            <Link to="/login" className="px-5 py-2.5 rounded-xl border border-emerald-600 hover:bg-emerald-750 text-white font-bold text-xs md:text-sm transition-all">
+              Sign In
+            </Link>
           </div>
         </div>
       </section>
 
       {/* Footer */}
       <footer className="border-t border-slate-200 bg-white py-8 text-center text-xs text-slate-500 shadow-inner">
-        <p>© {new Date().getFullYear()} CampCraft. Redemption City's Artisan & Service Finder.</p>
+        <p>© CampCraft. All rights reserved.</p>
       </footer>
     </div>
   );
