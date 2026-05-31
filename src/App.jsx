@@ -236,8 +236,17 @@ function LandingPage() {
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-slate-200 bg-white py-8 text-center text-xs text-slate-500 shadow-inner">
-        <p>© CampCraft. All rights reserved.</p>
+      <footer className="bg-white py-8 text-xs text-slate-500">
+        <div className="max-w-6xl mx-auto px-4">
+          <div className="border-t border-slate-200 pt-6 flex flex-col md:flex-row md:items-center md:justify-between">
+            <p>© CampCraft. All rights reserved.</p>
+            <div className="flex space-x-6 mt-4 md:mt-0">
+              <a href="#how" className="hover:text-emerald-800 transition-colors">How It Works</a>
+              <a href="#categories" className="hover:text-emerald-800 transition-colors">Categories</a>
+              <a href="#about" className="hover:text-emerald-800 transition-colors">About</a>
+            </div>
+          </div>
+        </div>
       </footer>
     </div>
   );
