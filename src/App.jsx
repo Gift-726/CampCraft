@@ -1178,7 +1178,7 @@ function ArtisanProfileView() {
 
 // 8. Post a Job
 function PostJobPage() {
-  const { currentUser, createJob } = useAuth();
+  const { currentUser, createJob, showToast } = useAuth();
   const navigate = useNavigate();
 
   const [title, setTitle] = useState('');
@@ -1191,7 +1191,7 @@ function PostJobPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!title || !description || !locationDetails) {
-      alert('Please fill out title, description, and location details.');
+      showToast('Please fill out title, description, and location details.', 'error');
       return;
     }
 
@@ -1206,10 +1206,11 @@ function PostJobPage() {
         residentName: currentUser.fullName,
         description
       });
+      showToast('Job posted successfully!');
       navigate('/resident/my-jobs');
     } catch (err) {
       console.error("Error creating job:", err);
-      alert("Failed to create job: " + err.message);
+      showToast("Failed to create job: " + err.message, 'error');
     }
   };
 
@@ -1420,7 +1421,7 @@ function ResidentJobsPage() {
 // 10. Job Details (Resident View with Bid Management)
 function JobDetailsPage() {
   const { jobId } = useParams();
-  const { getJobs, hireArtisanForJob, cancelJob } = useAuth();
+  const { getJobs, hireArtisanForJob, cancelJob, showToast } = useAuth();
 
   const job = getJobs().find(j => j.id === jobId);
   const bids = job ? job.bids || [] : [];
@@ -1431,13 +1432,13 @@ function JobDetailsPage() {
 
   const handleHire = (artisanId, price) => {
     hireArtisanForJob(job.id, artisanId, price);
-    alert('Artisan hired successfully!');
+    showToast('Artisan hired successfully!');
   };
 
   const handleCancel = () => {
     if (window.confirm('Are you sure you want to cancel this job?')) {
       cancelJob(job.id);
-      alert('Job cancelled.');
+      showToast('Job cancelled.', 'error');
     }
   };
 
@@ -1562,7 +1563,7 @@ function JobDetailsPage() {
 // 11. Leave Rating
 function LeaveRatingPage() {
   const { jobId } = useParams();
-  const { getJobs, submitRating, currentUser } = useAuth();
+  const { getJobs, submitRating, currentUser, showToast } = useAuth();
   const navigate = useNavigate();
 
   const [rating, setRating] = useState(5);
@@ -1571,13 +1572,13 @@ function LeaveRatingPage() {
   const job = getJobs().find(j => j.id === jobId);
 
   if (!job) {
-    return <div className="text-left text-red-750 font-bold">Job not found.</div>;
+    return <div className="text-left text-red-755 font-bold">Job not found.</div>;
   }
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!reviewText.trim()) {
-      alert('Please fill out review text.');
+      showToast('Please fill out review text.', 'error');
       return;
     }
 
@@ -1591,7 +1592,7 @@ function LeaveRatingPage() {
       reviewText
     });
 
-    alert('Thank you for your review!');
+    showToast('Thank you for your review!');
     navigate('/resident/my-jobs');
   };
 
@@ -1885,7 +1886,7 @@ function FindJobsPage() {
 // 14. Job Details (Artisan View to bid / mark complete)
 function ArtisanJobDetailsPage() {
   const { jobId } = useParams();
-  const { getJobs, placeBid, getArtisans, currentUser, completeJob } = useAuth();
+  const { getJobs, placeBid, getArtisans, currentUser, completeJob, showToast } = useAuth();
 
   const [bidPrice, setBidPrice] = useState('');
   const [bidDesc, setBidDesc] = useState('');
@@ -1901,7 +1902,7 @@ function ArtisanJobDetailsPage() {
   const handlePlaceBid = (e) => {
     e.preventDefault();
     if (!bidPrice || !bidDesc.trim()) {
-      alert('Please fill out bid amount and cover message.');
+      showToast('Please fill out bid amount and cover message.', 'error');
       return;
     }
 
@@ -1913,14 +1914,14 @@ function ArtisanJobDetailsPage() {
       description: bidDesc.trim()
     });
 
-    alert('Your bid was submitted!');
+    showToast('Your bid was submitted!');
     setBidPrice('');
     setBidDesc('');
   };
 
   const handleMarkComplete = () => {
     completeJob(job.id);
-    alert('Contract completed successfully!');
+    showToast('Contract completed successfully!');
   };
 
   const myBid = job.bids?.find(b => b.artisanId === currentUser.uid);
@@ -2199,7 +2200,7 @@ function EarningsPage() {
 
 // 18. Profile (Artisan View to edit)
 function ArtisanProfilePage() {
-  const { currentUser, getArtisans, updateArtisanProfile } = useAuth();
+  const { currentUser, getArtisans, updateArtisanProfile, showToast } = useAuth();
   const profile = getArtisans().find(a => a.uid === currentUser.uid) || {};
 
   const [fullName, setFullName] = useState(profile.fullName || '');
@@ -2217,7 +2218,7 @@ function ArtisanProfilePage() {
       experienceYears: Number(experience),
       bio
     });
-    alert('Profile updated successfully!');
+    showToast('Profile updated successfully!');
   };
 
   return (
@@ -2400,17 +2401,17 @@ function AdminDashboard() {
 
 // 20. Pending Artisans
 function PendingArtisansPage() {
-  const { getArtisans, updateArtisanStatus } = useAuth();
+  const { getArtisans, updateArtisanStatus, showToast } = useAuth();
   const artisans = getArtisans().filter(a => a.status === 'pending');
 
   const handleApprove = (uid) => {
     updateArtisanStatus(uid, 'approved');
-    alert('Artisan approved!');
+    showToast('Artisan approved!');
   };
 
   const handleReject = (uid) => {
     updateArtisanStatus(uid, 'rejected');
-    alert('Artisan application rejected.');
+    showToast('Artisan application rejected.', 'error');
   };
 
   return (
@@ -2471,7 +2472,7 @@ function PendingArtisansPage() {
 // 21. Artisan Details (Admin View)
 function AdminArtisanDetailsPage() {
   const { artisanId } = useParams();
-  const { getArtisans, updateArtisanStatus } = useAuth();
+  const { getArtisans, updateArtisanStatus, showToast } = useAuth();
   const navigate = useNavigate();
 
   const art = getArtisans().find(a => a.uid === artisanId);
@@ -2482,13 +2483,13 @@ function AdminArtisanDetailsPage() {
 
   const handleApprove = () => {
     updateArtisanStatus(art.uid, 'approved');
-    alert('Artisan approved!');
+    showToast('Artisan approved!');
     navigate('/admin/pending');
   };
 
   const handleReject = () => {
     updateArtisanStatus(art.uid, 'rejected');
-    alert('Artisan rejected.');
+    showToast('Artisan rejected.', 'error');
     navigate('/admin/pending');
   };
 
@@ -2777,8 +2778,9 @@ function ReportsPage() {
 
 // 25. Settings
 function SettingsPage() {
+  const { showToast } = useAuth();
   return (
-    <div className="space-y-6 text-left max-w-xl mx-auto bg-white border border-slate-200 p-8 rounded-3xl shadow-md">
+    <div className="space-y-6 text-left max-w-xl mx-auto bg-white border border-slate-200 p-8 rounded-3xl shadow-md font-sans">
       <div>
         <h1 className="text-xl font-bold text-slate-900">General Settings</h1>
         <p className="text-slate-500 text-xs mt-1">Configure categories, zones, and verification thresholds.</p>
@@ -2808,7 +2810,7 @@ function SettingsPage() {
         </div>
 
         <button 
-          onClick={() => alert('Settings saved!')}
+          onClick={() => showToast('Settings saved!')}
           className="w-full py-2.5 rounded-xl bg-emerald-800 hover:bg-emerald-900 text-white font-bold shadow transition"
         >
           Save Platform Changes
@@ -2965,22 +2967,20 @@ function ResidentReviewsPage() {
 
 // 28. Resident Profile Page
 function ResidentProfilePage() {
-  const { currentUser, updateResidentProfile } = useAuth();
+  const { currentUser, updateResidentProfile, showToast } = useAuth();
   const [fullName, setFullName] = useState(currentUser?.fullName || '');
   const [phone, setPhone] = useState(currentUser?.phone || '');
   const [zone, setZone] = useState(currentUser?.zone || 'Zone A');
   const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState(false);
 
   const handleUpdate = async (e) => {
     e.preventDefault();
-    setSuccess(false);
     setLoading(true);
     try {
       await updateResidentProfile(currentUser.uid, { fullName, phone, zone });
-      setSuccess(true);
+      showToast('Profile updated successfully!');
     } catch (err) {
-      alert(err.message || 'Failed to update profile.');
+      showToast(err.message || 'Failed to update profile.', 'error');
     } finally {
       setLoading(false);
     }

@@ -208,8 +208,74 @@ export function AuthProvider({ children }) {
     return [];
   });
 
+  const [notifications, setNotifications] = useState(() => {
+    if (isFirebaseMock()) {
+      if (!localStorage.getItem('cc_notifications')) {
+        localStorage.setItem('cc_notifications', JSON.stringify([]));
+      }
+      return getMockData('cc_notifications') || [];
+    }
+    return [];
+  });
+
+  const [toast, setToast] = useState(null);
+
   const [loading, setLoading] = useState(() => !isFirebaseMock());
 
+  const showToast = (message, type = 'success') => {
+    setToast({ message, type });
+    // Auto-dismiss after 3.5 seconds
+    setTimeout(() => {
+      setToast(prev => prev && prev.message === message ? null : prev);
+    }, 3500);
+  };
+
+  const addNotification = async (userId, title, message, jobId) => {
+    const newNotif = {
+      userId,
+      title,
+      message,
+      jobId,
+      read: false,
+      createdAt: Date.now()
+    };
+    if (isMock) {
+      const currentNotifs = getMockData('cc_notifications') || [];
+      const updated = [{ id: 'n_' + Date.now() + Math.random().toString(36).substr(2, 5), ...newNotif }, ...currentNotifs];
+      saveMockData('cc_notifications', updated);
+      setNotifications(updated);
+    } else {
+      await addDoc(collection(db, 'notifications'), newNotif);
+    }
+  };
+
+  const markNotificationRead = async (id) => {
+    if (isMock) {
+      const currentNotifs = getMockData('cc_notifications') || [];
+      const updated = currentNotifs.map(n => n.id === id ? { ...n, read: true } : n);
+      saveMockData('cc_notifications', updated);
+      setNotifications(updated);
+    } else {
+      const ref = doc(db, 'notifications', id);
+      await updateDoc(ref, { read: true });
+    }
+  };
+
+  const clearAllNotifications = async (userId) => {
+    if (isMock) {
+      const currentNotifs = getMockData('cc_notifications') || [];
+      const updated = currentNotifs.map(n => n.userId === userId ? { ...n, read: true } : n);
+      saveMockData('cc_notifications', updated);
+      setNotifications(updated);
+    } else {
+      const userNotifs = notifications.filter(n => n.userId === userId && !n.read);
+      for (const n of userNotifs) {
+        await updateDoc(doc(db, 'notifications', n.id), { read: true });
+      }
+    }
+  };
+
+  // Auth State Listener
   useEffect(() => {
     if (isMock) return;
     try {
@@ -238,10 +304,28 @@ export function AuthProvider({ children }) {
         console.error("Firebase auth error:", error);
         setLoading(false);
       });
+      return unsubscribeAuth;
+    } catch (err) {
+      console.error("Firebase Auth listener registration failed.", err);
+      setTimeout(() => setLoading(false), 0);
+    }
+  }, [isMock]);
 
+  // Firestore Collections Subscription (Dependent on Logged-in User Role/UID)
+  useEffect(() => {
+    if (isMock) return;
+    if (!currentUser) {
+      setJobs([]);
+      setArtisans([]);
+      setRatings([]);
+      setNotifications([]);
+      return;
+    }
+
+    try {
+      console.log("Subscribing to Firestore collections for user:", currentUser.uid);
       const unsubscribeJobs = onSnapshot(collection(db, 'jobs'), (snapshot) => {
         const jobsList = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-        console.log("Firestore onSnapshot jobs count:", jobsList.length, jobsList);
         jobsList.sort((a, b) => b.createdAt - a.createdAt);
         setJobs(jobsList);
       }, (err) => console.error("Firestore jobs listener error:", err));
@@ -257,17 +341,23 @@ export function AuthProvider({ children }) {
         setRatings(ratingsList);
       }, (err) => console.error("Firestore ratings listener error:", err));
 
+      const unsubscribeNotifications = onSnapshot(collection(db, 'notifications'), (snapshot) => {
+        const notificationsList = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        notificationsList.sort((a, b) => b.createdAt - a.createdAt);
+        setNotifications(notificationsList);
+      }, (err) => console.error("Firestore notifications listener error:", err));
+
       return () => {
-        unsubscribeAuth();
+        console.log("Unsubscribing from Firestore collections for user:", currentUser.uid);
         unsubscribeJobs();
         unsubscribeArtisans();
         unsubscribeRatings();
+        unsubscribeNotifications();
       };
     } catch (err) {
-      console.error("Firebase initialization failed.", err);
-      setTimeout(() => setLoading(false), 0);
+      console.error("Firestore subscription setup failed:", err);
     }
-  }, [isMock]);
+  }, [isMock, currentUser?.uid]);
 
   // --- AUTH ACTIONS ---
 
@@ -490,6 +580,23 @@ export function AuthProvider({ children }) {
   };
 
   const placeBid = async (jobId, bidData) => {
+    let residentId = '';
+    let jobTitle = '';
+    if (isMock) {
+      const job = jobs.find(j => j.id === jobId);
+      if (job) {
+        residentId = job.residentId;
+        jobTitle = job.title;
+      }
+    } else {
+      const jobRef = doc(db, 'jobs', jobId);
+      const jobDoc = await getDoc(jobRef);
+      if (jobDoc.exists()) {
+        residentId = jobDoc.data().residentId;
+        jobTitle = jobDoc.data().title;
+      }
+    }
+
     if (isMock) {
       const updated = jobs.map(j => {
         if (j.id === jobId) {
@@ -513,9 +620,34 @@ export function AuthProvider({ children }) {
         await updateDoc(jobRef, { bids: updatedBids });
       }
     }
+
+    if (residentId) {
+      await addNotification(
+        residentId,
+        "New Bid Received",
+        `${bidData.artisanName || 'An artisan'} placed a bid of ₦${Number(bidData.price).toLocaleString()} on your job: "${jobTitle}"`,
+        jobId
+      );
+    }
   };
 
   const hireArtisanForJob = async (jobId, artisanId, price) => {
+    let jobTitle = '';
+    let residentName = '';
+    if (isMock) {
+      const job = jobs.find(j => j.id === jobId);
+      if (job) {
+        jobTitle = job.title;
+        residentName = job.residentName;
+      }
+    } else {
+      const jobDoc = await getDoc(doc(db, 'jobs', jobId));
+      if (jobDoc.exists()) {
+        jobTitle = jobDoc.data().title;
+        residentName = jobDoc.data().residentName;
+      }
+    }
+
     if (isMock) {
       const artisan = artisans.find(a => a.uid === artisanId);
       const updated = jobs.map(j => {
@@ -544,6 +676,13 @@ export function AuthProvider({ children }) {
         agreedPrice: Number(price)
       });
     }
+
+    await addNotification(
+      artisanId,
+      "Bid Accepted!",
+      `Your bid on "${jobTitle}" has been accepted by ${residentName || 'the resident'} for ₦${Number(price).toLocaleString()}.`,
+      jobId
+    );
   };
 
   const completeJob = async (jobId) => {
@@ -694,6 +833,10 @@ export function AuthProvider({ children }) {
       currentUser,
       loading,
       isMock,
+      notifications,
+      markNotificationRead,
+      clearAllNotifications,
+      showToast,
       login,
       registerResident,
       registerArtisan,
@@ -713,6 +856,30 @@ export function AuthProvider({ children }) {
       submitRating
     }}>
       {!loading && children}
+      {toast && (
+        <div className="fixed bottom-5 right-5 z-[9999] transition-all duration-300 animate-slide-in">
+          <div className={`flex items-center gap-3 px-4 py-3 rounded-2xl shadow-xl border text-sm font-semibold ${
+            toast.type === 'error' 
+              ? 'bg-rose-50 border-rose-150 text-rose-900' 
+              : 'bg-emerald-50 border-emerald-150 text-emerald-900'
+          }`}>
+            <span className={`w-6 h-6 rounded-full flex items-center justify-center shrink-0 text-xs font-black ${
+              toast.type === 'error' ? 'bg-rose-100 text-rose-800' : 'bg-emerald-100 text-emerald-800'
+            }`}>
+              {toast.type === 'error' ? '✕' : '✓'}
+            </span>
+            <div className="flex-1 min-w-[200px] text-left">
+              <p className="text-slate-800 text-xs font-bold leading-normal">{toast.message}</p>
+            </div>
+            <button 
+              onClick={() => setToast(null)} 
+              className="text-slate-400 hover:text-slate-700 font-bold text-lg p-1 transition"
+            >
+              ×
+            </button>
+          </div>
+        </div>
+      )}
     </AuthContext.Provider>
   );
 }

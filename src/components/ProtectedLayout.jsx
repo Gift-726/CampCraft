@@ -24,9 +24,10 @@ import {
 } from 'lucide-react';
 
 export default function ProtectedLayout({ allowedRoles }) {
-  const { currentUser, logout } = useAuth();
+  const { currentUser, logout, notifications, markNotificationRead, clearAllNotifications } = useAuth();
   const location = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
+  const [notifDropdownOpen, setNotifDropdownOpen] = React.useState(false);
 
   if (!currentUser) return <Navigate to="/login" state={{ from: location }} replace />;
   if (allowedRoles && !allowedRoles.includes(currentUser.role)) {
@@ -170,10 +171,71 @@ export default function ProtectedLayout({ allowedRoles }) {
 
           <div className="ml-auto flex items-center gap-4">
             {/* Notification bell */}
-            <button className="relative p-2 rounded-xl hover:bg-slate-100 transition">
-              <Bell className="w-5 h-5 text-slate-500" />
-              <span className="absolute top-1 right-1 w-4 h-4 bg-emerald-600 rounded-full text-[9px] font-bold text-white flex items-center justify-center">3</span>
-            </button>
+            <div className="relative">
+              <button 
+                onClick={() => setNotifDropdownOpen(!notifDropdownOpen)}
+                className="relative p-2 rounded-xl hover:bg-slate-100 transition flex items-center justify-center"
+              >
+                <Bell className="w-5 h-5 text-slate-500" />
+                {((notifications || []).filter(n => n.userId === currentUser.uid && !n.read).length) > 0 && (
+                  <span className="absolute top-1 right-1 w-4 h-4 bg-emerald-600 rounded-full text-[9px] font-bold text-white flex items-center justify-center animate-pulse">
+                    {(notifications || []).filter(n => n.userId === currentUser.uid && !n.read).length}
+                  </span>
+                )}
+              </button>
+
+              {notifDropdownOpen && (
+                <>
+                  {/* Dropdown backdrop click-out overlay */}
+                  <div className="fixed inset-0 z-45" onClick={() => setNotifDropdownOpen(false)} />
+                  
+                  {/* Dropdown menu container */}
+                  <div className="absolute right-0 mt-2 w-80 bg-white border border-slate-200 rounded-2xl shadow-xl z-50 overflow-hidden py-1">
+                    <div className="px-4 py-2.5 border-b border-slate-100 flex items-center justify-between">
+                      <span className="font-bold text-sm text-slate-800">Notifications</span>
+                      {((notifications || []).filter(n => n.userId === currentUser.uid && !n.read).length) > 0 && (
+                        <button 
+                          onClick={() => {
+                            clearAllNotifications(currentUser.uid);
+                          }}
+                          className="text-[10px] font-bold text-emerald-800 hover:text-emerald-950 transition"
+                        >
+                          Mark all as read
+                        </button>
+                      )}
+                    </div>
+                    
+                    <div className="max-h-64 overflow-y-auto">
+                      {(notifications || []).filter(n => n.userId === currentUser.uid).length === 0 ? (
+                        <div className="p-6 text-center text-xs text-slate-400">
+                          No notifications yet.
+                        </div>
+                      ) : (
+                        (notifications || []).filter(n => n.userId === currentUser.uid).map(n => (
+                          <div 
+                            key={n.id}
+                            onClick={() => {
+                              markNotificationRead(n.id);
+                              setNotifDropdownOpen(false);
+                            }}
+                            className={`p-3 border-b border-slate-50 text-left hover:bg-slate-50 transition cursor-pointer flex gap-3 items-start ${!n.read ? 'bg-emerald-50/40' : ''}`}
+                          >
+                            <span className={`w-2 h-2 mt-1.5 rounded-full shrink-0 ${!n.read ? 'bg-emerald-600' : 'bg-slate-200'}`} />
+                            <div className="space-y-0.5">
+                              <p className="text-xs font-bold text-slate-800">{n.title}</p>
+                              <p className="text-[11px] text-slate-505 leading-normal">{n.message}</p>
+                              <p className="text-[9px] text-slate-400">
+                                {new Date(n.createdAt).toLocaleDateString()} {new Date(n.createdAt).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
+                              </p>
+                            </div>
+                          </div>
+                        ))
+                      )}
+                    </div>
+                  </div>
+                </>
+              )}
+            </div>
 
             {/* User avatar + name */}
             <button className="flex items-center gap-2.5 hover:bg-slate-50 px-2 py-1.5 rounded-xl transition">
