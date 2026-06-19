@@ -24,10 +24,49 @@ import {
 } from 'lucide-react';
 
 export default function ProtectedLayout({ allowedRoles }) {
-  const { currentUser, logout, notifications, markNotificationRead, clearAllNotifications } = useAuth();
+  const { 
+    currentUser, 
+    loading,
+    logout, 
+    notifications, 
+    markNotificationRead, 
+    clearAllNotifications,
+    supportMessages,
+    sendSupportMessage
+  } = useAuth();
   const location = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
   const [notifDropdownOpen, setNotifDropdownOpen] = React.useState(false);
+  const [supportChatOpen, setSupportChatOpen] = React.useState(false);
+  const [newMsgText, setNewMsgText] = React.useState('');
+  const chatEndRef = React.useRef(null);
+
+  const mySupportMessages = (supportMessages || []).filter(msg => msg.userId === currentUser?.uid);
+
+  const handleSendMessage = async (e) => {
+    e.preventDefault();
+    if (!newMsgText.trim()) return;
+    try {
+      await sendSupportMessage(newMsgText.trim());
+      setNewMsgText('');
+    } catch (err) {
+      console.error("Failed to send message", err);
+    }
+  };
+
+  React.useEffect(() => {
+    if (chatEndRef.current) {
+      chatEndRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [mySupportMessages.length, supportChatOpen]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-emerald-800"></div>
+      </div>
+    );
+  }
 
   if (!currentUser) return <Navigate to="/login" state={{ from: location }} replace />;
   if (allowedRoles && !allowedRoles.includes(currentUser.role)) {
@@ -134,7 +173,10 @@ export default function ProtectedLayout({ allowedRoles }) {
           <p className="text-[11px] text-slate-500 leading-relaxed">
             We're here to help you find the right artisan.
           </p>
-          <button className="w-full py-2 rounded-xl bg-emerald-800 hover:bg-emerald-900 text-white text-xs font-bold transition">
+          <button 
+            onClick={() => setSupportChatOpen(true)}
+            className="w-full py-2 rounded-xl bg-emerald-800 hover:bg-emerald-900 text-white text-xs font-bold transition"
+          >
             Contact Support
           </button>
         </div>
@@ -291,6 +333,90 @@ export default function ProtectedLayout({ allowedRoles }) {
         <main className="flex-1 overflow-y-auto p-5 md:p-7">
           <Outlet />
         </main>
+
+        {/* ── SUPPORT CHAT FLOATING PANEL ── */}
+        {currentUser?.role !== 'admin' && supportChatOpen && (
+          <div className="fixed bottom-6 right-6 w-80 md:w-96 h-[450px] bg-white border border-slate-200 rounded-2xl shadow-2xl z-[9999] flex flex-col overflow-hidden animate-slide-in">
+            {/* Header */}
+            <div className="bg-emerald-800 text-white px-4 py-3 flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 rounded-full bg-emerald-700 flex items-center justify-center">
+                  <Headphones className="w-4 h-4 text-white" />
+                </div>
+                <div>
+                  <p className="text-xs font-bold leading-none">CampCraft Support</p>
+                  <span className="text-[10px] text-emerald-300 flex items-center gap-1.5 mt-0.5">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                    We reply in minutes
+                  </span>
+                </div>
+              </div>
+              <button 
+                onClick={() => setSupportChatOpen(false)}
+                className="text-emerald-200 hover:text-white transition p-1 hover:bg-emerald-700/50 rounded-lg"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            {/* Messages area */}
+            <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-slate-50 flex flex-col">
+              {mySupportMessages.length === 0 ? (
+                <div className="flex-1 flex flex-col items-center justify-center text-center p-4 space-y-2">
+                  <p className="text-xs font-bold text-slate-800">No messages yet</p>
+                  <p className="text-[11px] text-slate-400 max-w-[200px] leading-relaxed">
+                    Send a message to start a conversation with our support team.
+                  </p>
+                </div>
+              ) : (
+                mySupportMessages.map((msg) => {
+                  const isMe = msg.senderId === currentUser.uid;
+                  return (
+                    <div 
+                      key={msg.id || msg.createdAt} 
+                      className={`flex flex-col max-w-[75%] ${isMe ? 'self-end items-end' : 'self-start items-start'}`}
+                    >
+                      <span className="text-[9px] text-slate-400 font-medium mb-0.5 px-1">
+                        {isMe ? 'You' : (msg.senderName || 'Support Agent')}
+                      </span>
+                      <div 
+                        className={`px-3 py-2 rounded-2xl text-xs shadow-sm leading-relaxed ${
+                          isMe 
+                            ? 'bg-emerald-800 text-white rounded-tr-none' 
+                            : 'bg-white text-slate-800 border border-slate-200 rounded-tl-none'
+                        }`}
+                      >
+                        {msg.message}
+                      </div>
+                      <span className="text-[9px] text-slate-400 mt-1 px-1">
+                        {new Date(msg.createdAt).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
+                      </span>
+                    </div>
+                  );
+                })
+              )}
+              <div ref={chatEndRef} />
+            </div>
+
+            {/* Input form */}
+            <form onSubmit={handleSendMessage} className="p-3 border-t border-slate-200 bg-white flex gap-2">
+              <input
+                type="text"
+                value={newMsgText}
+                onChange={(e) => setNewMsgText(e.target.value)}
+                placeholder="Type your message..."
+                className="flex-1 px-3 py-2 text-xs border border-slate-200 rounded-xl focus:outline-none focus:border-emerald-800 placeholder-slate-400"
+              />
+              <button 
+                type="submit"
+                disabled={!newMsgText.trim()}
+                className="px-3 py-2 rounded-xl bg-emerald-800 hover:bg-emerald-900 text-white text-xs font-bold transition disabled:opacity-55"
+              >
+                Send
+              </button>
+            </form>
+          </div>
+        )}
       </div>
     </div>
   );

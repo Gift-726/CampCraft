@@ -1,12 +1,15 @@
-import { useState } from 'react';
+import { useState, useMemo, useRef, useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Link, useNavigate, useParams } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthProvider';
 import { useAuth } from './contexts/AuthContext';
 import ProtectedLayout from './components/ProtectedLayout';
+import { db } from './firebase';
+import { collection, doc, deleteDoc, getDocs, query, where } from 'firebase/firestore';
 import { 
   Star, Search, MapPin, AlertCircle, Wrench, UploadCloud, ChevronRight,
-  PlusCircle, User, Settings, Droplets, Zap, Hammer, Paintbrush,
-  Flame, Cpu, WashingMachine, ShieldCheck, Home, Briefcase
+  PlusCircle, User, Droplets, Zap, Hammer, Paintbrush,
+  Flame, Cpu, WashingMachine, ShieldCheck, Briefcase,
+  MessageSquare, Send, Headphones
 } from 'lucide-react';
 
 // ==========================================
@@ -328,7 +331,7 @@ function RegisterPage() {
                 <User className="w-5 h-5" />
               </div>
               <div>
-                <h4 className="font-extrabold text-slate-900 group-hover:text-emerald-850">Resident</h4>
+                <h4 className="font-extrabold text-slate-900 group-hover:text-emerald-800">Resident</h4>
                 <p className="text-xs text-slate-500">Find and hire verified artisans</p>
               </div>
             </button>
@@ -341,7 +344,7 @@ function RegisterPage() {
                 <Wrench className="w-5 h-5" />
               </div>
               <div>
-                <h4 className="font-extrabold text-slate-900 group-hover:text-emerald-850">Artisan</h4>
+                <h4 className="font-extrabold text-slate-900 group-hover:text-emerald-800">Artisan</h4>
                 <p className="text-xs text-slate-500">Offer your skills and find jobs</p>
               </div>
             </button>
@@ -354,7 +357,7 @@ function RegisterPage() {
           /* REGISTRATION FORM FOR CHOSEN ROLE */
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="flex justify-between items-center bg-slate-50 p-2.5 rounded-xl border border-slate-200 mb-2">
-              <span className="text-xs text-slate-600">Role: <strong className="text-emerald-850 capitalize font-extrabold">{role}</strong></span>
+              <span className="text-xs text-slate-600">Role: <strong className="text-emerald-800 capitalize font-extrabold">{role}</strong></span>
               <button 
                 type="button" 
                 onClick={() => setRole(null)} 
@@ -551,7 +554,7 @@ function LoginPage() {
           <div className="space-y-1">
             <div className="flex justify-between items-center">
               <label className="text-xs font-semibold text-slate-600">Password</label>
-              <Link to="/forgot-password" className="text-xs text-emerald-850 font-semibold hover:underline">Forgot password?</Link>
+              <Link to="/forgot-password" className="text-xs text-emerald-800 font-semibold hover:underline">Forgot password?</Link>
             </div>
             <input 
               type="password" 
@@ -650,7 +653,7 @@ function ForgotPasswordPage() {
 function ResidentDashboard() {
   const { currentUser, getJobs, getArtisans, getRatings } = useAuth();
   const allJobs   = getJobs().filter(j => j.residentId === currentUser.uid);
-  const artisans  = getArtisans().filter(a => a.status === 'approved');
+  const artisans  = getArtisans();
   const ratings   = getRatings().filter(r => r.residentId === currentUser.uid);
 
   const postedCount    = allJobs.length;
@@ -661,6 +664,9 @@ function ResidentDashboard() {
   const avgRating = ratings.length
     ? (ratings.reduce((s, r) => s + r.rating, 0) / ratings.length).toFixed(1)
     : '—';
+
+  const jobsWithBids = allJobs.filter(j => j.status === 'open' && j.bids && j.bids.length > 0);
+  const totalBidsPending = jobsWithBids.reduce((sum, j) => sum + (j.bids?.length || 0), 0);
 
   const [jobTab, setJobTab] = useState('all');
   const filteredJobs = jobTab === 'all' ? allJobs
@@ -689,10 +695,6 @@ function ResidentDashboard() {
     'cancelled':   'bg-red-50 text-red-700',
   }[s] || 'bg-slate-100 text-slate-600');
 
-  const jobColorDot = s => ({
-    'open': 'bg-emerald-500', 'in-progress': 'bg-blue-500',
-    'completed': 'bg-slate-400', 'cancelled': 'bg-red-400',
-  }[s] || 'bg-slate-300');
 
   return (
     <div className="space-y-6 text-left">
@@ -700,12 +702,35 @@ function ResidentDashboard() {
       {/* ── WELCOME HEADER ── */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <div>
-          <p className="text-slate-500 text-sm">Find trusted artisans and get your jobs done.</p>
+          <p className="text-slate-505 text-sm">Find trusted artisans and get your jobs done.</p>
           <h1 className="text-2xl font-black text-slate-900 mt-0.5">
             Welcome back, {currentUser.fullName} 👋
           </h1>
         </div>
       </div>
+
+      {/* ── PENDING BIDS ALERT BANNER ── */}
+      {jobsWithBids.length > 0 && (
+        <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4 flex items-center justify-between shadow-sm animate-pulse">
+          <div className="flex items-center space-x-3">
+            <div className="w-9 h-9 rounded-xl bg-amber-100 text-amber-800 flex items-center justify-center shrink-0">
+              <Star className="w-5 h-5 fill-amber-500 text-amber-500" />
+            </div>
+            <div>
+              <h3 className="text-sm font-bold text-amber-900">Pending Bids Alert</h3>
+              <p className="text-xs text-amber-700 font-medium mt-0.5">
+                You have received {totalBidsPending} new bid{totalBidsPending > 1 ? 's' : ''} on {jobsWithBids.length} of your open job request{jobsWithBids.length > 1 ? 's' : ''}.
+              </p>
+            </div>
+          </div>
+          <Link
+            to="/resident/my-jobs"
+            className="px-4 py-2 bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold text-xs rounded-xl shadow-sm transition"
+          >
+            Review Bids
+          </Link>
+        </div>
+      )}
 
       {/* ── STAT CARDS ── */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
@@ -744,7 +769,6 @@ function ResidentDashboard() {
               <p className="text-xs text-slate-400 text-center py-4">No jobs posted yet.</p>
             ) : allJobs.slice(0, 4).map(job => {
               const CatIcon = categoryIcons[job.category] || Wrench;
-              const dotColor = jobColorDot(job.status);
               const catColor = catColors[job.category] || 'bg-slate-50 text-slate-600';
               return (
                 <div key={job.id} className="flex items-center gap-3 py-2 border-b border-slate-100 last:border-0">
@@ -752,7 +776,14 @@ function ResidentDashboard() {
                     <CatIcon className="w-4 h-4" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-semibold text-slate-900 truncate">{job.title}</p>
+                    <div className="flex items-center gap-1.5">
+                      <p className="text-sm font-semibold text-slate-900 truncate">{job.title}</p>
+                      {job.status === 'open' && job.bids && job.bids.length > 0 && (
+                        <span className="px-1.5 py-0.5 rounded bg-amber-100 text-amber-800 text-[8px] font-bold uppercase shrink-0 border border-amber-200">
+                          {job.bids.length} Bid{job.bids.length > 1 ? 's' : ''}
+                        </span>
+                      )}
+                    </div>
                     <p className="text-[11px] text-slate-500 mt-0.5 flex items-center gap-1">
                       <span className="text-emerald-700 font-medium">{job.category}</span>
                       <span>•</span> {job.zone}
@@ -794,6 +825,14 @@ function ResidentDashboard() {
                   <p className="text-[11px] text-slate-500 mt-0.5 flex items-center gap-1">
                     <span className="text-emerald-700 font-medium">{art.category}</span>
                     <span>•</span> {art.zone}
+                    <span>•</span>
+                    {art.status === 'approved' ? (
+                      <span className="text-emerald-800 font-bold">Verified</span>
+                    ) : art.status === 'pending' ? (
+                      <span className="text-amber-750 font-bold">Pending</span>
+                    ) : (
+                      <span className="text-rose-800 font-bold">Rejected</span>
+                    )}
                   </p>
                   <div className="flex items-center gap-1 mt-0.5">
                     <Star className="w-3 h-3 fill-amber-400 text-amber-400" />
@@ -971,14 +1010,16 @@ function BrowseArtisans() {
   const [categoryFilter, setCategoryFilter] = useState('All');
   const [zoneFilter, setZoneFilter] = useState('All');
 
-  const artisans = getArtisans().filter(a => a.status === 'approved');
+  const artisans = getArtisans();
 
   // Filter logic
   const filtered = artisans.filter(a => {
-    const matchesSearch = a.fullName.toLowerCase().includes(search.toLowerCase()) || 
-                          a.bio.toLowerCase().includes(search.toLowerCase());
-    const matchesCategory = categoryFilter === 'All' || a.category === categoryFilter;
-    const matchesZone = zoneFilter === 'All' || a.zone === zoneFilter;
+    const nameText = a.fullName || '';
+    const bioText = a.bio || '';
+    const matchesSearch = nameText.toLowerCase().includes(search.toLowerCase()) || 
+                          bioText.toLowerCase().includes(search.toLowerCase());
+    const matchesCategory = categoryFilter === 'All' || (a.category && a.category === categoryFilter);
+    const matchesZone = zoneFilter === 'All' || (a.zone && a.zone === zoneFilter);
     return matchesSearch && matchesCategory && matchesZone;
   });
 
@@ -998,7 +1039,7 @@ function BrowseArtisans() {
             placeholder="Search artisans by name, skill, or bio..." 
             value={search}
             onChange={e => setSearch(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 rounded-xl bg-slate-50 border border-slate-250 focus:outline-none focus:border-emerald-850 text-sm text-slate-700 placeholder-slate-400"
+            className="w-full pl-10 pr-4 py-2 rounded-xl bg-slate-50 border border-slate-250 focus:outline-none focus:border-emerald-800 text-sm text-slate-700 placeholder-slate-400"
           />
         </div>
 
@@ -1062,9 +1103,19 @@ function BrowseArtisans() {
               </div>
 
               <div className="flex flex-col items-end justify-between h-full min-h-[90px]">
-                <span className="px-2.5 py-1 rounded bg-emerald-50 text-[10px] font-bold text-emerald-800 uppercase tracking-wider">
-                  Available
-                </span>
+                {art.status === 'approved' ? (
+                  <span className="px-2.5 py-1 rounded bg-emerald-50 text-[10px] font-bold text-emerald-800 uppercase tracking-wider">
+                    Available
+                  </span>
+                ) : art.status === 'pending' ? (
+                  <span className="px-2.5 py-1 rounded bg-amber-50 text-[10px] font-bold text-amber-800 uppercase tracking-wider">
+                    Pending Verification
+                  </span>
+                ) : (
+                  <span className="px-2.5 py-1 rounded bg-rose-50 text-[10px] font-bold text-rose-800 uppercase tracking-wider">
+                    Rejected / Suspended
+                  </span>
+                )}
                 <Link 
                   to={`/resident/profile/${art.uid}`}
                   className="px-3.5 py-1.5 rounded-lg bg-emerald-800 text-xs font-bold text-white hover:bg-emerald-900 shadow transition-all mt-4"
@@ -1324,6 +1375,16 @@ function ResidentJobsPage() {
 
   const filtered = jobs.filter(j => tab === 'All' || j.status === tab);
 
+  const sortedJobs = useMemo(() => {
+    return [...filtered].sort((a, b) => {
+      const aHasBids = a.status === 'open' && a.bids && a.bids.length > 0;
+      const bHasBids = b.status === 'open' && b.bids && b.bids.length > 0;
+      if (aHasBids && !bHasBids) return -1;
+      if (!aHasBids && bHasBids) return 1;
+      return b.createdAt - a.createdAt;
+    });
+  }, [filtered]);
+
   const tabs = ['All', 'open', 'in-progress', 'completed', 'cancelled'];
 
   return (
@@ -1360,24 +1421,31 @@ function ResidentJobsPage() {
 
       {/* Jobs Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {filtered.length === 0 ? (
+        {sortedJobs.length === 0 ? (
           <div className="col-span-2 p-12 text-center text-slate-400 text-xs bg-white border border-slate-200 rounded-2xl shadow-sm">
             No jobs found in this category.
           </div>
         ) : (
-          filtered.map(job => (
+          sortedJobs.map(job => (
             <div key={job.id} className="p-6 rounded-2xl bg-white border border-slate-200 flex flex-col justify-between space-y-4 shadow-sm">
               <div className="space-y-2">
                 <div className="flex justify-between items-start">
                   <h3 className="font-bold text-slate-900 text-base leading-tight">{job.title}</h3>
-                  <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wide ${
-                    job.status === 'open' ? 'bg-emerald-50 text-emerald-800' :
-                    job.status === 'in-progress' ? 'bg-blue-50 text-blue-800' :
-                    job.status === 'completed' ? 'bg-slate-100 text-slate-500 border border-slate-200' :
-                    'bg-red-50 text-red-800'
-                  }`}>
-                    {job.status}
-                  </span>
+                  <div className="flex items-center space-x-2 shrink-0">
+                    {job.status === 'open' && job.bids && job.bids.length > 0 && (
+                      <span className="px-2 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wide bg-amber-100 text-amber-800 border border-amber-200">
+                        {job.bids.length} Bid{job.bids.length > 1 ? 's' : ''} Received
+                      </span>
+                    )}
+                    <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wide ${
+                      job.status === 'open' ? 'bg-emerald-50 text-emerald-800' :
+                      job.status === 'in-progress' ? 'bg-blue-50 text-blue-800' :
+                      job.status === 'completed' ? 'bg-slate-100 text-slate-500 border border-slate-200' :
+                      'bg-red-50 text-red-800'
+                    }`}>
+                      {job.status}
+                    </span>
+                  </div>
                 </div>
                 <div className="flex items-center space-x-2 text-xs text-slate-500">
                   <span className="text-emerald-800 font-bold">{job.category}</span>
@@ -1672,6 +1740,8 @@ function ArtisanDashboard() {
   const inProgressCount = jobs.filter(j => j.status === 'in-progress').length;
   const completedCount = jobs.filter(j => j.status === 'completed').length;
 
+  const hiredJobs = getJobs().filter(j => j.hiredArtisanId === currentUser.uid && j.status === 'in-progress');
+
   return (
     <div className="space-y-8 text-left">
       <div className="flex items-center justify-between">
@@ -1687,6 +1757,29 @@ function ArtisanDashboard() {
           <span>Find Available Jobs</span>
         </Link>
       </div>
+
+      {/* ── HIRED JOBS ALERT BANNER ── */}
+      {hiredJobs.length > 0 && (
+        <div className="bg-emerald-50 border border-emerald-200 rounded-2xl p-4 flex items-center justify-between shadow-sm animate-pulse">
+          <div className="flex items-center space-x-3">
+            <div className="w-9 h-9 rounded-xl bg-emerald-100 text-emerald-800 flex items-center justify-center shrink-0">
+              <Star className="w-5 h-5 fill-emerald-600 text-emerald-600" />
+            </div>
+            <div>
+              <h3 className="text-sm font-bold text-emerald-900">Bid Accepted Alert</h3>
+              <p className="text-xs text-emerald-700 font-medium mt-0.5">
+                Congratulations! You have been hired for {hiredJobs.length} active job request{hiredJobs.length > 1 ? 's' : ''}! Click below to view contract details.
+              </p>
+            </div>
+          </div>
+          <Link
+            to="/artisan/my-jobs"
+            className="px-4 py-2 bg-emerald-800 hover:bg-emerald-900 text-white font-bold text-xs rounded-xl shadow-sm transition"
+          >
+            View My Jobs
+          </Link>
+        </div>
+      )}
 
       {/* Stats Cards */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -1777,10 +1870,12 @@ function FindJobsPage() {
   const openJobs = getJobs().filter(j => j.status === 'open');
 
   const filtered = openJobs.filter(j => {
-    const matchesSearch = j.title.toLowerCase().includes(search.toLowerCase()) || 
-                          j.description.toLowerCase().includes(search.toLowerCase());
-    const matchesCategory = categoryFilter === 'All' || j.category === categoryFilter;
-    const matchesZone = zoneFilter === 'All' || j.zone === zoneFilter;
+    const titleText = j.title || '';
+    const descText = j.description || '';
+    const matchesSearch = titleText.toLowerCase().includes(search.toLowerCase()) || 
+                          descText.toLowerCase().includes(search.toLowerCase());
+    const matchesCategory = categoryFilter === 'All' || (j.category && j.category === categoryFilter);
+    const matchesZone = zoneFilter === 'All' || (j.zone && j.zone === zoneFilter);
     return matchesSearch && matchesCategory && matchesZone;
   });
 
@@ -2300,18 +2395,151 @@ function ArtisanProfilePage() {
 }
 
 
-// ==========================================
-// ADMIN PAGES
-// ==========================================
-
-// 19. Admin Dashboard
 function AdminDashboard() {
-  const { getArtisans, getJobs } = useAuth();
+  const { getArtisans, getJobs, supportMessages, adminReplySupportMessage, showToast, isMock } = useAuth();
   const artisans = getArtisans();
   const jobs = getJobs();
 
   const pendingArtisans = artisans.filter(a => a.status === 'pending');
   const activeArtisans = artisans.filter(a => a.status === 'approved');
+
+  const [activeThreadId, setActiveThreadId] = useState(null);
+  const [replyText, setReplyText] = useState('');
+  const chatEndRef = useRef(null);
+
+  // One-time database cleanup script
+  useEffect(() => {
+    if (isMock) return;
+    
+    const runCleanup = async () => {
+      try {
+        const hasRun = localStorage.getItem('cc_db_cleanup_v3');
+        if (hasRun === 'true') return;
+        
+        console.log("Running database clean-up script...");
+        const artisansRef = collection(db, 'artisans');
+        
+        // 1. Remove ayanogift@gmail.com from the artisans collection
+        const qArtisan = query(artisansRef, where('email', '==', 'ayanogift@gmail.com'));
+        const querySnapshot = await getDocs(qArtisan);
+        for (const docSnap of querySnapshot.docs) {
+          console.log("Deleting artisan document for ayanogift@gmail.com:", docSnap.id);
+          await deleteDoc(doc(db, 'artisans', docSnap.id));
+        }
+
+        // 2. Make sure gbemigift2@gmail.com is the only artisan that needs to be verified.
+        const qPending = query(artisansRef, where('status', '==', 'pending'));
+        const pendingSnapshot = await getDocs(qPending);
+        for (const docSnap of pendingSnapshot.docs) {
+          const data = docSnap.data();
+          const email = (data.email || '').toLowerCase();
+          if (email !== 'gbemigift2@gmail.com' && email !== 'ayanogift@gmail.com') {
+            console.log("Cleaning up/deleting pending test artisan:", email);
+            await deleteDoc(doc(db, 'artisans', docSnap.id));
+            await deleteDoc(doc(db, 'users', docSnap.id));
+          }
+        }
+
+        // 3. Clear other unnecessary support messages
+        const supportRef = collection(db, 'support');
+        const supportSnapshot = await getDocs(supportRef);
+        for (const docSnap of supportSnapshot.docs) {
+          const data = docSnap.data();
+          const email = (data.userEmail || '').toLowerCase();
+          if (email === 'resident@example.com' || email === 'artisan@example.com') {
+            console.log("Deleting test support message:", docSnap.id);
+            await deleteDoc(doc(db, 'support', docSnap.id));
+          }
+        }
+
+        // 4. Clear other unnecessary notifications
+        const notifRef = collection(db, 'notifications');
+        const notifSnapshot = await getDocs(notifRef);
+        for (const docSnap of notifSnapshot.docs) {
+          const data = docSnap.data();
+          const message = data.message || '';
+          if (message.includes('Mary Johnson') || message.includes('John Plumbing')) {
+            console.log("Deleting test notification:", docSnap.id);
+            await deleteDoc(doc(db, 'notifications', docSnap.id));
+          }
+        }
+
+        // 5. Clear test/junk jobs created by resident@example.com / Mary Johnson
+        const jobsRef = collection(db, 'jobs');
+        const jobsSnapshot = await getDocs(jobsRef);
+        for (const docSnap of jobsSnapshot.docs) {
+          const data = docSnap.data();
+          const resEmail = (data.residentEmail || '').toLowerCase();
+          if (resEmail === 'resident@example.com' || data.residentName === 'Mary Johnson') {
+            console.log("Deleting test job:", docSnap.id);
+            await deleteDoc(doc(db, 'jobs', docSnap.id));
+          }
+        }
+
+        // 6. Clear test/junk ratings left by/on mock users
+        const ratingsRef = collection(db, 'ratings');
+        const ratingsSnapshot = await getDocs(ratingsRef);
+        for (const docSnap of ratingsSnapshot.docs) {
+          const data = docSnap.data();
+          if (data.residentName === 'Mary Johnson' || data.artisanName === 'John Plumbing Expert') {
+            console.log("Deleting test rating:", docSnap.id);
+            await deleteDoc(doc(db, 'ratings', docSnap.id));
+          }
+        }
+        
+        localStorage.setItem('cc_db_cleanup_v3', 'true');
+        showToast('Database cleanup completed successfully!');
+        console.log("Database clean-up completed successfully!");
+      } catch (err) {
+        console.error("Database clean-up error:", err);
+      }
+    };
+    
+    runCleanup();
+  }, [isMock, showToast]);
+
+  // Group support messages by userId
+  const threads = useMemo(() => {
+    const map = {};
+    (supportMessages || []).forEach(msg => {
+      if (!map[msg.userId]) {
+        map[msg.userId] = {
+          userId: msg.userId,
+          userEmail: msg.userEmail,
+          userName: msg.userName,
+          userRole: msg.userRole,
+          messages: [],
+          latestTimestamp: 0
+        };
+      }
+      map[msg.userId].messages.push(msg);
+      if (msg.createdAt > map[msg.userId].latestTimestamp) {
+        map[msg.userId].latestTimestamp = msg.createdAt;
+      }
+    });
+    return Object.values(map).sort((a, b) => b.latestTimestamp - a.latestTimestamp);
+  }, [supportMessages]);
+
+  const activeThread = threads.find(t => t.userId === activeThreadId) || threads[0];
+
+  useEffect(() => {
+    if (chatEndRef.current) {
+      chatEndRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [activeThread?.messages?.length]);
+
+  const handleSendReply = async (e) => {
+    e.preventDefault();
+    if (!replyText.trim() || !activeThread) return;
+    try {
+      await adminReplySupportMessage(activeThread.userId, activeThread.userEmail, activeThread.userName, replyText.trim());
+      setReplyText('');
+      showToast('Support reply sent!');
+    } catch (err) {
+      console.error("Failed to send admin support reply:", err);
+      showToast('Failed to send reply.', 'error');
+    }
+  };
 
   return (
     <div className="space-y-8 text-left">
@@ -2328,7 +2556,7 @@ function AdminDashboard() {
         </div>
         <div className="bg-white border border-slate-200 p-5 rounded-2xl shadow-sm">
           <span className="text-slate-400 text-[10px] font-bold uppercase tracking-wider block">Active Artisans</span>
-          <p className="text-3xl font-black text-emerald-805 mt-1">{activeArtisans.length}</p>
+          <p className="text-3xl font-black text-emerald-800 mt-1">{activeArtisans.length}</p>
         </div>
         <div className="bg-white border border-slate-200 p-5 rounded-2xl shadow-sm">
           <span className="text-slate-400 text-[10px] font-bold uppercase tracking-wider block">Total Jobs Posted</span>
@@ -2337,6 +2565,159 @@ function AdminDashboard() {
         <div className="bg-white border border-slate-200 p-5 rounded-2xl shadow-sm">
           <span className="text-slate-400 text-[10px] font-bold uppercase tracking-wider block">Total Residents</span>
           <p className="text-3xl font-black text-slate-900 mt-1">389</p>
+        </div>
+      </div>
+
+      {/* ── SUPPORT CHAT CONSOLE ── */}
+      <div className="bg-white border border-slate-200 rounded-3xl overflow-hidden shadow-sm flex h-[550px] w-full">
+        
+        {/* Left column: active conversations list */}
+        <div className="w-80 border-r border-slate-150 flex flex-col shrink-0 bg-slate-50/20">
+          <div className="p-5 border-b border-slate-150 bg-white shrink-0">
+            <h2 className="text-sm font-bold text-slate-900 flex items-center gap-2">
+              <MessageSquare className="w-4 h-4 text-emerald-800" /> Support Inbox
+            </h2>
+            <p className="text-[10px] text-slate-500 mt-0.5">Manage user support requests</p>
+          </div>
+          
+          <div className="flex-1 overflow-y-auto p-3 space-y-1">
+            {threads.length === 0 ? (
+              <p className="p-6 text-center text-xs text-slate-400 italic">No support chats started yet.</p>
+            ) : (
+              threads.map((t) => {
+                const isActive = activeThread ? t.userId === activeThread.userId : false;
+                const latestMsg = t.messages[t.messages.length - 1];
+                const isUnread = latestMsg && !latestMsg.isAdminReply;
+                return (
+                  <button
+                    key={t.userId}
+                    onClick={() => {
+                      setActiveThreadId(t.userId);
+                    }}
+                    className={`w-full p-3.5 rounded-2xl text-left flex items-start space-x-3 transition-all ${
+                      isActive 
+                        ? 'bg-white border border-slate-250 shadow-sm' 
+                        : 'border border-transparent hover:bg-white/60 hover:border-slate-200'
+                    }`}
+                  >
+                    <div className="w-9 h-9 rounded-xl bg-emerald-800 text-white flex items-center justify-center font-bold text-sm shrink-0 shadow-sm">
+                      {(t.userName || t.userEmail || 'U')[0].toUpperCase()}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex justify-between items-baseline mb-1">
+                        <h4 className="text-xs font-bold text-slate-800 truncate max-w-[130px]">
+                          {t.userName || t.userEmail}
+                        </h4>
+                        <span className="text-[9px] text-slate-450 font-medium shrink-0">
+                          {new Date(t.latestTimestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-2 mt-0.5">
+                        <span className={`px-1.5 py-0.5 border rounded text-[8px] font-bold uppercase tracking-wider shrink-0 ${
+                          t.userRole === 'artisan' 
+                            ? 'bg-emerald-50 border-emerald-150 text-emerald-800' 
+                            : 'bg-indigo-50 border-indigo-150 text-indigo-800'
+                        }`}>
+                          {t.userRole || 'Resident'}
+                        </span>
+                        <p className={`text-[11px] truncate flex-1 ${isUnread ? 'text-slate-900 font-bold' : 'text-slate-500'}`}>
+                          {latestMsg ? latestMsg.message : ''}
+                        </p>
+                      </div>
+                    </div>
+                    {isUnread && <span className="w-2 h-2 rounded-full bg-emerald-600 shrink-0 self-center border border-white shadow-sm ml-1"></span>}
+                  </button>
+                );
+              })
+            )}
+          </div>
+        </div>
+
+        {/* Right columns: chat thread messages and input */}
+        <div className="flex-1 flex flex-col bg-white">
+          {activeThread ? (
+            <>
+              {/* Header */}
+              <div className="px-6 py-4 border-b border-slate-150 flex items-center justify-between shrink-0 bg-white shadow-sm/5 z-10">
+                <div className="flex items-center space-x-3">
+                  <div className="w-10 h-10 rounded-xl bg-emerald-800 text-white flex items-center justify-center font-bold text-base shadow-sm shrink-0">
+                    {(activeThread.userName || activeThread.userEmail || 'U')[0].toUpperCase()}
+                  </div>
+                  <div>
+                    <h3 className="text-sm font-bold text-slate-900 leading-tight">
+                      {activeThread.userName || activeThread.userEmail}
+                    </h3>
+                    <div className="flex items-center gap-2 mt-1">
+                      <span className="text-[11px] text-slate-500 truncate max-w-[200px]">{activeThread.userEmail}</span>
+                      <span className={`px-1.5 py-0.5 border rounded text-[8px] font-bold uppercase tracking-wider shrink-0 ${
+                        activeThread.userRole === 'artisan' 
+                          ? 'bg-emerald-50 border-emerald-150 text-emerald-800' 
+                          : 'bg-indigo-50 border-indigo-150 text-indigo-800'
+                      }`}>
+                        {activeThread.userRole || 'Resident'}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Messages List */}
+              <div className="flex-1 p-6 overflow-y-auto space-y-4 bg-slate-50/45 flex flex-col">
+                {activeThread.messages.map((msg, idx) => {
+                  const isMe = msg.isAdminReply;
+                  return (
+                    <div
+                      key={msg.id || idx}
+                      className={`flex flex-col max-w-[70%] ${isMe ? 'self-end items-end' : 'self-start items-start'}`}
+                    >
+                      <span className="text-[9px] text-slate-400 font-semibold mb-1 px-1">
+                        {isMe ? 'Support Agent' : (msg.senderName || msg.userEmail || 'User')}
+                      </span>
+                      <div
+                        className={`px-4 py-2.5 rounded-2xl text-xs md:text-sm leading-relaxed shadow-sm ${
+                          isMe
+                            ? 'bg-emerald-800 text-white rounded-tr-none'
+                            : 'bg-white text-slate-800 border border-slate-150 rounded-tl-none'
+                        }`}
+                      >
+                        {msg.message}
+                      </div>
+                      <span className="text-[9px] text-slate-400 mt-1 px-1">
+                        {new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                      </span>
+                    </div>
+                  );
+                })}
+                <div ref={chatEndRef} />
+              </div>
+
+              {/* Chat Input */}
+              <form onSubmit={handleSendReply} className="p-4 border-t border-slate-155 bg-white flex gap-2 shrink-0">
+                <input
+                  type="text"
+                  value={replyText}
+                  onChange={(e) => setReplyText(e.target.value)}
+                  placeholder={`Type your reply to ${activeThread.userName || activeThread.userEmail}...`}
+                  className="flex-1 px-4 py-2.5 text-xs md:text-sm border border-slate-200 rounded-xl focus:outline-none focus:border-emerald-800 placeholder-slate-450 bg-slate-50/50 focus:bg-white transition"
+                />
+                <button
+                  type="submit"
+                  disabled={!replyText.trim()}
+                  className="px-5 py-2.5 rounded-xl bg-emerald-800 hover:bg-emerald-900 text-white text-xs font-bold transition disabled:opacity-50 flex items-center gap-1.5 shrink-0 shadow-sm"
+                >
+                  <Send className="w-3.5 h-3.5" /> Send
+                </button>
+              </form>
+            </>
+          ) : (
+            <div className="flex-1 flex flex-col items-center justify-center text-center p-6 space-y-3 bg-slate-50/10">
+              <Headphones className="w-10 h-10 text-slate-350" />
+              <p className="text-sm font-bold text-slate-800">Select a Conversation</p>
+              <p className="text-[11px] text-slate-400 max-w-[240px] leading-relaxed">
+                Click on a user conversation in the list to view support history and send replies.
+              </p>
+            </div>
+          )}
         </div>
       </div>
 
@@ -2381,7 +2762,7 @@ function AdminDashboard() {
               <div key={job.id} className="py-3 flex justify-between items-center text-xs">
                 <div>
                   <h4 className="font-bold text-slate-900">{job.title}</h4>
-                  <p className="text-[10px] text-slate-550 mt-0.5">By {job.residentName} • Status: {job.status}</p>
+                  <p className="text-[10px] text-slate-555 mt-0.5">By {job.residentName} • Status: {job.status}</p>
                 </div>
                 <span className={`px-2 py-0.5 rounded text-[9px] font-bold uppercase ${
                   job.status === 'open' ? 'bg-emerald-50 text-emerald-800' :
@@ -2563,8 +2944,9 @@ function AllArtisansPage() {
   const artisans = getArtisans();
 
   const filtered = artisans.filter(a => {
-    const matchesSearch = a.fullName.toLowerCase().includes(search.toLowerCase());
-    const matchesCategory = categoryFilter === 'All' || a.category === categoryFilter;
+    const nameText = a.fullName || '';
+    const matchesSearch = nameText.toLowerCase().includes(search.toLowerCase());
+    const matchesCategory = categoryFilter === 'All' || (a.category && a.category === categoryFilter);
     return matchesSearch && matchesCategory;
   });
 
@@ -2878,7 +3260,7 @@ function MessagesPage() {
           </div>
 
           <div className="flex items-start space-x-2.5 max-w-lg">
-            <div className="w-8 h-8 rounded-full bg-emerald-850 text-white flex items-center justify-center font-bold text-xs shrink-0">
+            <div className="w-8 h-8 rounded-full bg-emerald-800 text-white flex items-center justify-center font-bold text-xs shrink-0">
               {chats[activeChat].avatar}
             </div>
             <div className="bg-white border border-slate-200 text-slate-800 p-3.5 rounded-2xl rounded-tl-none shadow-sm text-xs leading-relaxed">
@@ -2893,7 +3275,7 @@ function MessagesPage() {
           </div>
 
           <div className="flex items-start space-x-2.5 max-w-lg">
-            <div className="w-8 h-8 rounded-full bg-emerald-850 text-white flex items-center justify-center font-bold text-xs shrink-0">
+            <div className="w-8 h-8 rounded-full bg-emerald-800 text-white flex items-center justify-center font-bold text-xs shrink-0">
               {chats[activeChat].avatar}
             </div>
             <div className="bg-white border border-slate-200 text-slate-800 p-3.5 rounded-2xl rounded-tl-none shadow-sm text-xs leading-relaxed">
@@ -2924,8 +3306,8 @@ function MessagesPage() {
 
 // 27. Resident Reviews Page
 function ResidentReviewsPage() {
-  const { currentUser, ratings } = useAuth();
-  const myReviews = ratings.filter(r => r.residentId === currentUser.uid);
+  const { currentUser, ratings = [] } = useAuth();
+  const myReviews = (ratings || []).filter(r => r.residentId === currentUser?.uid);
 
   return (
     <div className="space-y-6 text-left max-w-2xl mx-auto">
@@ -2993,12 +3375,7 @@ function ResidentProfilePage() {
         <p className="text-slate-500 text-xs mt-1">Manage your account details and contact information.</p>
       </div>
 
-      {success && (
-        <div className="mb-4 p-3 bg-emerald-50 border border-emerald-100 text-emerald-800 text-xs rounded-xl flex items-center space-x-2">
-          <span className="material-icons-round text-sm">check_circle</span>
-          <span>Profile updated successfully!</span>
-        </div>
-      )}
+
 
       <form onSubmit={handleUpdate} className="space-y-4">
         <div className="space-y-1">

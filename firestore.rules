@@ -41,5 +41,15 @@ service cloud.firestore {
     match /notifications/{notificationId} {
       allow read, write: if request.auth != null;
     }
+
+    // 6. Support Collection rules
+    match /support/{messageId} {
+      allow read, write: if request.auth != null;
+    }
+
+    // 7. Zones Collection rules
+    match /zones/{zoneId} {
+      allow read, write: if request.auth != null;
+    }
   }
 }

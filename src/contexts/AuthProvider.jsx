@@ -3,7 +3,8 @@ import {
   signInWithEmailAndPassword, 
   createUserWithEmailAndPassword, 
   signOut, 
-  onAuthStateChanged 
+  onAuthStateChanged,
+  sendPasswordResetEmail
 } from 'firebase/auth';
 import { doc, getDoc, setDoc, updateDoc, addDoc, collection, onSnapshot } from 'firebase/firestore';
 import { auth, db } from '../firebase';
@@ -167,49 +168,93 @@ const initMockDatabase = () => {
   if (!localStorage.getItem('cc_ratings')) {
     localStorage.setItem('cc_ratings', JSON.stringify(initialMockRatings));
   }
+  if (!localStorage.getItem('cc_zones')) {
+    localStorage.setItem('cc_zones', JSON.stringify([
+      { id: 'z_1', name: 'Zone A' },
+      { id: 'z_2', name: 'Zone B' },
+      { id: 'z_3', name: 'Zone C' }
+    ]));
+  }
+  if (!localStorage.getItem('cc_support')) {
+    localStorage.setItem('cc_support', JSON.stringify([
+      {
+        id: 's_1',
+        userId: 'u_res_1',
+        userEmail: 'resident@example.com',
+        userName: 'Mary Johnson',
+        userRole: 'resident',
+        message: 'Hello, I need some help finding an electrician.',
+        senderId: 'u_res_1',
+        senderName: 'Mary Johnson',
+        isAdminReply: false,
+        createdAt: Date.now() - 1000 * 60 * 60 * 2
+      },
+      {
+        id: 's_2',
+        userId: 'u_res_1',
+        userEmail: 'resident@example.com',
+        userName: 'Mary Johnson',
+        userRole: 'resident',
+        message: 'Sure! Let me check on the available electricians in Zone A.',
+        senderId: 'u_adm_1',
+        senderName: 'Super Admin',
+        isAdminReply: true,
+        createdAt: Date.now() - 1000 * 60 * 60 * 1.8
+      }
+    ]));
+  }
 };
 
 const getMockData = (key) => JSON.parse(localStorage.getItem(key));
 const saveMockData = (key, data) => localStorage.setItem(key, JSON.stringify(data));
 
 export function AuthProvider({ children }) {
-  const [isMock] = useState(() => isFirebaseMock());
+  const initialIsMock = isFirebaseMock();
+
+  const [isMock, setIsMock] = useState(initialIsMock);
   
   const [currentUser, setCurrentUser] = useState(() => {
-    if (isFirebaseMock()) {
+    if (initialIsMock) {
       initMockDatabase();
       const savedUser = localStorage.getItem('cc_current_user');
-      return savedUser ? JSON.parse(savedUser) : null;
+      if (savedUser) {
+        const parsed = JSON.parse(savedUser);
+        if (parsed && !parsed.role) {
+          parsed.role = 'resident';
+        }
+        return parsed;
+      }
+      return null;
     }
     return null;
   });
 
   const [jobs, setJobs] = useState(() => {
-    if (isFirebaseMock()) {
+    if (initialIsMock) {
       initMockDatabase();
-      return getMockData('cc_jobs');
+      return getMockData('cc_jobs') || [];
     }
     return [];
   });
 
   const [artisans, setArtisans] = useState(() => {
-    if (isFirebaseMock()) {
+    if (initialIsMock) {
       initMockDatabase();
-      return getMockData('cc_artisans');
+      return getMockData('cc_artisans') || [];
     }
     return [];
   });
 
   const [ratings, setRatings] = useState(() => {
-    if (isFirebaseMock()) {
+    if (initialIsMock) {
       initMockDatabase();
-      return getMockData('cc_ratings');
+      return getMockData('cc_ratings') || [];
     }
     return [];
   });
 
   const [notifications, setNotifications] = useState(() => {
-    if (isFirebaseMock()) {
+    if (initialIsMock) {
       if (!localStorage.getItem('cc_notifications')) {
         localStorage.setItem('cc_notifications', JSON.stringify([]));
       }
@@ -218,9 +263,31 @@ export function AuthProvider({ children }) {
     return [];
   });
 
+  const [zones, setZones] = useState(() => {
+    if (initialIsMock) {
+      initMockDatabase();
+      return getMockData('cc_zones') || [];
+    }
+    return [];
+  });
+
+  const [supportMessages, setSupportMessages] = useState(() => {
+    if (initialIsMock) {
+      initMockDatabase();
+      return getMockData('cc_support') || [];
+    }
+    return [];
+  });
+
   const [toast, setToast] = useState(null);
 
-  const [loading, setLoading] = useState(() => !isFirebaseMock());
+  const [loading, setLoading] = useState(() => {
+    return !initialIsMock;
+  });
+
+  useEffect(() => {
+    localStorage.setItem('cc_is_mock_session', String(initialIsMock));
+  }, [initialIsMock]);
 
   const showToast = (message, type = 'success') => {
     setToast({ message, type });
@@ -284,10 +351,12 @@ export function AuthProvider({ children }) {
           const userDocRef = doc(db, 'users', user.uid);
           const userDoc = await getDoc(userDocRef);
           if (userDoc.exists()) {
+            const data = userDoc.data();
             setCurrentUser({
               uid: user.uid,
               email: user.email,
-              ...userDoc.data()
+              role: data.role || 'resident',
+              ...data
             });
           } else {
             setCurrentUser({
@@ -296,8 +365,13 @@ export function AuthProvider({ children }) {
               role: 'resident'
             });
           }
+          localStorage.setItem('cc_is_mock_session', 'false');
+          setIsMock(false);
         } else {
-          setCurrentUser(null);
+          const savedMockSess = localStorage.getItem('cc_is_mock_session');
+          if (savedMockSess !== 'true') {
+            setCurrentUser(null);
+          }
         }
         setLoading(false);
       }, (error) => {
@@ -311,14 +385,32 @@ export function AuthProvider({ children }) {
     }
   }, [isMock]);
 
+  // Subscribe to Zones globally (since registration needs it too)
+  useEffect(() => {
+    if (isMock) return;
+    try {
+      console.log("Subscribing to Firestore zones collection globally");
+      const unsubscribeZones = onSnapshot(collection(db, 'zones'), (snapshot) => {
+        const zonesList = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        setZones(zonesList);
+      }, (err) => console.error("Firestore zones listener error:", err));
+      return unsubscribeZones;
+    } catch (err) {
+      console.error("Firestore zones subscription setup failed:", err);
+    }
+  }, [isMock]);
+
   // Firestore Collections Subscription (Dependent on Logged-in User Role/UID)
   useEffect(() => {
     if (isMock) return;
     if (!currentUser) {
-      setJobs([]);
-      setArtisans([]);
-      setRatings([]);
-      setNotifications([]);
+      setTimeout(() => {
+        setJobs([]);
+        setArtisans([]);
+        setRatings([]);
+        setNotifications([]);
+        setSupportMessages([]);
+      }, 0);
       return;
     }
 
@@ -343,9 +435,15 @@ export function AuthProvider({ children }) {
 
       const unsubscribeNotifications = onSnapshot(collection(db, 'notifications'), (snapshot) => {
         const notificationsList = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-        notificationsList.sort((a, b) => b.createdAt - a.createdAt);
+        notificationsList.sort((a, b) => a.createdAt - b.createdAt);
         setNotifications(notificationsList);
       }, (err) => console.error("Firestore notifications listener error:", err));
+
+      const unsubscribeSupport = onSnapshot(collection(db, 'support'), (snapshot) => {
+        const supportList = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        supportList.sort((a, b) => a.createdAt - b.createdAt);
+        setSupportMessages(supportList);
+      }, (err) => console.error("Firestore support listener error:", err));
 
       return () => {
         console.log("Unsubscribing from Firestore collections for user:", currentUser.uid);
@@ -353,11 +451,69 @@ export function AuthProvider({ children }) {
         unsubscribeArtisans();
         unsubscribeRatings();
         unsubscribeNotifications();
+        unsubscribeSupport();
       };
     } catch (err) {
       console.error("Firestore subscription setup failed:", err);
     }
-  }, [isMock, currentUser?.uid]);
+  }, [isMock, currentUser]);
+
+  // For Mock Mode: reload states from localStorage whenever current user changes (fixes dashboard refresh lag on login/logout)
+  useEffect(() => {
+    if (!isMock) return;
+    try {
+      console.log("Mock Mode - Reloading states from localStorage for user:", currentUser?.uid);
+      initMockDatabase();
+      setTimeout(() => {
+        setJobs(getMockData('cc_jobs') || []);
+        setArtisans(getMockData('cc_artisans') || []);
+        setRatings(getMockData('cc_ratings') || []);
+        setNotifications(getMockData('cc_notifications') || []);
+        setZones(getMockData('cc_zones') || []);
+        setSupportMessages(getMockData('cc_support') || []);
+      }, 0);
+    } catch (err) {
+      console.error("Mock Mode state reload failed:", err);
+    }
+  }, [isMock, currentUser]);
+
+  // Sync state between browser tabs in Mock Mode via storage event listener
+  useEffect(() => {
+    const handleStorageChange = (e) => {
+      try {
+        if (e.key === 'cc_is_mock_session') {
+          const isMockSess = e.newValue === 'true';
+          if (!isFirebaseMock()) {
+            setIsMock(false);
+          } else {
+            setIsMock(isMockSess);
+          }
+        }
+        if (!isMock) return;
+        if (e.key === 'cc_support') {
+          setSupportMessages(JSON.parse(e.newValue) || []);
+        } else if (e.key === 'cc_jobs') {
+          setJobs(JSON.parse(e.newValue) || []);
+        } else if (e.key === 'cc_artisans') {
+          setArtisans(JSON.parse(e.newValue) || []);
+        } else if (e.key === 'cc_ratings') {
+          setRatings(JSON.parse(e.newValue) || []);
+        } else if (e.key === 'cc_notifications') {
+          setNotifications(JSON.parse(e.newValue) || []);
+        } else if (e.key === 'cc_zones') {
+          setZones(JSON.parse(e.newValue) || []);
+        } else if (e.key === 'cc_current_user') {
+          const u = JSON.parse(e.newValue);
+          if (u && !u.role) u.role = 'resident';
+          setCurrentUser(u);
+        }
+      } catch (err) {
+        console.error("Storage change sync error:", err);
+      }
+    };
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
+  }, [isMock]);
 
   // --- AUTH ACTIONS ---
 
@@ -368,6 +524,8 @@ export function AuthProvider({ children }) {
       const mockUsers = getMockData('cc_users');
       const user = mockUsers[emailKey];
       if (user) {
+        localStorage.setItem('cc_is_mock_session', 'true');
+        setIsMock(true);
         setCurrentUser(user);
         localStorage.setItem('cc_current_user', JSON.stringify(user));
         return user;
@@ -387,23 +545,53 @@ export function AuthProvider({ children }) {
         const fullUser = {
           uid: userCredential.user.uid,
           email: userCredential.user.email,
+          role: userData.role || 'resident',
           ...userData
         };
+        localStorage.setItem('cc_is_mock_session', 'false');
+        setIsMock(false);
         setCurrentUser(fullUser);
         return fullUser;
       } catch (firebaseErr) {
-        // If user doesn't exist in Firebase yet, fall back to mock database
-        // This allows demo accounts to work even when Firebase Auth is connected
         const code = firebaseErr?.code || '';
-        if (code === 'auth/invalid-credential' || code === 'auth/user-not-found' || code === 'auth/wrong-password') {
-          const user = tryMockLogin(email.toLowerCase());
-          if (user) return user;
+        
+        // Auto-seed demo accounts in real Firebase if they don't exist yet
+        if (code === 'auth/user-not-found' || code === 'auth/invalid-credential') {
+          const lowerEmail = email.toLowerCase();
+          try {
+            if (lowerEmail === 'admin@example.com') {
+              console.log("Auto-seeding Admin account in Firebase Auth & Firestore...");
+              const seededUser = await registerAdmin('Super Admin', 'admin@example.com', password);
+              return seededUser;
+            } else if (lowerEmail === 'resident@example.com') {
+              console.log("Auto-seeding Resident account in Firebase Auth & Firestore...");
+              const seededUser = await registerResident('Mary Johnson', 'resident@example.com', password, '08031234567', 'Zone A');
+              return seededUser;
+            } else if (lowerEmail === 'artisan@example.com') {
+              console.log("Auto-seeding Artisan account in Firebase Auth & Firestore...");
+              const seededUser = await registerArtisan(
+                'John Plumbing Expert', 
+                'artisan@example.com', 
+                password, 
+                '08029876543', 
+                'Zone A', 
+                'Plumbing', 
+                5, 
+                'I specialize in all plumbing installations, repairs, and leak fixes. Reliable, fast, and affordable.'
+              );
+              return seededUser;
+            }
+          } catch (seedErr) {
+            console.error("Auto-seeding of demo account failed:", seedErr);
+          }
         }
+        
         // Re-throw with a friendlier message
         throw new Error(
           code === 'auth/invalid-credential' || code === 'auth/user-not-found' || code === 'auth/wrong-password'
             ? 'Invalid email or password. Check your credentials and try again.'
-            : firebaseErr.message
+            : firebaseErr.message,
+          { cause: firebaseErr }
         );
       }
     }
@@ -429,6 +617,8 @@ export function AuthProvider({ children }) {
       mockUsers[payload.email] = newUser;
       saveMockData('cc_users', mockUsers);
       
+      localStorage.setItem('cc_is_mock_session', 'true');
+      setIsMock(true);
       setCurrentUser(newUser);
       localStorage.setItem('cc_current_user', JSON.stringify(newUser));
       return newUser;
@@ -437,6 +627,8 @@ export function AuthProvider({ children }) {
       const userRef = doc(db, 'users', userCredential.user.uid);
       await setDoc(userRef, payload);
       const fullUser = { uid: userCredential.user.uid, ...payload };
+      localStorage.setItem('cc_is_mock_session', 'false');
+      setIsMock(false);
       setCurrentUser(fullUser);
       return fullUser;
     }
@@ -481,6 +673,8 @@ export function AuthProvider({ children }) {
       saveMockData('cc_artisans', updatedArtisans);
       setArtisans(updatedArtisans);
 
+      localStorage.setItem('cc_is_mock_session', 'true');
+      setIsMock(true);
       setCurrentUser(newUser);
       localStorage.setItem('cc_current_user', JSON.stringify(newUser));
       return newUser;
@@ -493,6 +687,8 @@ export function AuthProvider({ children }) {
       await setDoc(artisanRef, { uid: userCredential.user.uid, ...artisanPayload });
       
       const fullUser = { uid: userCredential.user.uid, ...payload };
+      localStorage.setItem('cc_is_mock_session', 'false');
+      setIsMock(false);
       setCurrentUser(fullUser);
       return fullUser;
     }
@@ -516,6 +712,8 @@ export function AuthProvider({ children }) {
       mockUsers[payload.email] = newUser;
       saveMockData('cc_users', mockUsers);
       
+      localStorage.setItem('cc_is_mock_session', 'true');
+      setIsMock(true);
       setCurrentUser(newUser);
       localStorage.setItem('cc_current_user', JSON.stringify(newUser));
       return newUser;
@@ -524,6 +722,8 @@ export function AuthProvider({ children }) {
       const userRef = doc(db, 'users', userCredential.user.uid);
       await setDoc(userRef, payload);
       const fullUser = { uid: userCredential.user.uid, ...payload };
+      localStorage.setItem('cc_is_mock_session', 'false');
+      setIsMock(false);
       setCurrentUser(fullUser);
       return fullUser;
     }
@@ -533,17 +733,21 @@ export function AuthProvider({ children }) {
     if (isMock) {
       setCurrentUser(null);
       localStorage.removeItem('cc_current_user');
+      localStorage.setItem('cc_is_mock_session', String(isFirebaseMock()));
+      setIsMock(isFirebaseMock());
     } else {
       await signOut(auth);
       setCurrentUser(null);
+      localStorage.setItem('cc_is_mock_session', String(isFirebaseMock()));
+      setIsMock(isFirebaseMock());
     }
   };
 
   // --- DATABASE READS & WRITES ---
 
-  const getJobs = () => jobs;
-  const getArtisans = () => artisans;
-  const getRatings = () => ratings;
+  const getJobs = () => jobs || [];
+  const getArtisans = () => artisans || [];
+  const getRatings = () => ratings || [];
 
   const createJob = async (jobData) => {
     if (isMock) {
@@ -582,6 +786,8 @@ export function AuthProvider({ children }) {
   const placeBid = async (jobId, bidData) => {
     let residentId = '';
     let jobTitle = '';
+    const timestamp = new Date().getTime();
+
     if (isMock) {
       const job = jobs.find(j => j.id === jobId);
       if (job) {
@@ -603,7 +809,7 @@ export function AuthProvider({ children }) {
           const cleanBids = j.bids.filter(b => b.artisanId !== bidData.artisanId);
           return {
             ...j,
-            bids: [...cleanBids, { ...bidData, createdAt: Date.now() }]
+            bids: [...cleanBids, { ...bidData, createdAt: timestamp }]
           };
         }
         return j;
@@ -616,7 +822,20 @@ export function AuthProvider({ children }) {
       if (jobDoc.exists()) {
         const job = jobDoc.data();
         const cleanBids = (job.bids || []).filter(b => b.artisanId !== bidData.artisanId);
-        const updatedBids = [...cleanBids, { ...bidData, createdAt: Date.now() }];
+        
+        // Clean bidData from any undefined values
+        const cleanBid = {};
+        Object.keys(bidData).forEach(key => {
+          if (bidData[key] !== undefined) {
+            cleanBid[key] = bidData[key];
+          }
+        });
+
+        const updatedBids = [...cleanBids, { 
+          artisanName: bidData.artisanName || currentUser?.fullName || currentUser?.email || 'Artisan',
+          ...cleanBid, 
+          createdAt: timestamp 
+        }];
         await updateDoc(jobRef, { bids: updatedBids });
       }
     }
@@ -628,6 +847,26 @@ export function AuthProvider({ children }) {
         `${bidData.artisanName || 'An artisan'} placed a bid of ₦${Number(bidData.price).toLocaleString()} on your job: "${jobTitle}"`,
         jobId
       );
+
+      // Retrieve resident email to trigger email alert
+      let residentEmail;
+      if (isMock) {
+        const mockUsers = getMockData('cc_users') || {};
+        const residentUser = Object.values(mockUsers).find(u => u.uid === residentId);
+        residentEmail = residentUser ? residentUser.email : 'resident@example.com';
+      } else {
+        const userRef = doc(db, 'users', residentId);
+        const userDoc = await getDoc(userRef);
+        residentEmail = userDoc.exists() ? userDoc.data().email : 'resident@example.com';
+      }
+
+      if (residentEmail) {
+        sendNotificationEmail(
+          residentEmail,
+          "New Bid Received on CampCraft",
+          `Hello, an artisan (${bidData.artisanName}) has bidded ₦${Number(bidData.price).toLocaleString()} on your job request "${jobTitle}". Please log in to review and accept the bid.`
+        );
+      }
     }
   };
 
@@ -683,6 +922,26 @@ export function AuthProvider({ children }) {
       `Your bid on "${jobTitle}" has been accepted by ${residentName || 'the resident'} for ₦${Number(price).toLocaleString()}.`,
       jobId
     );
+
+    // Retrieve artisan email to trigger email alert
+    let artisanEmail;
+    if (isMock) {
+      const mockUsers = getMockData('cc_users') || {};
+      const artisanUser = Object.values(mockUsers).find(u => u.uid === artisanId);
+      artisanEmail = artisanUser ? artisanUser.email : 'artisan@example.com';
+    } else {
+      const userRef = doc(db, 'users', artisanId);
+      const userDoc = await getDoc(userRef);
+      artisanEmail = userDoc.exists() ? userDoc.data().email : 'artisan@example.com';
+    }
+
+    if (artisanEmail) {
+      sendNotificationEmail(
+        artisanEmail,
+        "Bid Accepted on CampCraft!",
+        `Hello, your bid on "${jobTitle}" has been accepted by ${residentName || 'the resident'} for ₦${Number(price).toLocaleString()}. You can now start the contract from your portal.`
+      );
+    }
   };
 
   const completeJob = async (jobId) => {
@@ -778,6 +1037,64 @@ export function AuthProvider({ children }) {
     }
   };
 
+  const addZone = async (name) => {
+    const newZone = { name, createdAt: Date.now() };
+    if (isMock) {
+      const currentZones = getMockData('cc_zones') || [];
+      const updated = [...currentZones, { id: 'z_' + Date.now(), ...newZone }];
+      saveMockData('cc_zones', updated);
+      setZones(updated);
+    } else {
+      await addDoc(collection(db, 'zones'), newZone);
+    }
+  };
+
+  const sendSupportMessage = async (text) => {
+    if (!currentUser) return;
+    const newMessage = {
+      userId: currentUser.uid || '',
+      userEmail: currentUser.email || '',
+      userName: currentUser.fullName || currentUser.email || 'User',
+      userRole: currentUser.role || 'resident',
+      message: text || '',
+      senderId: currentUser.uid || '',
+      senderName: currentUser.fullName || currentUser.email || 'User',
+      isAdminReply: false,
+      createdAt: Date.now()
+    };
+    if (isMock) {
+      const currentSupport = getMockData('cc_support') || [];
+      const updated = [...currentSupport, { id: 's_' + Date.now(), ...newMessage }];
+      saveMockData('cc_support', updated);
+      setSupportMessages(updated);
+    } else {
+      await addDoc(collection(db, 'support'), newMessage);
+    }
+  };
+
+  const adminReplySupportMessage = async (userId, userEmail, userName, text) => {
+    if (!currentUser || currentUser.role !== 'admin') return;
+    const newMessage = {
+      userId: userId || '',
+      userEmail: userEmail || '',
+      userName: userName || userEmail || 'User',
+      userRole: 'resident',
+      message: text || '',
+      senderId: currentUser.uid || '',
+      senderName: currentUser.fullName || 'Admin',
+      isAdminReply: true,
+      createdAt: Date.now()
+    };
+    if (isMock) {
+      const currentSupport = getMockData('cc_support') || [];
+      const updated = [...currentSupport, { id: 's_' + Date.now(), ...newMessage }];
+      saveMockData('cc_support', updated);
+      setSupportMessages(updated);
+    } else {
+      await addDoc(collection(db, 'support'), newMessage);
+    }
+  };
+
   const submitRating = async (ratingData) => {
     if (isMock) {
       const newRating = {
@@ -792,9 +1109,9 @@ export function AuthProvider({ children }) {
       // Update artisan average rating
       const updatedArtisans = artisans.map(art => {
         if (art.uid === ratingData.artisanId) {
-          const currentTotal = art.ratingAverage * art.ratingCount;
-          const newCount = art.ratingCount + 1;
-          const newAvg = Number(((currentTotal + ratingData.rating) / newCount).toFixed(1));
+          const currentTotal = Number(art.ratingAverage || 0) * Number(art.ratingCount || 0);
+          const newCount = Number(art.ratingCount || 0) + 1;
+          const newAvg = Number(((currentTotal + Number(ratingData.rating)) / newCount).toFixed(1));
           return {
             ...art,
             ratingAverage: newAvg,
@@ -817,14 +1134,75 @@ export function AuthProvider({ children }) {
       const artisanDoc = await getDoc(artisanRef);
       if (artisanDoc.exists()) {
         const art = artisanDoc.data();
-        const currentTotal = (art.ratingAverage || 0) * (art.ratingCount || 0);
-        const newCount = (art.ratingCount || 0) + 1;
-        const newAvg = Number(((currentTotal + ratingData.rating) / newCount).toFixed(1));
+        const currentTotal = Number(art.ratingAverage || 0) * Number(art.ratingCount || 0);
+        const newCount = Number(art.ratingCount || 0) + 1;
+        const newAvg = Number(((currentTotal + Number(ratingData.rating)) / newCount).toFixed(1));
         await updateDoc(artisanRef, {
           ratingAverage: newAvg,
           ratingCount: newCount
         });
       }
+    }
+  };
+
+  // --- EMAIL & PASSWORD ACTIONS ---
+
+  const sendNotificationEmail = async (email, subject, message) => {
+    const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID;
+    const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
+    const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
+
+    console.log("=== EMAIL DISPATCH ===");
+    console.log("To:", email);
+    console.log("Subject:", subject);
+    console.log("Message:", message);
+    console.log("======================");
+
+    if (serviceId && templateId && publicKey) {
+      try {
+        const response = await fetch("https://api.emailjs.com/api/v1.0/email/send", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            service_id: serviceId,
+            template_id: templateId,
+            user_id: publicKey,
+            template_params: {
+              to_email: email,
+              subject: subject,
+              message: message,
+            },
+          }),
+        });
+
+        if (response.ok) {
+          console.log("Email successfully sent via EmailJS!");
+          showToast(`Notification email sent to ${email}`, 'success');
+        } else {
+          const errText = await response.text();
+          console.error("EmailJS sending failed:", errText);
+          showToast("Failed to send notification email (Service Error)", "error");
+        }
+      } catch (err) {
+        console.error("Network error sending email:", err);
+        showToast("Network error sending notification email", "error");
+      }
+    } else {
+      console.warn("EmailJS credentials not set in .env. Falling back to console-only mode.");
+      showToast(`Notification email simulated to ${email}`, 'success');
+    }
+  };
+
+  const resetPassword = async (email) => {
+    if (isMock) {
+      console.log(`Mock Mode - Password reset requested for: ${email}`);
+      showToast(`Mock Reset: Password reset link sent to ${email}`, 'success');
+      return true;
+    } else {
+      await sendPasswordResetEmail(auth, email);
+      showToast(`Password reset link sent to ${email}`, 'success');
     }
   };
 
@@ -844,6 +1222,7 @@ export function AuthProvider({ children }) {
       logout,
       getJobs,
       getArtisans,
+      ratings,
       getRatings,
       createJob,
       placeBid,
@@ -853,7 +1232,14 @@ export function AuthProvider({ children }) {
       updateArtisanStatus,
       updateArtisanProfile,
       updateResidentProfile,
-      submitRating
+      submitRating,
+      zones,
+      addZone,
+      supportMessages,
+      sendSupportMessage,
+      adminReplySupportMessage,
+      resetPassword,
+      sendNotificationEmail
     }}>
       {!loading && children}
       {toast && (
